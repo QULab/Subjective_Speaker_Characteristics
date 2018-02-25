@@ -11,6 +11,8 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = './')
+
 ```
 
 
@@ -43,12 +45,7 @@ Set paths and read data.
 
 ```{r echo=FALSE}
 
-setwd_thisdir <- function () {
-  this.dir <- dirname(parent.frame(3)$ofile)
-  setwd(this.dir)
-}
-
-path_generated_data <- paste0(setwd_thisdir,"../data/generated_data")
+setwd("D:/Work/git_ML/Subjective_Speaker_Characteristics/speaker_characteristics/factor_analysis/")
 
 path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
   
@@ -196,10 +193,17 @@ Write scores to file.
 
 factorscores_m <- data.frame("sample_heard"=data_m$sample_heard, "dim1"=fs_m_dim1, "dim2"=fs_m_dim2, "dim3"=fs_m_dim3, "dim4"=fs_m_dim4, "dim5"=fs_m_dim5)
 
+# average over raters
 factorscores_m_averaged <- aggregate(factorscores_m[,2:ncol(factorscores_m)], by=list(factorscores_m$sample_heard), mean, na.rm=T)
 names(factorscores_m_averaged)[1] <- "sample_heard"
 
-write.csv(factorscores_m_averaged, paste0(path_generated_data, "/factorscores_malespk.csv"), row.names = F)
+write.csv(factorscores_m_averaged, "../../data/generated_data/factorscores_malespk.csv", row.names = F)
+
+# save scores without averaging
+factorscores_m_02 <- data.frame(data_m$listener_pseudonym, data_m$sample_heard,  "dim1"=fs_m_dim1, "dim2"=fs_m_dim2, "dim3"=fs_m_dim3, "dim4"=fs_m_dim4, "dim5"=fs_m_dim5)
+
+write.csv(factorscores_m_02, "../../data/generated_data/factorscores_malespk_notaveraged.csv", row.names = F)
+
 
 ```
 
@@ -207,9 +211,22 @@ write.csv(factorscores_m_averaged, paste0(path_generated_data, "/factorscores_ma
 
 
 
-### 2b) Factor analysis of male speakers
+### 2b) Factor analysis of female speakers
+
+For female speakers, we follow a similar procedure as for male speakers. We also find 5 dimensions in the end.
+
 
 ## 3) Summary of dimensions and loadings
 
+### Male speakers
+
+dim1: benevolence (circumplex):  [812]: "feindselig / einfühlsam", [715]: "kaltherzig / warm-verträglich"
+dim2: attractiveness (physical)
+dim3: confidence (circumplex): [812]: "durchsetzungsfähig / schüchtern", [715]: "sicher-dominant / unsicher-unterwürfig"
+dim4: compliance / obedience (circumplex): "zynisch / folgsam", [715]: "arrogant-berechnend / bescheiden-vertrauensvoll"
+dim5: maturity
+
+There was an indication of a calm dimension, but the items were removed due to lower loadings
 
 
+### Female speakers
