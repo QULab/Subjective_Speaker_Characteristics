@@ -22,16 +22,17 @@ A set of 300 speakers (126 males, 174 females) has been evaluated employing a qu
 
 
 
-### Questionnaire items
+### Semantic differential questionnaire items
+
+These can also be seen in:
+Fernández Gallardo, L. and Weiss, B., "The Nautilus Speaker Characterization Corpus: Speech Recordings and Labels of Speaker Characteristics and Voice Descriptions," in International Conference on Language Resources and Evaluation (LREC), 2018.
 
 #### German (original)
 
 34 items of interpersonal speaker characteristics:
 
 item left | item right 
-
 --- | ---
-
 sympathisch | unsympathisch
 unsicher | sicher
 unattraktiv | attraktiv
@@ -72,75 +73,40 @@ frech | bescheiden
 34 items of naive voice descriptions:
 
 item left | item right 
-
 --- | ---
-
 klangvoll | klanglos
-
 tief | hoch
-
 nasal | nicht_nasal
-
 stumpf | scharf
-
 gleichmaessig | ungleichmaessig
-
 akzentfrei | mit_Akzent
-
 dunkel | hell
-
 leise | laut
-
 knarrend | nicht_knarrend
-
 variabel | monoton
-
 angenehm | unangenehm
-
 deutlich | undeutlich
-
 rau | glatt
-
 klar | heiser
-
 unauffaellig | auffaellig
-
 schnell | langsam
-
 kalt | warm
-
 unnatuerlich | natuerlich
-
 stabil | zittrig
-
 unpraezise | praezise
-
 bruechig | fest
-
 unmelodisch | melodisch
-
 angespannt | entspannt
-
 holprig | gleitend
-
 lang | kurz
-
 locker | gepresst
-
 kraftvoll | kraftlos
-
 fluessig | stockend
-
 weich | hart
-
 professionell | unprofessionell
-
 betont | unbetont
-
 sanft | schrill
-
 getrennt | verbunden
-
 nicht_behaucht | behaucht
 
 
@@ -150,9 +116,7 @@ nicht_behaucht | behaucht
 34 items of interpersonal speaker characteristics:
 
 item left | item right 
-
 --- | ---
-
 likable | non_likable
 unsecure | secure
 unattractive | attractive
@@ -193,9 +157,7 @@ impudent | modest
 34 items of naive voice descriptions:
 
 item left | item right 
-
 --- | ---
-
 sonorous | flat
 low | high
 nasal | not_nasal
