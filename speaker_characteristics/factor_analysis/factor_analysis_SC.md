@@ -1174,9 +1174,9 @@ write.csv(factorscores_f_02, "../../data/generated_data/factorscores_femalespk_n
 3) Summary of dimensions and loadings
 -------------------------------------
 
-dim1: Benevolence.
+dim1: Warmth.
 
--   Equivalent to that of the interpersonal circumplex. In the literature:
+-   Equivalent to "Benevolence" of the interpersonal circumplex. In the literature:
 -   Jacobs and Scholl (2005): "feindselig vs. einfühlsam"
 -   Wiggins, Trapnell, and Phillips (1988): "kaltherzig vs. warm-verträglich"
 
@@ -1186,7 +1186,7 @@ dim2: Attractiveness.
 
 dim3: Confidence.
 
--   Equivalent to that of the interpersonal circumplex. In the literature:
+-   Equivalent to "dominance" of the interpersonal circumplex. In the literature:
 -   Jacobs and Scholl (2005): "durchsetzungsfähig vs. schüchtern",
 -   Wiggins, Trapnell, and Phillips (1988): "sicher-dominant vs. unsicher-unterwürfig"
 -   This is the 3rd dimension for male speech and the 4th dimension for female speech.
@@ -1223,34 +1223,34 @@ mean(loa_m_df_retained[,2:6][abs(loa_m_df_retained[,2:6])<0.4]) # avg of cros-lo
 ``` r
 loa_m_df_retained[,2:6][abs(loa_m_df_retained[,2:6])<0.4] <- NA
 
-# dimension names
-names(loa_m_df_retained) <- c("item_English","benevolence",  "attractiveness", "compliance", "confidence",  "maturity")
+# dimension names 
+names(loa_m_df_retained) <- c("item_English", "warmth",  "attractiveness", "confidence", "compliance", "maturity")
 
 # show loadings table with kable
 options(knitr.kable.NA = '')
 kable(loa_m_df_retained, digits = 2)
 ```
 
-| item\_English  |  benevolence|  attractiveness|  compliance|  confidence|  maturity|
-|:---------------|------------:|---------------:|-----------:|-----------:|---------:|
-| old            |             |                |            |            |      0.82|
-| pleasant       |             |            0.58|            |            |          |
-| attractive     |             |            0.85|            |            |          |
-| distant        |        -0.76|                |            |            |          |
-| friendly       |         0.59|                |            |            |          |
-| submissive     |             |                |            |        0.87|          |
-| ugly           |             |           -0.79|            |            |          |
-| hearty         |         0.85|                |            |            |          |
-| interesting    |             |            0.48|            |            |          |
-| childish       |             |                |            |            |     -0.73|
-| affectionate   |         0.84|                |            |            |          |
-| not\_irritated |         0.51|                |            |            |          |
-| calm           |             |                |            |            |          |
-| secure         |             |                |        1.01|            |          |
-| indecisive     |             |                |       -0.60|            |          |
-| non\_likable   |        -0.52|                |            |            |          |
-| unsympathetic  |        -0.58|                |            |            |          |
-| cynical        |             |                |            |       -0.71|          |
+| item\_English  |  warmth|  attractiveness|  confidence|  compliance|  maturity|
+|:---------------|-------:|---------------:|-----------:|-----------:|---------:|
+| old            |        |                |            |            |      0.82|
+| pleasant       |        |            0.58|            |            |          |
+| attractive     |        |            0.85|            |            |          |
+| distant        |   -0.76|                |            |            |          |
+| friendly       |    0.59|                |            |            |          |
+| submissive     |        |                |            |        0.87|          |
+| ugly           |        |           -0.79|            |            |          |
+| hearty         |    0.85|                |            |            |          |
+| interesting    |        |            0.48|            |            |          |
+| childish       |        |                |            |            |     -0.73|
+| affectionate   |    0.84|                |            |            |          |
+| not\_irritated |    0.51|                |            |            |          |
+| calm           |        |                |            |            |          |
+| secure         |        |                |        1.01|            |          |
+| indecisive     |        |                |       -0.60|            |          |
+| non\_likable   |   -0.52|                |            |            |          |
+| unsympathetic  |   -0.58|                |            |            |          |
+| cynical        |        |                |            |       -0.71|          |
 
 ### Female speakers
 
@@ -1270,34 +1270,34 @@ mean(loa_f_df_retained[,2:6][abs(loa_f_df_retained[,2:6])<0.4]) # avg of cros-lo
 loa_f_df_retained[,2:6][abs(loa_f_df_retained[,2:6])<0.4] <- NA
 
 # dimension names
-names(loa_f_df_retained) <- c("item_English","benevolence",  "attractiveness", "compliance", "confidence",  "maturity")
+names(loa_f_df_retained) <- c("item_English","warmth",  "attractiveness", "compliance", "confidence",  "maturity")
 
 # show loadings table with kable
 options(knitr.kable.NA = '')
 kable(loa_f_df_retained, digits = 2)
 ```
 
-| item\_English  |  benevolence|  attractiveness|  compliance|  confidence|  maturity|
-|:---------------|------------:|---------------:|-----------:|-----------:|---------:|
-| old            |             |                |            |            |      0.68|
-| pleasant       |             |            0.59|            |            |          |
-| attractive     |             |            0.83|            |            |          |
-| modest         |             |                |        0.58|            |          |
-| distant        |        -0.78|                |            |            |          |
-| friendly       |         0.56|                |            |            |          |
-| submissive     |             |                |        0.80|            |          |
-| ugly           |             |           -0.81|            |            |          |
-| hearty         |         0.84|                |            |            |          |
-| intelligent    |             |            0.61|            |            |          |
-| childish       |             |                |            |            |     -0.81|
-| affectionate   |         0.84|                |            |            |          |
-| not\_irritated |         0.49|                |            |            |          |
-| secure         |             |                |            |        0.82|          |
-| unaffected     |             |                |            |            |          |
-| indecisive     |             |                |            |       -0.81|          |
-| non\_likable   |        -0.45|                |            |            |          |
-| unsympathetic  |        -0.49|                |            |            |          |
-| cynical        |             |                |       -0.72|            |          |
+| item\_English  |  warmth|  attractiveness|  compliance|  confidence|  maturity|
+|:---------------|-------:|---------------:|-----------:|-----------:|---------:|
+| old            |        |                |            |            |      0.68|
+| pleasant       |        |            0.59|            |            |          |
+| attractive     |        |            0.83|            |            |          |
+| modest         |        |                |        0.58|            |          |
+| distant        |   -0.78|                |            |            |          |
+| friendly       |    0.56|                |            |            |          |
+| submissive     |        |                |        0.80|            |          |
+| ugly           |        |           -0.81|            |            |          |
+| hearty         |    0.84|                |            |            |          |
+| intelligent    |        |            0.61|            |            |          |
+| childish       |        |                |            |            |     -0.81|
+| affectionate   |    0.84|                |            |            |          |
+| not\_irritated |    0.49|                |            |            |          |
+| secure         |        |                |            |        0.82|          |
+| unaffected     |        |                |            |            |          |
+| indecisive     |        |                |            |       -0.81|          |
+| non\_likable   |   -0.45|                |            |            |          |
+| unsympathetic  |   -0.49|                |            |            |          |
+| cynical        |        |                |       -0.72|            |          |
 
 Aronson, E., T. D. Wilson, and R. M. Akert. 2009. *Social Psychology*. 7th ed. Prentice Hall.
 

@@ -371,9 +371,9 @@ write.csv(factorscores_f_02, "../../data/generated_data/factorscores_femalespk_n
 
 ## 3) Summary of dimensions and loadings
 
-dim1: Benevolence. 
+dim1: Warmth. 
 
-* Equivalent to that of the interpersonal circumplex. In the literature:
+* Equivalent to "Benevolence" of the interpersonal circumplex. In the literature:
 * @812: "feindselig vs. einfühlsam"
 * @715: "kaltherzig vs. warm-verträglich"
 
@@ -383,7 +383,7 @@ dim2: Attractiveness.
 
 dim3: Confidence. 
 
-* Equivalent to that of the interpersonal circumplex. In the literature:
+* Equivalent to "dominance" of the interpersonal circumplex. In the literature:
 * @812: "durchsetzungsfähig vs. schüchtern", 
 * @715: "sicher-dominant vs. unsicher-unterwürfig"
 * This is the 3rd dimension for male speech and the 4th dimension for female speech.
@@ -417,8 +417,8 @@ loa_m_df_retained <- loa_m_df_retained[,c(10,2:6)]
 mean(loa_m_df_retained[,2:6][abs(loa_m_df_retained[,2:6])<0.4]) # avg of cros-loadings to be removed
 loa_m_df_retained[,2:6][abs(loa_m_df_retained[,2:6])<0.4] <- NA
 
-# dimension names
-names(loa_m_df_retained) <- c("item_English","benevolence",  "attractiveness", "compliance", "confidence",  "maturity")
+# dimension names 
+names(loa_m_df_retained) <- c("item_English", "warmth",  "attractiveness", "confidence", "compliance", "maturity")
 
 # show loadings table with kable
 options(knitr.kable.NA = '')
@@ -443,7 +443,7 @@ mean(loa_f_df_retained[,2:6][abs(loa_f_df_retained[,2:6])<0.4]) # avg of cros-lo
 loa_f_df_retained[,2:6][abs(loa_f_df_retained[,2:6])<0.4] <- NA
 
 # dimension names
-names(loa_f_df_retained) <- c("item_English","benevolence",  "attractiveness", "compliance", "confidence",  "maturity")
+names(loa_f_df_retained) <- c("item_English","warmth",  "attractiveness", "compliance", "confidence",  "maturity")
 
 # show loadings table with kable
 options(knitr.kable.NA = '')

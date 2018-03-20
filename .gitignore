@@ -2,3 +2,5 @@
 *.bak
 
 *.sav
+
+speaker_characteristics/factor_analysis/\.Rhistory

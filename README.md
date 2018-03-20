@@ -5,7 +5,7 @@ As part of my [Postdoc project](http://www.qu.tu-berlin.de/?id=lfernandez), I co
 * Factor analysis to find dimensions of interpersonal speaker characteristics
 * Statistical data analysis of effects of communication channels
 
-The raw data from listening tests and the factor scores are included as documentation in the  [Nautilus Speaker Characterization (NSC) Corpus](http://www.qu.tu-berlin.de/?id=nsc-corpus). For the listening tests, this [GUI](https://github.com/laufergall/GUI_SpeakerCharacteristics) written in Java (adapted depending on the questionnaire items and audio stimuli) was employed.
+The raw data from listening tests and the factor scores are included as documentation of the  [Nautilus Speaker Characterization (NSC) Corpus](http://www.qu.tu-berlin.de/?id=nsc-corpus). For the listening tests, this [GUI](https://github.com/laufergall/GUI_SpeakerCharacteristics) written in Java (adapted depending on the questionnaire items and audio stimuli) was employed.
 
 I also employed these data to perform [predictive modeling](https://github.com/laufergall/ML_Speaker_Characteristics) of speaker characteristics.
 
@@ -13,7 +13,7 @@ I also employed these data to perform [predictive modeling](https://github.com/l
 
 ### Listening tests
 
-A set of 300 speakers (126 males, 174 females) has been evaluated employing a questionnaire involving a 34-item semantic differential rating scale.
+The semi-spontaneous "Pizza" dialogs (clean microphone speech, and shortened) from 300 speakers (126 males, 174 females) have been evaluated employing a questionnaire involving a 34-item semantic differential rating scale.
 
 - 114 participants (raters) performed the test (70 males and 44 females)
 - Mean age = 24.5, standard deviation = 3.4
