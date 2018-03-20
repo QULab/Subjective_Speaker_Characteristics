@@ -1,17 +1,25 @@
-### This repository
+## This repository
 
 As part of my [Postdoc project](http://www.qu.tu-berlin.de/?id=lfernandez), I collected subjective ratings of speaker and voice characteristics. In this repository, I explore these data:
 
-* Factor analysis to find dimensions of interpersonal speaker characteristics
-* Statistical data analysis of effects of communication channels
+* Factor analysis to find dimensions of social speaker characteristics
+* Factor analysis to find dimensions of voice descriptions
+* Statistical data analysis of effects of  [telephone degradations](https://github.com/laufergall/ML_Speaker_Characteristics/tree/master/data/distortions) (channel bandwidth)
+  * on speaker characteristics
+  * on voice descriptions
+* Analyzing the relationship between speech quality and speakers' WAAT
 
-The raw data from listening tests and the factor scores are included as documentation of the  [Nautilus Speaker Characterization (NSC) Corpus](http://www.qu.tu-berlin.de/?id=nsc-corpus). For the listening tests, this [GUI](https://github.com/laufergall/GUI_SpeakerCharacteristics) written in Java (adapted depending on the questionnaire items and audio stimuli) was employed.
-
-I also employed these data to perform [predictive modeling](https://github.com/laufergall/ML_Speaker_Characteristics) of speaker characteristics.
+I also employed these subjective data to perform [predictive modeling](https://github.com/laufergall/ML_Speaker_Characteristics) of speaker characteristics.
 
 
 
-### Listening tests
+## Listening tests
+
+The raw data from listening tests 1) and 2) and the scores resulting from factor analysis are included as documentation of the  [Nautilus Speaker Characterization (NSC) Corpus](http://www.qu.tu-berlin.de/?id=nsc-corpus). 
+
+For the listening tests, this [GUI](https://github.com/laufergall/GUI_SpeakerCharacteristics) written in Java (adapted depending on the questionnaire items and audio stimuli) was employed.
+
+### 1) NSC labeling of speaker characteristics
 
 The semi-spontaneous "Pizza" dialogs (clean microphone speech, and shortened) from 300 speakers (126 males, 174 females) have been evaluated employing a questionnaire involving a 34-item semantic differential rating scale.
 
@@ -22,12 +30,39 @@ The semi-spontaneous "Pizza" dialogs (clean microphone speech, and shortened) fr
 
 
 
-### Semantic differential questionnaire items
+### 2) NSC labeling of voice descriptions
 
-These can also be seen in:
+
+
+### 3) Effects of bandwidth on speaker characteristics
+
+
+
+### 4) Effects of bandwidth on voice descriptions
+
+
+
+### 5) Speech quality of speakers of extreme WAAT
+
+WAAT stands for "warmth-attractiveness", the first two dimensions resulting from the factor analysis of speaker characteristics. 
+
+
+
+
+
+
+
+
+
+
+## Semantic differential questionnaire items
+
+Used for listening tests 1), 2), and 3).
+
+These items can also be seen in:
 Fernández Gallardo, L. and Weiss, B., "The Nautilus Speaker Characterization Corpus: Speech Recordings and Labels of Speaker Characteristics and Voice Descriptions," in International Conference on Language Resources and Evaluation (LREC), 2018.
 
-#### German (original)
+### German (original)
 
 34 items of interpersonal speaker characteristics:
 
@@ -111,7 +146,7 @@ nicht_behaucht | behaucht
 
 
 
-#### English (translated) 
+### English (translated) 
 
 34 items of interpersonal speaker characteristics:
 

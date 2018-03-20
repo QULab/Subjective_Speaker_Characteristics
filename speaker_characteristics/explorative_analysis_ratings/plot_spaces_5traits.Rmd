@@ -1,0 +1,114 @@
+---
+title: "Plots of mean ratings for each item of speaker characteristics"
+author: "Laura Fernández Gallardo"
+date: "June 2017"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = './')
+knitr::opts_chunk$set(fig.width=20, fig.height=20, dpi=300)
+
+```
+
+After conducting factor analysis, plot speakers in the space of the resulting traits: warmth, attractiveness, confidence, compliance, maturity.
+
+
+## 1) Load subjective ratings
+
+Clear workspace.
+
+```{r message=FALSE, echo = FALSE}
+
+rm(list=ls())
+
+```
+
+Load necessary libraries.
+
+```{r message=FALSE, warning=FALSE}
+
+library(RCurl) # to read raw data from repo
+library(stringi) # install.packages("stringi")
+library(ggplot2) # install.packages("ggplot2")
+
+```
+
+Set paths and read data.
+
+```{r echo=FALSE}
+
+setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/speaker_characteristics/explorative_analysis_ratings")
+
+path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/generated_data"
+  
+data_m <- read.csv(text=getURL(paste0(path_github,"/factorscores_malespk.csv")), header=TRUE, sep=",")  
+data_f <- read.csv(text=getURL(paste0(path_github,"/factorscores_femalespk.csv")), header=TRUE, sep=",")  
+
+```
+
+## 2) Generate Biplots
+
+For male and female speakers:
+
+* attractiveness vs. warmth 
+* warmth vs. confidence
+
+
+```{r}
+
+# prepare speaker pseudonym - text next to each point
+
+data_m$speaker_ID2 = stri_sub(data_m$sample_heard, 1, -14)
+data_f$speaker_ID2 = stri_sub(data_f$sample_heard, 1, -14)
+
+
+# plots for male speakers
+
+plot_m_d1_d2_names <- ggplot(data=data_m, aes(y=dim2, x=dim1)) +
+  geom_point() +
+  geom_text(aes(label=speaker_ID2), hjust=0, vjust=0, size=2) +
+  theme_bw() +
+  xlab("Dim 1: Warmth") +
+  ylab("Dim 2: Attractiveness") 
+
+print(plot_m_d1_d2_names)
+
+plot_m_d1_d4_names <- ggplot(data=data_m, aes(y=dim3, x=dim1)) +
+  geom_point() +
+  geom_text(aes(label=speaker_ID2), hjust=0, vjust=0, size=2) +
+  theme_bw() +
+  xlab("Dim 1: Warmth") +
+  ylab("Dim 3: Confidence") 
+
+print(plot_m_d1_d4_names)
+
+
+# plots for female speakers
+
+plot_f_d1_d2_names <- ggplot(data=data_f, aes(y=dim2, x=dim1)) +
+  geom_point() +
+  geom_text(aes(label=speaker_ID2), hjust=0, vjust=0, size=2) +
+  theme_bw() +
+  xlab("Dim 1: Warmth") +
+  ylab("Dim 2: Attractiveness") 
+
+print(plot_f_d1_d2_names)
+
+plot_f_d1_d4_names <- ggplot(data=data_f, aes(y=dim4, x=dim1)) +
+  geom_point() +
+  geom_text(aes(label=speaker_ID2), hjust=0, vjust=0, size=2) +
+  theme_bw() +
+  xlab("Dim 1: Warmth") +
+  ylab("Dim 4: Confidence") 
+
+print(plot_f_d1_d4_names)
+
+```
+
+
+
