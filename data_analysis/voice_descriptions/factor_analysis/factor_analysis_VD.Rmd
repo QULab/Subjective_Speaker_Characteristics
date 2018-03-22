@@ -2,7 +2,6 @@
 title: "Factor analysis of voice descriptions"
 author: "Laura Fernández Gallardo"
 date: "September 2017"
-bibliography: references.bib
 output: 
   github_document:
     toc: true
@@ -44,11 +43,11 @@ Set paths and read data.
 
 ```{r echo=FALSE}
 
-setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/data_analysis/speaker_characteristics/factor_analysis")
+setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/data_analysis/voice_descriptions/factor_analysis")
 
 path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
   
-data_raw <- read.csv(text=getURL(paste0(path_github,"/SC_ratings.csv")), header=TRUE, sep=",")  
+data_raw <- read.csv(text=getURL(paste0(path_github,"/VD_ratings.csv")), header=TRUE, sep=",")  
 
 ```
 
@@ -59,8 +58,8 @@ Split data into male and female speakers to perform factor analysis separately, 
 ```{r}
 
 data_split_g <- split(data_raw, data_raw$speaker_gender)
-data_m <- data_split_g$male
-data_f <- data_split_g$female
+data_m <- data_split_g$m
+data_f <- data_split_g$w
 
 ```
 
@@ -70,7 +69,7 @@ data_f <- data_split_g$female
 
 # always use z-scores
 data_m <- data_m[order(data_m$listener_pseudonym),]
-data_m<- cbind(data_m[,c(1, 5)], data.frame(do.call("rbind", as.list(by(data_m[,10:ncol(data_m)], data_m$listener_pseudonym, scale)))))
+data_m<- cbind(data_m[,c(1, 5)], data.frame(do.call("rbind", as.list(by(data_m[,16:ncol(data_m)], data_m$listener_pseudonym, scale)))))
 data_m <- data_m[order(data_m$listener_pseudonym),]
 
 # find the no of factors
@@ -78,11 +77,10 @@ fa.parallel(data_m[,3:ncol(data_m)])
 
 ```
 
-Parallel analysis suggests that the number of factors =  7  and the number of components =  4 . Hence, perform factor analysis with 7 factors:
+Parallel analysis suggests that the number of factors =  4  and the number of components =  3 . Hence, perform factor analysis with 4 factors:
 
 ```{r}
-fa_m <- fa(data_m[,3:ncol(data_m)], nfactors=7 , rotate="oblimin", fm="minres") # this is default; no pricipal axis analysis
-
+fa_m <- fa(data_m[,3:ncol(data_m)], nfactors=4 , rotate="oblimin", fm="minres") # this is default; no pricipal axis analysis
 print(fa_m, cut=.2, digits=2, sort=T)
 
 ```
@@ -93,65 +91,62 @@ In order to only retain items with large main loading and small cross-loadings, 
 
 ## Second round: Run factor analysis again, removing items:
 
-itemsremove <- c("emotional", "gesellig", "charakterlos", "intelligent", "aktiv", "bescheiden", "dominant", "unaufdringlich", "maennlich", "entspannt", "gleichgueltig", "gelangweilt", "unaffektiert", "aufgesetzt", "unsachlich", "inkompetent")
-intemsremoveindexes <- match( itemsremove, colnames(data_m))
+itemsremove <- c("heiser","kraftlos","unangenehm", "behaucht","natuerlich","ungleichmaessig","kurz","klanglos","laut","nicht_nasal","nicht_knarrend","langsam","mit_Akzent")
+intemsremoveindexes <- match(itemsremove, colnames(data_m))
 
-data_m_02 <- data_m[ ,-intemsremoveindexes ]
+data_m_02 <- data_m[ ,-intemsremoveindexes]
 
 names(data_m_02)
 
 fa.parallel(data_m_02[,3:ncol(data_m_02)])
-# Parallel analysis suggests that the number of factors =  5  and the number of components =  3 
+# Parallel analysis suggests that the number of factors =  4  and the number of components =  3 
 
-fa_m_02 <- fa(data_m_02[,3:ncol(data_m_02)], nfactors=5 , rotate="oblimin", fm="minres") # this is default; no pricipal axis analysis
+fa_m_02 <- fa(data_m_02[,3:ncol(data_m_02)], nfactors=4 , rotate="oblimin", fm="minres") # this is default; no pricipal axis analysis
 print(fa_m_02, cut=.2, digits=2, sort=T)
 
 # fa.diagram(fa_m_02, cut=.40, digits=2)   # fa.graph for plotting (prior to alpha analysis)
 
 ```
 
-This second factor analysis explained 58% of data variance.
+This second factor analysis explained 54% of data variance.
 
 Next, we examine Cronbach alphas to see if we should remove other items. 
 
 ```{r}
 
 # Dimension 1 -  MR1
-alpha(as.data.frame(cbind(
-  data_m_02$herzlich, data_m_02$mitfuehlend, data_m_02$distanziert, data_m_02$freundlich, data_m_02$verstaendnislos, data_m_02$unsympatisch, data_m_02$nicht.genervt)
+psych::alpha(as.data.frame(cbind(
+  data_m_02$fest, data_m_02$praezise, data_m_02$unprofessionell, data_m_02$gleitend, data_m_02$zittrig, data_m_02$stockend, data_m_02$undeutlich)
 ),check.keys=TRUE)
-# raw_alpha = 0.88. no item removed
+# raw_alpha = 0.87 , no item removed
 
-# Dimension 2 -  MR4
-alpha(as.data.frame(cbind(
-  data_m_02$attraktiv, data_m_02$haesslich, data_m_02$interessant, data_m_02$angenehm)
+
+# Dimension 2 -  MR3
+psych::alpha(as.data.frame(cbind(
+  data_m_02$hart, data_m_02$gepresst, data_m_02$entspannt, data_m_02$warm, data_m_02$verbunden, data_m_02$schrill)
 ),check.keys=TRUE)
-# raw_alpha = 0.84. no item removed
+# raw_alpha = 0.79 , no item removed
 
-# Dimension 3 -  MR2
-alpha(as.data.frame(cbind(
-  data_m_02$sicher, data_m_02$unentschieden)
+# Dimension 3 -  MR4
+psych::alpha(as.data.frame(cbind(
+  data_m_02$monoton, data_m_02$auffaellig, data_m_02$melodisch, data_m_02$unbetont)
 ),check.keys=TRUE)
-# raw_alpha = 0.78. no item removed
-
-
-# Dimension 4 -  MR5
-alpha(as.data.frame(cbind(
-  data_m_02$gehorsam, data_m_02$zynisch)
+# raw_alpha = 0.82 , remove 2nd item
+psych::alpha(as.data.frame(cbind(
+  data_m_02$monoton, data_m_02$melodisch, data_m_02$unbetont)
 ),check.keys=TRUE)
-# raw_alpha = 0.78. no item removed
+# raw_alpha = 0.83
 
 
-# Dimension 5 -  MR3
-alpha(as.data.frame(cbind(
-  data_m_02$alt, data_m_02$kindlich, data_m_02$ruhig)
+# Dimension 4 -  MR2
+psych::alpha(as.data.frame(cbind(
+  data_m_02$hell, data_m_02$hoch, data_m_02$scharf, data_m_02$glatt)
 ),check.keys=TRUE)
-# raw_alpha = 0.63
-alpha(as.data.frame(cbind(
-  data_m_02$alt, data_m_02$kindlich)
+# raw_alpha = 0.80 , remove 4th item
+psych::alpha(as.data.frame(cbind(
+  data_m_02$hell, data_m_02$hoch, data_m_02$scharf)
 ),check.keys=TRUE)
-# raw_alpha = 0.76
-
+# raw_alpha = 0.81
 
 ```
 
@@ -163,29 +158,34 @@ Compute new factor scores as a weighted average of the z-scores.
 loa_m <- fa_m_02$loadings
 loa_m_df <- as.data.frame(loa_m[,])
 
+# remove items from alpha analysis
+remove_items <- c('auffaellig','glatt')
+loa_m_df <- loa_m_df[-which(row.names(loa_m_df) %in% remove_items),]
 
-fs_m_dim1 <- loa_m_df["herzlich",1]*data_m$herzlich + 
-  loa_m_df["mitfuehlend",1]*data_m$mitfuehlend + 
-  loa_m_df["distanziert",1]*data_m$distanziert + 
-  loa_m_df["freundlich",1]*data_m$freundlich + 
-  loa_m_df["verstaendnislos",1]*data_m$verstaendnislos + 
-  loa_m_df["unsympathisch",1]*data_m$unsympathisch + 
-  loa_m_df["nicht_genervt",1]*data_m$nicht_genervt
+# factor scores
+fs_m_dim1 <- loa_m_df["fest",1]*data_m$fest + 
+  loa_m_df["praezise",1]*data_m$praezise + 
+  loa_m_df["unprofessionell",1]*data_m$unprofessionell + 
+  loa_m_df["gleitend",1]*data_m$gleitend + 
+  loa_m_df["zittrig",1]*data_m$zittrig + 
+  loa_m_df["stockend",1]*data_m$stockend + 
+  loa_m_df["undeutlich",1]*data_m$undeutlich
 
-fs_m_dim2 <- loa_m_df["attraktiv",2]*data_m$attraktiv + 
-  loa_m_df["haesslich",2]*data_m$haesslich + 
-  loa_m_df["angenehm",2]*data_m$angenehm + 
-  loa_m_df["interessant",2]*data_m$interessant
+  
+fs_m_dim2 <- loa_m_df["hart",2]*data_m$hart + 
+  loa_m_df["gepresst",2]*data_m$gepresst + 
+  loa_m_df["entspannt",2]*data_m$entspannt + 
+  loa_m_df["warm",2]*data_m$warm +
+  loa_m_df["verbunden",2]*data_m$verbunden + 
+  loa_m_df["schrill",2]*data_m$schrill 
 
+fs_m_dim3 <- loa_m_df["monoton",3]*data_m$monoton + 
+  loa_m_df["melodisch",3]*data_m$melodisch + 
+  loa_m_df["unbetont",3]*data_m$unbetont 
 
-fs_m_dim3 <- loa_m_df["sicher",3]*data_m$sicher + 
-  loa_m_df["unentschieden",3]*data_m$unentschieden 
-
-fs_m_dim4 <- loa_m_df["gehorsam",4]*data_m$gehorsam + 
-  loa_m_df["zynisch",4]*data_m$zynisch
-
-fs_m_dim5 <- loa_m_df["alt",5]*data_m$alt + 
-  loa_m_df["kindlich",5]*data_m$kindlich
+fs_m_dim4 <- loa_m_df["hell",4]*data_m$hell + 
+  loa_m_df["hoch",4]*data_m$hoch +
+  loa_m_df["scharf",4]*data_m$scharf
 
 ```
 
@@ -193,19 +193,18 @@ Write scores to file.
 
 ```{r}
 
-factorscores_m <- data.frame("sample_heard"=data_m$sample_heard, "dim1"=fs_m_dim1, "dim2"=fs_m_dim2, "dim3"=fs_m_dim3, "dim4"=fs_m_dim4, "dim5"=fs_m_dim5)
+factorscores_m <- data.frame("sample_heard"=data_m$sample_heard, "dim1"=fs_m_dim1, "dim2"=fs_m_dim2, "dim3"=fs_m_dim3, "dim4"=fs_m_dim4)
 
 # average over raters
 factorscores_m_averaged <- aggregate(factorscores_m[,2:ncol(factorscores_m)], by=list(factorscores_m$sample_heard), mean, na.rm=T)
 names(factorscores_m_averaged)[1] <- "sample_heard"
 
-write.csv(factorscores_m_averaged, "../../data/generated_data/factorscores_malespk.csv", row.names = F)
+write.csv(factorscores_m_averaged, "../../../data/generated_data/factorscores_VD_malespk.csv", row.names = F)
 
 # save scores without averaging
-factorscores_m_02 <- data.frame(data_m$listener_pseudonym, data_m$sample_heard,  "dim1"=fs_m_dim1, "dim2"=fs_m_dim2, "dim3"=fs_m_dim3, "dim4"=fs_m_dim4, "dim5"=fs_m_dim5)
+factorscores_m_02 <- data.frame(data_m$listener_pseudonym, data_m$sample_heard,  "dim1"=fs_m_dim1, "dim2"=fs_m_dim2, "dim3"=fs_m_dim3, "dim4"=fs_m_dim4)
 
-write.csv(factorscores_m_02, "../../data/generated_data/factorscores_malespk_notaveraged.csv", row.names = F)
-
+write.csv(factorscores_m_02, "../../../data/generated_data/factorscores_VD_malespk_notaveraged.csv", row.names = F)
 
 ```
 
@@ -215,27 +214,28 @@ write.csv(factorscores_m_02, "../../data/generated_data/factorscores_malespk_not
 
 ### 2b) Factor analysis of female speakers
 
-For female speakers, we follow a similar procedure as for male speakers. We also find 5 dimensions in the end.
+For female speakers, we follow a similar procedure as for male speakers. We also find 4 dimensions in the end, yet these are different latent factors as those found for male speech.
 
 
 ```{r}
+
 # always use z-scores
 data_f <- data_f[order(data_f$listener_pseudonym),]
-data_f <- cbind(data_f[,c(1, 5)], data.frame(do.call("rbind", as.list(by(data_f[,10:ncol(data_f)], data_f$listener_pseudonym, scale)))))
+data_f <- cbind(data_f[,c(1, 5)], data.frame(do.call("rbind", as.list(by(data_f[,16:ncol(data_f)], data_f$listener_pseudonym, scale)))))
 data_f <- data_f[order(data_f$listener_pseudonym),]
 
 # find the no of factors
 names(data_f)[3:ncol(data_f)]
 fa.parallel(data_f[,3:ncol(data_f)])
-# Parallel analysis suggests that the number of factors =  8  and the number of components =  5 
+# Parallel analysis suggests that the number of factors =  5  and the number of components =  3 
 
-fa_f <- fa(data_f[,3:ncol(data_f)], nfactors=8 , rotate="oblimin", fm="minres") # this is default; no pricipal axis analysis
+fa_f <- fa(data_f[,3:ncol(data_f)], nfactors=5 , rotate="oblimin", fm="minres") # this is default; no pricipal axis analysis
 print(fa_f, cut=.2, digits=2, sort=T)
 
 
 ```
 
-Parallel analysis suggests that the number of factors =  8  and the number of components =  5.
+Parallel analysis suggests that the number of factors =  5  and the number of components =  3.
 
 In order to only retain items with large main loading and small cross-loadings, we remove items when main loading <= .5  && (main loading - cross-loading) <= .2.
 
@@ -244,17 +244,17 @@ In order to only retain items with large main loading and small cross-loadings, 
 
 ## Second round: Run factor analysis again, removing items:
 
-itemsremove <- c("gleichgueltig","charakterlos","inkompetent","maennlich","aktiv","entspannt","dominant","unaufdringlich","ruhig","gelangweilt","aufgesetzt","emotional","unsachlich","gesellig","interessant")
+itemsremove <- c("monoton","melodisch","praezise","klanglos","unbetont","kraftlos","mit_Akzent","kurz","entspannt","gepresst","verbunden","ungleichmaessig","natuerlich","scharf","nicht_knarrend","behaucht","langsam","nicht_nasal","laut")
 intemsremoveindexes <- match( itemsremove, colnames(data_f))
 
 data_f_02 <- data_f[ ,-intemsremoveindexes ]
 names(data_f_02)[3:ncol(data_f_02)]
 
 fa.parallel(data_f_02[,3:ncol(data_f_02)])
-# Parallel analysis suggests that the number of factors =  6  and the number of components =  4 
+# Parallel analysis suggests that the number of factors =  4  and the number of components =  2 
 
 
-fa_f_02 <- fa(data_f_02[,3:ncol(data_f_02)], nfactors=5 , rotate="oblimin", fm="minres") # this is default; no pricipal axis analysis
+fa_f_02 <- fa(data_f_02[,3:ncol(data_f_02)], nfactors=4 , rotate="oblimin", fm="minres") # this is default; no pricipal axis analysis
 print(fa_f_02, cut=.2, digits=2, sort=T)
 
 # fa.diagram(fa_f_02, cut=.40, digits=2)   # fa.graph for plotting (prior to alpha analysis)
@@ -262,7 +262,7 @@ print(fa_f_02, cut=.2, digits=2, sort=T)
 
 ```
 
-This second factor analysis explained 56% of data variance.
+This second factor analysis explained 53% of data variance.
 
 Alpha analysis: Examine Cronbach alphas to see if we should remove other items. 
 
@@ -270,49 +270,33 @@ Alpha analysis: Examine Cronbach alphas to see if we should remove other items.
 ```{r}
  
 # Dimension 1 -  MR1
-alpha(as.data.frame(cbind(
-  data_f_02$herzlich, data_f_02$mitfuehlend, data_f_02$distanziert, data_f_02$freundlich, data_f_02$verstaendnislos, data_f_02$nicht.genervt, data_f_02$unsympatisch)
+psych::alpha(as.data.frame(cbind(
+  data_f_02$zittrig, data_f_02$fest, data_f_02$gleitend, data_f_02$stockend)
 ),check.keys=TRUE)
-# raw_alpha = 0.89
+# raw_alpha = 0.81, no item removed
 
+# Dimension 2 -  MR2
+psych::alpha(as.data.frame(cbind(
+  data_f_02$hoch, data_f_02$hell, data_f_02$glatt, data_f_02$auffaellig, data_f_02$heiser)
+),check.keys=TRUE)
+# raw_alpha = 0.74 , remove 4th item
+psych::alpha(as.data.frame(cbind(
+  data_f_02$hoch, data_f_02$hell, data_f_02$glatt,data_f_02$heiser)
+),check.keys=TRUE)
+# raw_alpha = 0.76
 
-# Dimension 2 -  MR4
-alpha(as.data.frame(cbind(
-  data_f_02$attraktiv, data_f_02$haesslich, data_f_02$intelligent, data_f_02$angenehm)
+# Dimension 3 -  MR4
+psych::alpha(as.data.frame(cbind(
+  data_f_02$unangenehm, data_f_02$undeutlich, data_f_02$unprofessionell)
 ),check.keys=TRUE)
-# raw_alpha = 0.86 if intelligent removed (before raw_alpha = 0.84)
-alpha(as.data.frame(cbind(
-  data_f_02$attraktiv, data_f_02$haesslich, data_f_02$angenehm)
-),check.keys=TRUE)
-# raw_alpha = 0.86
+# raw_alpha = 0.82, no item removed
 
-# Dimension 3 -  MR5
-alpha(as.data.frame(cbind(
-  data_f_02$gehorsam, data_f_02$zynisch, data_f_02$bescheiden, data_f_02$unaffektiert)
+# Dimension 4 -  MR3
+psych::alpha(as.data.frame(cbind(
+  data_f_02$schrill, data_f_02$hart, data_f_02$warm)
 ),check.keys=TRUE)
-# raw_alpha = 0.76 if unaffektiert removed (before raw_alpha = 0.67)
-alpha(as.data.frame(cbind(
-  data_f_02$gehorsam, data_f_02$zynisch, data_f_02$bescheiden)
-),check.keys=TRUE)
-# raw_alpha = 0.78 if bescheiden removed (before raw_alpha = 0.76)
-alpha(as.data.frame(cbind(
-  data_f_02$gehorsam, data_f_02$zynisch)
-),check.keys=TRUE)
-# raw_alpha = 0.78
+# raw_alpha = 0.71, no item removed
 
-
-# Dimension 4 -  MR2
-alpha(as.data.frame(cbind(
-  data_f_02$sicher, data_f_02$unentschieden)
-),check.keys=TRUE)
-# raw_alpha = 0.80. no item removed
-
-
-# Dimension 5 -  MR3
-alpha(as.data.frame(cbind(
-  data_f_02$alt, data_f_02$kindlich)
-),check.keys=TRUE)
-# raw_alpha = 0.71. no item removed
 
 
 ## Compute new factor scores as a weighted average of the z-scores
@@ -320,28 +304,31 @@ alpha(as.data.frame(cbind(
 loa_f <- fa_f_02$loadings
 loa_f_df <- as.data.frame(loa_f[,])
 
+# remove items from alpha analysis
+remove_items <- c('auffaellig')
+loa_f_df <- loa_f_df[-which(row.names(loa_f_df) %in% remove_items),]
 
-fs_f_dim1 <- loa_f_df["herzlich",1]*data_f$herzlich + 
-  loa_f_df["mitfuehlend",1]*data_f$mitfuehlend + 
-  loa_f_df["distanziert",1]*data_f$distanziert +
-  loa_f_df["freundlich",1]*data_f$freundlich + 
-  loa_f_df["verstaendnislos",1]*data_f$verstaendnislos +
-  loa_f_df["nicht_genervt",1]*data_f$nicht_genervt +
-  loa_f_df["unsympathisch",1]*data_f$unsympathisch 
+# factor scores
+fs_f_dim1 <- loa_f_df["zittrig",1]*data_f$zittrig + 
+  loa_f_df["fest",1]*data_f$fest + 
+  loa_f_df["gleitend",1]*data_f$gleitend + 
+  loa_f_df["stockend",1]*data_f$stockend 
   
+
+fs_f_dim2 <- loa_f_df["hoch",2]*data_f$hoch + 
+  loa_f_df["hell",2]*data_f$hell + 
+  loa_f_df["glatt",2]*data_f$glatt + 
+  loa_f_df["heiser",2]*data_f$heiser
+
   
-fs_f_dim2 <- loa_f_df["attraktiv",2]*data_f$attraktiv + 
-  loa_f_df["haesslich",2]*data_f$haesslich + 
-  loa_f_df["angenehm",2]*data_f$angenehm 
+fs_f_dim3 <- loa_f_df["unangenehm",3]*data_f$unangenehm + 
+  loa_f_df["undeutlich",3]*data_f$undeutlich + 
+  loa_f_df["unprofessionell",3]*data_f$unprofessionell
+  
+fs_f_dim4 <- loa_f_df["schrill",4]*data_f$schrill + 
+  loa_f_df["hart",4]*data_f$hart + 
+  loa_f_df["warm",4]*data_f$warm
 
-fs_f_dim3 <- loa_f_df["gehorsam",3]*data_f$gehorsam + 
-  loa_f_df["zynisch",3]*data_f$zynisch
-
-fs_f_dim4 <- loa_f_df["sicher",4]*data_f$sicher + 
-  loa_f_df["unentschieden",4]*data_f$unentschieden 
-
-fs_f_dim5 <- loa_f_df["alt",5]*data_f$alt + 
-  loa_f_df["kindlich",5]*data_f$kindlich
 
 ```
 
@@ -350,18 +337,18 @@ Write scores to file.
 ```{r}
 
 
-factorscores_f <- data.frame("sample_heard"=data_f$sample_heard, "dim1"=fs_f_dim1, "dim2"=fs_f_dim2, "dim3"=fs_f_dim3, "dim4"=fs_f_dim4, "dim5"=fs_f_dim5)
+factorscores_f <- data.frame("sample_heard"=data_f$sample_heard, "dim1"=fs_f_dim1, "dim2"=fs_f_dim2, "dim3"=fs_f_dim3, "dim4"=fs_f_dim4)
 
 factorscores_f_averaged <- aggregate(factorscores_f[,2:ncol(factorscores_f)], by=list(factorscores_f$sample_heard), mean, na.rm=T)
 names(factorscores_f_averaged)[1] <- "sample_heard"
 
-write.csv(factorscores_f_averaged, "../../data/generated_data/factorscores_femalespk.csv", row.names = F)
+write.csv(factorscores_f_averaged, "../../../data/generated_data/factorscores_VD_femalespk.csv", row.names = F)
 
 
 # save scores without averaging
-factorscores_f_02 <- data.frame(data_m$listener_pseudonym, data_m$sample_heard,  "dim1"=fs_m_dim1, "dim2"=fs_m_dim2, "dim3"=fs_m_dim3, "dim4"=fs_m_dim4, "dim5"=fs_m_dim5)
+factorscores_f_02 <- data.frame(data_m$listener_pseudonym, data_m$sample_heard,  "dim1"=fs_m_dim1, "dim2"=fs_m_dim2, "dim3"=fs_m_dim3, "dim4"=fs_m_dim4)
 
-write.csv(factorscores_f_02, "../../data/generated_data/factorscores_femalespk_notaveraged.csv", row.names = F)
+write.csv(factorscores_f_02, "../../../data/generated_data/factorscores_femalespk_VD_notaveraged.csv", row.names = F)
 
 
 ```
@@ -369,35 +356,17 @@ write.csv(factorscores_f_02, "../../data/generated_data/factorscores_femalespk_n
 
 ## 3) Summary of dimensions and loadings
 
-dim1: Warmth. 
+* Male speech
+Dimension 1: proficiency (precision / fluency) (*negative)
+Dimension 2: tension
+Dimension 3: melody
+Dimension 4: brightness
 
-* Equivalent to "Benevolence" of the interpersonal circumplex. In the literature:
-* @812: "feindselig vs. einfühlsam"
-* @715: "kaltherzig vs. warm-verträglich"
-
-dim2: Attractiveness. 
-
-* Perception (imagined) physical attractiveness. Foundation on interpersonal attraction @559.
-
-dim3: Confidence. 
-
-* Equivalent to "dominance" of the interpersonal circumplex. In the literature:
-* @812: "durchsetzungsfähig vs. schüchtern", 
-* @715: "sicher-dominant vs. unsicher-unterwürfig"
-* This is the 3rd dimension for male speech and the 4th dimension for female speech.
-
-dim4: Compliance. 
-
-* Diagonal of the interpersonal circumplex: 
-* @812: "zynisch vs. folgsam"
-* @715: "arrogant-berechnend vs. bescheiden-vertrauensvoll"
-* This is the 4th dimension for male speech and the 3rd dimension for female speech.
-
-dim5: Maturity.
-
-* Perception of speakers' age @790.
-
-There was an indication of a calm dimension, but the items were removed due to lower loadings.
+* Female speech
+Dimension 1: fluency (not connected to precision in contrast to male speech)  (*negative)
+Dimension 2: brightness ( and also, smoothness with lower loading - can be neglected )
+Dimension 3: proficiency precision (*negative)
+Dimension 4: shrillness (related to tension dim of male speech)
 
 
 ### Male speakers
@@ -405,18 +374,18 @@ There was an indication of a calm dimension, but the items were removed due to l
 ```{r}
 
 # keep only English item translations
-sc_items <- read.csv(text=getURL(paste0(path_github,"/SC_Questionnaire.csv")), header=TRUE, sep=",") 
+vd_items <- read.csv(text=getURL(paste0(path_github,"/VD_Questionnaire.csv")), header=TRUE, sep=",") 
 
 loa_m_df$item <- rownames(loa_m_df)
-loa_m_df_retained <- merge(loa_m_df, sc_items, by.x = 'item', by.y = 'right_German')
-loa_m_df_retained <- loa_m_df_retained[,c(10,2:6)]
+loa_m_df_retained <- merge(loa_m_df, vd_items, by.x = 'item', by.y = 'right_German')
+loa_m_df_retained <- loa_m_df_retained[,c(9,2:5)]
 
 # set to NA the cross-loadings, to hide from kable
-mean(loa_m_df_retained[,2:6][abs(loa_m_df_retained[,2:6])<0.4]) # avg of cros-loadings to be removed
-loa_m_df_retained[,2:6][abs(loa_m_df_retained[,2:6])<0.4] <- NA
+mean(loa_m_df_retained[,2:5][abs(loa_m_df_retained[,2:5])<0.4]) # avg of cros-loadings to be removed
+loa_m_df_retained[,2:5][abs(loa_m_df_retained[,2:5])<0.4] <- NA
 
 # dimension names 
-names(loa_m_df_retained) <- c("item_English", "warmth",  "attractiveness", "confidence", "compliance", "maturity")
+names(loa_m_df_retained) <- c("item_English", "*neg proficiency precision",  "tension", "melody", "brightness")
 
 # show loadings table with kable
 options(knitr.kable.NA = '')
@@ -433,15 +402,15 @@ kable(loa_m_df_retained, digits = 2)
 
 # keep only English item translations
 loa_f_df$item <- rownames(loa_f_df)
-loa_f_df_retained <- merge(loa_f_df, sc_items, by.x = 'item', by.y = 'right_German')
-loa_f_df_retained <- loa_f_df_retained[,c(10,2:6)]
+loa_f_df_retained <- merge(loa_f_df, vd_items, by.x = 'item', by.y = 'right_German')
+loa_f_df_retained <- loa_f_df_retained[,c(9,2:5)]
 
 # set to NA the cross-loadings, to hide from kable
-mean(loa_f_df_retained[,2:6][abs(loa_f_df_retained[,2:6])<0.4]) # avg of cros-loadings to be removed
-loa_f_df_retained[,2:6][abs(loa_f_df_retained[,2:6])<0.4] <- NA
+mean(loa_f_df_retained[,2:5][abs(loa_f_df_retained[,2:5])<0.4]) # avg of cros-loadings to be removed
+loa_f_df_retained[,2:5][abs(loa_f_df_retained[,2:5])<0.4] <- NA
 
 # dimension names
-names(loa_f_df_retained) <- c("item_English","warmth",  "attractiveness", "compliance", "confidence",  "maturity")
+names(loa_f_df_retained) <- c("item_English","*neg fluency",  "brightness", "*neg proficiency precision", "shrillness")
 
 # show loadings table with kable
 options(knitr.kable.NA = '')

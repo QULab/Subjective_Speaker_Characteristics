@@ -302,7 +302,7 @@ Next, we examine Cronbach alphas to see if we should remove other items.
 ``` r
 # Dimension 1 -  MR1
 alpha(as.data.frame(cbind(
-  data_m_02$herzlich, data_m_02$mitfuehlend, data_m_02$distanziert, data_m_02$freundlich, data_m_02$verstaendnislos, data_m_02$unsympatisch, data_m_02$nicht.genervt)
+  data_m_02$herzlich, data_m_02$mitfuehlend, data_m_02$distanziert, data_m_02$freundlich, data_m_02$verstaendnislos, data_m_02$unsympatisch, data_m_02$nicht_genervt)
 ),check.keys=TRUE)
 ```
 
@@ -313,29 +313,31 @@ alpha(as.data.frame(cbind(
     ## Reliability analysis   
     ## Call: alpha(x = as.data.frame(cbind(data_m_02$herzlich, data_m_02$mitfuehlend, 
     ##     data_m_02$distanziert, data_m_02$freundlich, data_m_02$verstaendnislos, 
-    ##     data_m_02$unsympatisch, data_m_02$nicht.genervt)), check.keys = TRUE)
+    ##     data_m_02$unsympatisch, data_m_02$nicht_genervt)), check.keys = TRUE)
     ## 
-    ##   raw_alpha std.alpha G6(smc) average_r S/N    ase  mean   sd
-    ##       0.86      0.86    0.84      0.55 6.1 0.0052 0.012 0.78
+    ##   raw_alpha std.alpha G6(smc) average_r S/N    ase mean   sd
+    ##       0.87      0.87    0.85      0.52 6.5 0.0048 0.01 0.75
     ## 
     ##  lower alpha upper     95% confidence boundaries
-    ## 0.85 0.86 0.87 
+    ## 0.86 0.87 0.88 
     ## 
     ##  Reliability if an item is dropped:
     ##     raw_alpha std.alpha G6(smc) average_r S/N alpha se
-    ## V1       0.81      0.81    0.77      0.51 4.2   0.0072
-    ## V2       0.82      0.82    0.78      0.53 4.5   0.0069
-    ## V3-      0.83      0.83    0.80      0.55 5.0   0.0064
-    ## V4       0.84      0.84    0.81      0.56 5.2   0.0062
-    ## V5-      0.85      0.85    0.82      0.59 5.9   0.0055
+    ## V1       0.83      0.83    0.80      0.49 4.8   0.0063
+    ## V2       0.83      0.83    0.81      0.50 5.0   0.0061
+    ## V3-      0.84      0.84    0.82      0.52 5.5   0.0057
+    ## V4       0.84      0.84    0.82      0.52 5.4   0.0057
+    ## V5-      0.86      0.86    0.84      0.55 6.1   0.0052
+    ## V6       0.86      0.86    0.84      0.55 6.1   0.0052
     ## 
     ##  Item statistics 
     ##        n raw.r std.r r.cor r.drop     mean   sd
-    ## V1  1804  0.86  0.86  0.83   0.76 -1.6e-17 0.97
-    ## V2  1873  0.84  0.84  0.80   0.73  2.2e-17 0.97
-    ## V3- 1873  0.80  0.80  0.72   0.67  3.0e-02 0.97
-    ## V4  1873  0.78  0.78  0.70   0.65  1.1e-17 0.97
-    ## V5- 1873  0.74  0.73  0.62   0.58  3.0e-02 0.97
+    ## V1  1804  0.84  0.84  0.82   0.76 -1.6e-17 0.97
+    ## V2  1873  0.82  0.82  0.79   0.73  2.2e-17 0.97
+    ## V3- 1873  0.77  0.78  0.72   0.66  3.0e-02 0.97
+    ## V4  1873  0.78  0.78  0.73   0.67  1.1e-17 0.97
+    ## V5- 1873  0.72  0.72  0.63   0.59  3.0e-02 0.97
+    ## V6  1873  0.71  0.71  0.62   0.58 -7.0e-17 0.97
 
 ``` r
 # raw_alpha = 0.88. no item removed
@@ -525,7 +527,11 @@ Compute new factor scores as a weighted average of the z-scores.
 loa_m <- fa_m_02$loadings
 loa_m_df <- as.data.frame(loa_m[,])
 
+# remove items from alpha analysis
+remove_items <- c('ruhig')
+loa_m_df <- loa_m_df[-which(row.names(loa_m_df) %in% remove_items),]
 
+# factor scores
 fs_m_dim1 <- loa_m_df["herzlich",1]*data_m$herzlich + 
   loa_m_df["mitfuehlend",1]*data_m$mitfuehlend + 
   loa_m_df["distanziert",1]*data_m$distanziert + 
@@ -559,12 +565,12 @@ factorscores_m <- data.frame("sample_heard"=data_m$sample_heard, "dim1"=fs_m_dim
 factorscores_m_averaged <- aggregate(factorscores_m[,2:ncol(factorscores_m)], by=list(factorscores_m$sample_heard), mean, na.rm=T)
 names(factorscores_m_averaged)[1] <- "sample_heard"
 
-write.csv(factorscores_m_averaged, "../../data/generated_data/factorscores_malespk.csv", row.names = F)
+write.csv(factorscores_m_averaged, "../../../data/generated_data/factorscores_SC_malespk.csv", row.names = F)
 
 # save scores without averaging
 factorscores_m_02 <- data.frame(data_m$listener_pseudonym, data_m$sample_heard,  "dim1"=fs_m_dim1, "dim2"=fs_m_dim2, "dim3"=fs_m_dim3, "dim4"=fs_m_dim4, "dim5"=fs_m_dim5)
 
-write.csv(factorscores_m_02, "../../data/generated_data/factorscores_malespk_notaveraged.csv", row.names = F)
+write.csv(factorscores_m_02, "../../../data/generated_data/factorscores_SC_malespk_notaveraged.csv", row.names = F)
 ```
 
 ### 2b) Factor analysis of female speakers
@@ -1125,12 +1131,17 @@ alpha(as.data.frame(cbind(
 # raw_alpha = 0.71. no item removed
 
 
+
 ## Compute new factor scores as a weighted average of the z-scores
 
 loa_f <- fa_f_02$loadings
 loa_f_df <- as.data.frame(loa_f[,])
 
+# remove items from alpha analysis
+remove_items <- c('intelligent','unaffektiert','bescheiden')
+loa_f_df <- loa_f_df[-which(row.names(loa_f_df) %in% remove_items),]
 
+# factor scores
 fs_f_dim1 <- loa_f_df["herzlich",1]*data_f$herzlich + 
   loa_f_df["mitfuehlend",1]*data_f$mitfuehlend + 
   loa_f_df["distanziert",1]*data_f$distanziert +
@@ -1162,13 +1173,13 @@ factorscores_f <- data.frame("sample_heard"=data_f$sample_heard, "dim1"=fs_f_dim
 factorscores_f_averaged <- aggregate(factorscores_f[,2:ncol(factorscores_f)], by=list(factorscores_f$sample_heard), mean, na.rm=T)
 names(factorscores_f_averaged)[1] <- "sample_heard"
 
-write.csv(factorscores_f_averaged, "../../data/generated_data/factorscores_femalespk.csv", row.names = F)
+write.csv(factorscores_f_averaged, "../../../data/generated_data/factorscores_SC_femalespk.csv", row.names = F)
 
 
 # save scores without averaging
 factorscores_f_02 <- data.frame(data_m$listener_pseudonym, data_m$sample_heard,  "dim1"=fs_m_dim1, "dim2"=fs_m_dim2, "dim3"=fs_m_dim3, "dim4"=fs_m_dim4, "dim5"=fs_m_dim5)
 
-write.csv(factorscores_f_02, "../../data/generated_data/factorscores_femalespk_notaveraged.csv", row.names = F)
+write.csv(factorscores_f_02, "../../../data/generated_data/factorscores_SC_femalespk_notaveraged.csv", row.names = F)
 ```
 
 3) Summary of dimensions and loadings
@@ -1218,7 +1229,7 @@ loa_m_df_retained <- loa_m_df_retained[,c(10,2:6)]
 mean(loa_m_df_retained[,2:6][abs(loa_m_df_retained[,2:6])<0.4]) # avg of cros-loadings to be removed
 ```
 
-    ## [1] 0.01428122
+    ## [1] 0.007027582
 
 ``` r
 loa_m_df_retained[,2:6][abs(loa_m_df_retained[,2:6])<0.4] <- NA
@@ -1245,7 +1256,6 @@ kable(loa_m_df_retained, digits = 2)
 | childish       |        |                |            |            |     -0.73|
 | affectionate   |    0.84|                |            |            |          |
 | not\_irritated |    0.51|                |            |            |          |
-| calm           |        |                |            |            |          |
 | secure         |        |                |        1.01|            |          |
 | indecisive     |        |                |       -0.60|            |          |
 | non\_likable   |   -0.52|                |            |            |          |
@@ -1264,7 +1274,7 @@ loa_f_df_retained <- loa_f_df_retained[,c(10,2:6)]
 mean(loa_f_df_retained[,2:6][abs(loa_f_df_retained[,2:6])<0.4]) # avg of cros-loadings to be removed
 ```
 
-    ## [1] 0.01349359
+    ## [1] 0.002609333
 
 ``` r
 loa_f_df_retained[,2:6][abs(loa_f_df_retained[,2:6])<0.4] <- NA
@@ -1282,18 +1292,15 @@ kable(loa_f_df_retained, digits = 2)
 | old            |        |                |            |            |      0.68|
 | pleasant       |        |            0.59|            |            |          |
 | attractive     |        |            0.83|            |            |          |
-| modest         |        |                |        0.58|            |          |
 | distant        |   -0.78|                |            |            |          |
 | friendly       |    0.56|                |            |            |          |
 | submissive     |        |                |        0.80|            |          |
 | ugly           |        |           -0.81|            |            |          |
 | hearty         |    0.84|                |            |            |          |
-| intelligent    |        |            0.61|            |            |          |
 | childish       |        |                |            |            |     -0.81|
 | affectionate   |    0.84|                |            |            |          |
 | not\_irritated |    0.49|                |            |            |          |
 | secure         |        |                |            |        0.82|          |
-| unaffected     |        |                |            |            |          |
 | indecisive     |        |                |            |       -0.81|          |
 | non\_likable   |   -0.45|                |            |            |          |
 | unsympathetic  |   -0.49|                |            |            |          |

@@ -120,7 +120,7 @@ Next, we examine Cronbach alphas to see if we should remove other items.
 
 # Dimension 1 -  MR1
 alpha(as.data.frame(cbind(
-  data_m_02$herzlich, data_m_02$mitfuehlend, data_m_02$distanziert, data_m_02$freundlich, data_m_02$verstaendnislos, data_m_02$unsympatisch, data_m_02$nicht.genervt)
+  data_m_02$herzlich, data_m_02$mitfuehlend, data_m_02$distanziert, data_m_02$freundlich, data_m_02$verstaendnislos, data_m_02$unsympatisch, data_m_02$nicht_genervt)
 ),check.keys=TRUE)
 # raw_alpha = 0.88. no item removed
 
@@ -165,7 +165,11 @@ Compute new factor scores as a weighted average of the z-scores.
 loa_m <- fa_m_02$loadings
 loa_m_df <- as.data.frame(loa_m[,])
 
+# remove items from alpha analysis
+remove_items <- c('ruhig')
+loa_m_df <- loa_m_df[-which(row.names(loa_m_df) %in% remove_items),]
 
+# factor scores
 fs_m_dim1 <- loa_m_df["herzlich",1]*data_m$herzlich + 
   loa_m_df["mitfuehlend",1]*data_m$mitfuehlend + 
   loa_m_df["distanziert",1]*data_m$distanziert + 
@@ -201,12 +205,12 @@ factorscores_m <- data.frame("sample_heard"=data_m$sample_heard, "dim1"=fs_m_dim
 factorscores_m_averaged <- aggregate(factorscores_m[,2:ncol(factorscores_m)], by=list(factorscores_m$sample_heard), mean, na.rm=T)
 names(factorscores_m_averaged)[1] <- "sample_heard"
 
-write.csv(factorscores_m_averaged, "../../data/generated_data/factorscores_malespk.csv", row.names = F)
+write.csv(factorscores_m_averaged, "../../../data/generated_data/factorscores_SC_malespk.csv", row.names = F)
 
 # save scores without averaging
 factorscores_m_02 <- data.frame(data_m$listener_pseudonym, data_m$sample_heard,  "dim1"=fs_m_dim1, "dim2"=fs_m_dim2, "dim3"=fs_m_dim3, "dim4"=fs_m_dim4, "dim5"=fs_m_dim5)
 
-write.csv(factorscores_m_02, "../../data/generated_data/factorscores_malespk_notaveraged.csv", row.names = F)
+write.csv(factorscores_m_02, "../../../data/generated_data/factorscores_SC_malespk_notaveraged.csv", row.names = F)
 
 
 ```
@@ -317,12 +321,17 @@ alpha(as.data.frame(cbind(
 # raw_alpha = 0.71. no item removed
 
 
+
 ## Compute new factor scores as a weighted average of the z-scores
 
 loa_f <- fa_f_02$loadings
 loa_f_df <- as.data.frame(loa_f[,])
 
+# remove items from alpha analysis
+remove_items <- c('intelligent','unaffektiert','bescheiden')
+loa_f_df <- loa_f_df[-which(row.names(loa_f_df) %in% remove_items),]
 
+# factor scores
 fs_f_dim1 <- loa_f_df["herzlich",1]*data_f$herzlich + 
   loa_f_df["mitfuehlend",1]*data_f$mitfuehlend + 
   loa_f_df["distanziert",1]*data_f$distanziert +
@@ -357,13 +366,13 @@ factorscores_f <- data.frame("sample_heard"=data_f$sample_heard, "dim1"=fs_f_dim
 factorscores_f_averaged <- aggregate(factorscores_f[,2:ncol(factorscores_f)], by=list(factorscores_f$sample_heard), mean, na.rm=T)
 names(factorscores_f_averaged)[1] <- "sample_heard"
 
-write.csv(factorscores_f_averaged, "../../data/generated_data/factorscores_femalespk.csv", row.names = F)
+write.csv(factorscores_f_averaged, "../../../data/generated_data/factorscores_SC_femalespk.csv", row.names = F)
 
 
 # save scores without averaging
 factorscores_f_02 <- data.frame(data_m$listener_pseudonym, data_m$sample_heard,  "dim1"=fs_m_dim1, "dim2"=fs_m_dim2, "dim3"=fs_m_dim3, "dim4"=fs_m_dim4, "dim5"=fs_m_dim5)
 
-write.csv(factorscores_f_02, "../../data/generated_data/factorscores_femalespk_notaveraged.csv", row.names = F)
+write.csv(factorscores_f_02, "../../../data/generated_data/factorscores_SC_femalespk_notaveraged.csv", row.names = F)
 
 
 ```
