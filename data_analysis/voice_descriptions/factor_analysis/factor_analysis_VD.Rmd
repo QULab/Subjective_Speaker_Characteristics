@@ -1,7 +1,7 @@
 ---
-title: "Factor analysis of speaker characteristics"
+title: "Factor analysis of voice descriptions"
 author: "Laura Fernández Gallardo"
-date: "June 2017"
+date: "September 2017"
 bibliography: references.bib
 output: 
   github_document:
@@ -16,9 +16,7 @@ knitr::opts_chunk$set(root.dir = './')
 ```
 
 
-Perform factor analysis to reduce the 34-dimensional subjective speaker attributions to a smaller set of dimensions. Factor analysis instead of PCA in order to extract latent factors that represent the space of perceived interpersonal speaker characteristics from voice.
-
-More details in @my29.
+Perform factor analysis to reduce the 34-dimensional subjective voice descriptions to a smaller set of dimensions. Factor analysis instead of PCA in order to extract latent factors that represent the space of subjective voice descriptions that can be made by listening.
 
 
 ## 1) Load subjective ratings
@@ -46,7 +44,7 @@ Set paths and read data.
 
 ```{r echo=FALSE}
 
-setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/speaker_characteristics/factor_analysis")
+setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/data_analysis/speaker_characteristics/factor_analysis")
 
 path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
   
