@@ -13,15 +13,21 @@ Tests administered using a laptop, a mouse, and Shure SRH240 headphones (diotic 
 This listening test was conducted in order to label the NSC corpus with continuous numeric subjective ratings of speaker characteristics, given to all speakers.
 
 - Speakers: 300 speakers (126 males, 174 females), the entire NSC corpus.
+
 - Speech stimuli:
   - Clean microphone speech
   - Semi-spontaneous "Pizza" dialogs (shortened dialog version)
   - The speech stimuli can be found under the /stimuli folder of the [NSC release](http://www.qu.tu-berlin.de/?id=nsc-corpus).
+
 - Questionnaire: 34 items of interpersonal speaker characteristics (German) (see below)
+
 - Test participants: 114 (70 males and 44 females)
   - Mean age = 24.5, standard deviation = 3.4
   - 11 languages (93 German and 21 other)
+
 - Each test participant filled in the questionnaire for, on average, 16,4 male speakers and 23.2 female speakers
+
+  ​
 
 
 
@@ -55,17 +61,23 @@ This listening test was conducted in order to label the NSC corpus with continuo
 This listening test was conducted with degraded speech stimuli to study the effects of telephone bandwidth on subjective impressions of speaker characteristics. 
 
 * Speakers: same as in Listening test 2
+
 * Speech stimuli:
   * Semi-spontaneous "Pizza" dialogs (shortened dialog version)
   * 2 channel conditions (speech degradations): 
     * Narrowband: IRS8 filter, G.712 NB filter (300-3,400 Hz), G.711 A-law codec at 64 kbit/s 
     * Wideband: modified P.341 filter (135-7000 Hz), G.722 at 64 kbit/s
   * The average length of these files was 22.3 s (sd=2.7 s, range: 18.6-27.3 s).
+
 * Questionnaire: 34 items of interpersonal speaker characteristics (German) (see below)
+
 * Test participants: 23 (10 male and 13 female)
   * Mean age =27.7, standard deviation = 5.9, range = 18-40
   * German as mother tongue
+
 * Each test participant filled in the questionnaire for all speech stimuli
+
+  ​
 
 
 
@@ -74,12 +86,18 @@ This listening test was conducted with degraded speech stimuli to study the effe
 This listening test was conducted with degraded speech stimuli to study the effects of telephone bandwidth on subjective voice descriptions.
 
 - Speakers: same as in Listening test 2 and Listening test 3
+
 - Speech stimuli: same as in Listening test 3
+
 - Questionnaire: 34 items of naive voice descriptions (German) (see below)
+
 - Test participants: 23 (9 male and 14 female)
   - Mean age = 28.6, standard deviation = 6.0, range = 20-40
   - German as mother tongue
+
 - Each test participant filled in the questionnaire for all speech stimuli
+
+  ​
 
 
 
