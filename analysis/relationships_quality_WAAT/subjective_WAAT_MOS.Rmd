@@ -1,0 +1,334 @@
+---
+title: "Effects of Speaker Likability on Subjetive MOS"
+author: "Laura Fernández Gallardo"
+date: "December 2017"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = './')
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# clear
+rm(list=ls())
+
+# paths
+setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/analysis/relationships_quality_WAAT")
+
+path_data <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/ListeningTest'
+path_POLQA_data <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/data_POLQA'
+path_figures <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/Figures'
+path_R <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/degrading_extremespeakers_8sentences/R'
+
+# Libraries needed:
+
+library(stringr) # for str_pad
+library(ggplot2) # for plots
+library(ez) # for ezANOVA
+library(reshape2)  # for table, data manipulation
+library(xtable) # for table for latex
+library(knitr) # for kable
+```
+
+
+### Objectives
+
+Subjective MOS test to study the effects of speakers' warmth-attractiveness (WAAT) on perceived transmitted speech quality.
+
+### Speech Material
+
+* 12 speakers: 6 males (3 with high WAAT, 3 with low WAAT) and 6 females (3 with high WAAT, 3 with low WAAT)
+* Balanced content (8 sentences/speakers and no same wording so that the results are not dependent on one sentence)
+
+* Degradations:
+- downs8 + IRS + sv56 + c712 + G.711(at)64 + sv56
+- downs8 + IRS + sv56 + c712 + AMR-NB(at)4.65 + sv56
+- downs16 + HP135 + sv56 + P341 + G.722(at)64 + sv56
+- downs16 + HP135 + sv56 + P341 + AMR-WB(at)6.6 + sv56
+- downs32 + 14KBP + sv56 + SWV_EVS(at)16.4 + sv56
+- MNRU 10 dB + sv56
+- NB filtering 900 - 2500 Hz + sv56
+- reference (48 kHz) + sv56
+
+* Total: 8*12 = 96 stimuli (played randomly)
+* mean length of the all selected 96 files: 8.7 s, sd = 1.1 s, min = 5.5 s, max = 12.0 s
+
+
+### Listening test
+
+```{r}
+
+# speech degradations
+degradations = c('G711','AMRNB','G722','AMRWB','EVS','filtered','MNRU','ref','BP900_2500','MNRU_10DB')  
+
+# load raw answers
+mydata <- read.csv2(paste0(path_data,'/MOS_Lik.csv'))
+mydata$MOS <- as.numeric(as.matrix(mydata$MOS))
+
+# extract listener and stimulus information
+mydata$listener <- substr(mydata$Participant,1,2)
+mydata$listener_gender <- substr(mydata$Participant,4,4)
+mydata$listener_age <- substr(mydata$Participant,6,7)
+
+mydata$speaker <- substr(mydata$Filename,2,4)
+mydata$speaker_gender <- substr(mydata$Filename,1,1)
+
+mydata$distortion='ref'
+for (i in 1:length(degradations)){
+  pos_deg = grep(degradations[i] , mydata$Filename) 
+  mydata$distortion[pos_deg]=degradations[i]
+}
+
+# add speakers' WAAT info (class)
+spk_class <- read.csv(paste0(path_POLQA_data,'/spk_class.csv'))
+spk_class$speaker <-  str_pad(spk_class$speaker, 3, pad = "0")
+mydata <- merge(spk_class[,c(2,3)], mydata)
+
+# get listeners' info
+nstimuli = 96
+table(mydata$listener_gender)/nstimuli
+summary(as.numeric(mydata$listener_age))
+
+# save these data
+write.csv(mydata, paste0(path_data,'/subjective_MOS.csv'), row.names = F)
+
+```
+
+A group of 20 (10m, 10f) non-experts normal hearing listeners participated, aged 26.4 years on average (range: 19-34). Their mother tongue was German.
+
+
+### Tables with MOS averaged
+
+```{r}
+
+# aggregate (mean across listeners and speakers) and reshape
+
+mydata_agg <- aggregate(mydata$MOS, by = list(mydata$distortion, mydata$speaker_gender, mydata$class), mean)
+names(mydata_agg) <- c('distortion','speaker_gender', 'WAAT', 'mean_MOS')
+
+mean_MOS <- dcast(mydata_agg , distortion ~ WAAT + speaker_gender, value.var = "mean_MOS")
+
+# sort from high to low MOS
+mean_MOS$mean <- rowMeans(mean_MOS[,2:5])
+mean_MOS <- mean_MOS[order(mean_MOS$mean, decreasing = T),]
+rownames(mean_MOS) <- mean_MOS$distortion
+mean_MOS <- mean_MOS[,-1]
+
+# print table
+options(digits=2)
+# xtable(mean_MOS)
+kable(mean_MOS[,c(1:4)])
+
+write.csv(mean_MOS,paste0(path_data,'/mean_MOS_subjective.csv'))
+
+
+
+
+## checking mean of high WAAT vs. mean of low WAAT
+
+mean_high <- rowMeans(mean_MOS[,1:2])
+mean_low <- rowMeans(mean_MOS[,3:4])
+
+rbind(mean_high , mean_low)
+mean_high - mean_low
+min(mean_high - mean_low)
+max(mean_high - mean_low)
+
+
+## checking mean of males vs. mean of females
+
+mean_m <- rowMeans(mean_MOS[,c(1,3)])
+mean_f <- rowMeans(mean_MOS[,c(2,4)])
+
+rbind(mean_m , mean_f)
+mean_m - mean_f
+max(mean_m - mean_f)
+
+
+
+
+
+# Correlations of mean scores
+
+mean_MOS_POLQA <- read.csv(paste0(path_R,'/mean_MOS_POLQA.RData'))
+
+
+cor(mean_MOS_POLQA$high_m, mean_MOS$high_m)
+
+cor(mean_MOS_POLQA$high_f, mean_MOS$high_w)
+
+cor(mean_MOS_POLQA$low_m, mean_MOS$low_m)
+
+cor(mean_MOS_POLQA$low_f, mean_MOS$low_w)
+
+cor(mean_MOS_POLQA$mean, mean_MOS$mean)
+
+
+
+
+## see correlations for all speakers of each class/gender, not aggregated MOS
+
+mydata_agg2 <- aggregate(mydata$subjective_MOS, by = list(mydata$speaker, mydata$distortion, mydata$speaker_gender, mydata$class), mean)
+names(mydata_agg2) <- c('speaker', 'distortion', 'gender', 'WAAT', 'subjective_MOS')
+
+MOS_POLQA <- read.csv(paste0(path_R,'/MOS_POLQA.RData'))
+MOS_POLQA <- MOS_POLQA[,c(2,9,3,4,7)]
+MOS_POLQA$distortion <- as.character(MOS_POLQA$distortion)
+
+# sort both datasets in the same way and merge
+mydata_agg2 <- mydata_agg2[order(mydata_agg2$distortion),]
+mydata_agg2 <- mydata_agg2[order(mydata_agg2$speaker),]
+
+MOS_POLQA <- MOS_POLQA[order(MOS_POLQA$distortion),]
+MOS_POLQA <- MOS_POLQA[order(MOS_POLQA$speaker),]
+
+mydata_agg2$POLQA_MOS = MOS_POLQA$MOS
+
+write.csv(mydata_agg2,paste0(path_data,'/Likability_MOS_POLQA_subjective.csv'), row.names = F)
+
+# subsets:
+subs <- mydata_agg2[mydata_agg2$gender=='w' & mydata_agg2$WAAT=='low',]
+cor(subs$subjective_MOS, subs$POLQA_MOS)
+sqrt(mean((subs$subjective_MOS - subs$POLQA_MOS)^2))
+     
+
+# all:
+cor(mydata_agg2$subjective_MOS, mydata_agg2$POLQA_MOS)
+sqrt(mean((mydata_agg2$subjective_MOS - mydata_agg2$POLQA_MOS)^2))
+
+
+
+ 
+
+
+
+
+
+```
+
+### Interaction plots
+
+For each distortion separately, create interaction plot:
+
+* view effects of:
+- speaker gender (g)
+- speakers' WAAT class (class)
+- interaction (g:class)
+* if lines are parallel: there is no interaction effect
+
+
+```{r message = FALSE, warning=FALSE}
+
+# rename "speaker_gender" to "g"
+names(mydata)[names(mydata)=='speaker_gender'] = 'g'
+
+# split for different distortions
+mydata.split <- split(mydata, mydata$distortion)
+
+# aggregate data
+lapply(mydata.split, function(x){
+  
+  mydata_agg <- aggregate(x$MOS, by = list(x$g, x$class), mean)
+  names(mydata_agg)[1]<-'g'
+  names(mydata_agg)[2]<-'class' 
+  names(mydata_agg)[3]<-'mean_MOS' 
+  
+  plot_jpg <- ggplot(x, aes(x = factor(class), y = MOS, fill = g)) + 
+    geom_violin(adjust = .5, draw_quantiles = c(0.5)) + 
+    geom_point(data = mydata_agg, aes_string(y = "mean_MOS", group = "g", color = "g")) + 
+    geom_line(data = mydata_agg, aes_string(y = "mean_MOS", group = "g", color = "g")) + 
+    theme_bw() +
+    xlab("speaker WAAT class") +
+    ylab("MOS") +  
+    scale_y_continuous(limits = c(1, 5)) +
+    theme(legend.position = "bottom")
+  
+  #jpeg(paste0(path_figures,"/violin_interaction_",x$distortion[1],".jpg"), family="Times") 
+  #print(plot_jpg)
+  #dev.off()
+
+})
+
+
+
+```
+
+We observe that:
+
+* AMR-NB: interaction effect: higher MOS for males compared to females, only for high WAAT. Low WAAT females get slightly better MOS compared to high WAAT. 
+* G.711: lower MOS for low WAAT speakers. no gender effect. no interaction effect.
+
+* AMR-WB: slightly lower MOS for low WAAT speakers. higher MOS for males. no interaction effect.
+* G.722: interaction effect: higher MOS for males compared to females, only for high WAAT. Similar behaviour as for AMR-NB.
+
+* BP900 - 2500 and MNRU 10 DB: lower MOS for low WAAT speakers. no or small gender effect. no or small interaction effect.
+
+* EVS and ref: lower MOS for low WAAT speakers. higher MOS for males. no interaction effect.
+
+
+### Two-way ANOVA
+
+For each distortion separately, we perform 2-way repeated measures, to test the effects of: speaker gender (g), speakers' WAAT class (class), and interaction (g:class)
+
+We use the package ez to compute ezANOVA: Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. Behavior Research Methods, 37 (3), 379-384. 
+
+
+```{r warning= FALSE}
+
+res <- sapply(mydata.split, function(x){
+  
+  output <- ezANOVA(data=x,
+                    dv=MOS,
+                    wid=listener,
+                    within=.(g, class),
+                    type = 2)
+  
+})
+
+res
+
+```
+
+
+
+
+The effects observed in the interaction plots are confirmed with the ANOVA tests.
+
+Significant effects (p<0.01) of speaker WAAT (class) or interactions (g:class) are found for: 
+
+* AMR-NB (g, class, g:class) 
+* BP (class)
+* EVS (g, class)
+* G.711 (class)
+* G.722 (g, class, g:class) 
+* MNRU (class) 
+* ref (class)
+
+Not found for: 
+
+* AMR-WB (g)
+
+
+
+Remarks:
+
+* Effects of class observed: Consistently, lower MOS for low WAAT speakers and higher MOS for high WAAT speakers, for the same distortion. This manifests the importance of speakers' warmth-attractiveness for subjective speech quality assessments.
+* Almost consistently, male speech is better rated than female speech for the same distortion
+* The effect of speaker WAAT is even stronger than the effect of speker gender
+
+
+
+
+
+
+
+
+
+

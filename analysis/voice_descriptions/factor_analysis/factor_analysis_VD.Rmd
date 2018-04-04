@@ -43,7 +43,7 @@ Set paths and read data.
 
 ```{r echo=FALSE}
 
-setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/data_analysis/voice_descriptions/factor_analysis")
+setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/analysis/voice_descriptions/factor_analysis")
 
 path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
   
