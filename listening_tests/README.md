@@ -126,7 +126,7 @@ The relationships between speech quality and speakers' WAAT was studied with the
     * Modulated Noise Reference Unit (MNRU) of 10 dB
   * 8 different scripted excerpts of 2 to 3 sentences each (content) were extracted from the NSC corpus corresponding to the 12 speakers. We then selected 8 different channel conditions (reference and channel degradations). Randomly for each speaker, one of her 8 excerpts was assigned to one condition in a balanced manner, so that the same speaker, the same content, and the same distortion appears the same number of times in the resulting 12 x 8 = 96 stimulus files. 
   * Total: 96 speech stimuli with mean duration = 8.7 s, sd = 1.1 s, min = 5.5 s, max = 12.0 s
-* Test: Perceptual quality test with MOS continuous scale from "extremely bad" to "ideal" (see screenshot)
+* Test: Perceptual quality test with MOS continuous scale from "extremely bad" to "ideal" (see screenshot). Instruction: "Bitte beurteilen Sie die nachfolgenden Sprachproben nach ihrer Gesamtqualität" (in English: "Please rate the following speech samples according to their overall quality"). 
 * Test participants: 20 (10 male and 10 female)
   - Mean age =26.4, standard deviation = 4.1, range = 19-34
   - German as mother tongue

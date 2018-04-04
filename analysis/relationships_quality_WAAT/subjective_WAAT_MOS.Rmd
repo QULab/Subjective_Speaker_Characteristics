@@ -11,6 +11,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(root.dir = './')
+knitr::opts_chunk$set(fig.width=5, fig.height=5, dpi=300)
 ```
 
 
@@ -24,18 +25,13 @@ setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speake
 
 path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
   
- 
-
-#
-path_data <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/ListeningTest'
-path_POLQA_data <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/data_POLQA'
-path_figures <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/Figures'
-path_R <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/degrading_extremespeakers_8sentences/R'
-
 # Libraries needed:
 
+library(RCurl) # to read raw data from repo
 library(stringr) # for str_pad
+library(Rmisc) # for conf interval
 library(ggplot2) # for plots
+library(extrafont) # font in plots
 library(ez) # for ezANOVA
 library(reshape2)  # for table, data manipulation
 library(xtable) # for table for latex
@@ -46,6 +42,8 @@ library(knitr) # for kable
 ### Objectives
 
 Subjective MOS test to study the effects of speakers' warmth-attractiveness (WAAT) on perceived transmitted speech quality.
+
+In particular, we examine whether there is a correspondence between more likable voices and higher MOS, for the same speech degradation. We attempt to highlight the importance of speaker selection for MOS tests with respect to the speakers' vocal attractiveness. To this end, 12 German speakers with extremely high or low warmth-attractiveness (WAAT, which can be seen as voice likability) were selected from the Nautilus Speaker Characterization (NSC) Corpus. We then performed a subjective speech quality assessment test with native German test participants. Finally, we applied POLQA to the same files used in the test to obtain the instrumental speech quality measures (see "polqa_WAAT_MOS").
 
 ### Speech Material
 
@@ -74,7 +72,7 @@ Subjective MOS test to study the effects of speakers' warmth-attractiveness (WAA
 degradations = c('G711','AMRNB','G722','AMRWB','EVS','filtered','MNRU','ref','BP900_2500','MNRU_10DB')  
 
 # load raw answers
-mydata <- read.csv2(text=getURL(paste0(path_github,"/MOS_Lik.csv")), header=TRUE, sep=",")  
+mydata <- read.csv(text=getURL(paste0(path_github,"/MOS_Lik.csv")), header=TRUE, sep=";")  
 mydata$MOS <- as.numeric(as.matrix(mydata$MOS))
 
 # extract listener and stimulus information
@@ -84,6 +82,8 @@ mydata$listener_age <- substr(mydata$Participant,6,7)
 
 mydata$speaker <- substr(mydata$Filename,2,4)
 mydata$speaker_gender <- substr(mydata$Filename,1,1)
+# replacing female character from w (German) to f (English)
+mydata$speaker_gender <- gsub('w', 'f', mydata$speaker_gender)
 
 mydata$distortion='ref'
 for (i in 1:length(degradations)){
@@ -92,7 +92,7 @@ for (i in 1:length(degradations)){
 }
 
 # add speakers' WAAT info (class)
-spk_class <- read.csv(paste0(path_POLQA_data,'/spk_class.csv'))
+spk_class <- read.csv(text=getURL(paste0(path_github,"/spk_class.csv")))
 spk_class$speaker <-  str_pad(spk_class$speaker, 3, pad = "0")
 mydata <- merge(spk_class[,c(2,3)], mydata)
 
@@ -102,7 +102,7 @@ table(mydata$listener_gender)/nstimuli
 summary(as.numeric(mydata$listener_age))
 
 # save these data
-write.csv(mydata, paste0(path_data,'/subjective_MOS.csv'), row.names = F)
+write.csv(mydata, "../../data/generated_data/subjective_MOS.csv", row.names = F)
 
 ```
 
@@ -115,10 +115,9 @@ A group of 20 (10m, 10f) non-experts normal hearing listeners participated, aged
 
 # aggregate (mean across listeners and speakers) and reshape
 
-mydata_agg <- aggregate(mydata$MOS, by = list(mydata$distortion, mydata$speaker_gender, mydata$class), mean)
-names(mydata_agg) <- c('distortion','speaker_gender', 'WAAT', 'mean_MOS')
+mydata_agg <- group.CI(MOS~distortion+speaker_gender+class, mydata, ci = 0.95)
 
-mean_MOS <- dcast(mydata_agg , distortion ~ WAAT + speaker_gender, value.var = "mean_MOS")
+mean_MOS <- dcast(mydata_agg , distortion ~ class + speaker_gender, value.var = "MOS.mean")
 
 # sort from high to low MOS
 mean_MOS$mean <- rowMeans(mean_MOS[,2:5])
@@ -131,9 +130,23 @@ options(digits=2)
 # xtable(mean_MOS)
 kable(mean_MOS[,c(1:4)])
 
-write.csv(mean_MOS,paste0(path_data,'/mean_MOS_subjective.csv'))
+# write.csv(mean_MOS,paste0(path_data,"../../data/generated_data/mean_MOS_subjective.csv"))
 
+# generate figure for paper
+mydata_agg <- within(mydata_agg,  condition <- paste(speaker_gender, class, sep="_"))
 
+# The errorbars overlapped, so use position_dodge to move them horizontally
+pd <- position_dodge(0.4) # move them to the left and right
+
+# ggplot without lines, with black error bars
+ggplot(mydata_agg, aes(x=reorder(distortion, -MOS.mean), y=MOS.mean, shape = condition, group=condition)) + 
+    geom_errorbar(aes(ymin=MOS.lower, ymax=MOS.upper), colour="black", width=.1, position=pd) +
+    geom_point(position=pd, size=3) + 
+    scale_y_continuous(breaks = seq(0,5,0.5), limits = c(0, 5.5)) +
+    ylab('subjective MOS') +
+    xlab('degradation') +
+    theme_bw() + 
+    theme(text=element_text(family="Times New Roman", size=12), axis.text.x = element_text(angle = 30, hjust = 1), legend.position = "bottom", legend.title=element_blank())
 
 
 ## checking mean of high WAAT vs. mean of low WAAT
@@ -155,65 +168,6 @@ mean_f <- rowMeans(mean_MOS[,c(2,4)])
 rbind(mean_m , mean_f)
 mean_m - mean_f
 max(mean_m - mean_f)
-
-
-
-
-
-# Correlations of mean scores
-
-mean_MOS_POLQA <- read.csv(paste0(path_R,'/mean_MOS_POLQA.RData'))
-
-
-cor(mean_MOS_POLQA$high_m, mean_MOS$high_m)
-
-cor(mean_MOS_POLQA$high_f, mean_MOS$high_w)
-
-cor(mean_MOS_POLQA$low_m, mean_MOS$low_m)
-
-cor(mean_MOS_POLQA$low_f, mean_MOS$low_w)
-
-cor(mean_MOS_POLQA$mean, mean_MOS$mean)
-
-
-
-
-## see correlations for all speakers of each class/gender, not aggregated MOS
-
-mydata_agg2 <- aggregate(mydata$subjective_MOS, by = list(mydata$speaker, mydata$distortion, mydata$speaker_gender, mydata$class), mean)
-names(mydata_agg2) <- c('speaker', 'distortion', 'gender', 'WAAT', 'subjective_MOS')
-
-MOS_POLQA <- read.csv(paste0(path_R,'/MOS_POLQA.RData'))
-MOS_POLQA <- MOS_POLQA[,c(2,9,3,4,7)]
-MOS_POLQA$distortion <- as.character(MOS_POLQA$distortion)
-
-# sort both datasets in the same way and merge
-mydata_agg2 <- mydata_agg2[order(mydata_agg2$distortion),]
-mydata_agg2 <- mydata_agg2[order(mydata_agg2$speaker),]
-
-MOS_POLQA <- MOS_POLQA[order(MOS_POLQA$distortion),]
-MOS_POLQA <- MOS_POLQA[order(MOS_POLQA$speaker),]
-
-mydata_agg2$POLQA_MOS = MOS_POLQA$MOS
-
-write.csv(mydata_agg2,paste0(path_data,'/Likability_MOS_POLQA_subjective.csv'), row.names = F)
-
-# subsets:
-subs <- mydata_agg2[mydata_agg2$gender=='w' & mydata_agg2$WAAT=='low',]
-cor(subs$subjective_MOS, subs$POLQA_MOS)
-sqrt(mean((subs$subjective_MOS - subs$POLQA_MOS)^2))
-     
-
-# all:
-cor(mydata_agg2$subjective_MOS, mydata_agg2$POLQA_MOS)
-sqrt(mean((mydata_agg2$subjective_MOS - mydata_agg2$POLQA_MOS)^2))
-
-
-
- 
-
-
-
 
 
 ```
@@ -252,6 +206,7 @@ lapply(mydata.split, function(x){
     theme_bw() +
     xlab("speaker WAAT class") +
     ylab("MOS") +  
+    ggtitle(x$distortion) +
     scale_y_continuous(limits = c(1, 5)) +
     theme(legend.position = "bottom")
   
@@ -312,7 +267,7 @@ Significant effects (p<0.01) of speaker WAAT (class) or interactions (g:class) a
 * BP (class)
 * EVS (g, class)
 * G.711 (class)
-* G.722 (g, class, g:class) 
+* G.722 (g, class) 
 * MNRU (class) 
 * ref (class)
 
@@ -322,15 +277,13 @@ Not found for:
 
 
 
-Remarks:
+Three main remarks can be made from these results: 
 
-* Effects of class observed: Consistently, lower MOS for low WAAT speakers and higher MOS for high WAAT speakers, for the same distortion. This manifests the importance of speakers' warmth-attractiveness for subjective speech quality assessments.
-* Almost consistently, male speech is better rated than female speech for the same distortion
-* The effect of speaker WAAT is even stronger than the effect of speker gender
+1) Consistently across our wide range of degradations, the test participants perceived higher (lower) quality when speakers' WAAT was also high (low). Averaging the MOS of each speaker gender across distortions, the difference in MOS ranges from 0.10 to 0.35, with median = 0.21. Presumably, the higher MOS ratings can be attributed to the fact that the listeners also detected higher voice likability in these samples. This result manifests the importance of speakers' warmth-attractiveness for subjective speech quality assessments. 
 
+2) Averaging the MOS of each WAAT across distortions, male speech is always rated with higher quality than female speech, except for when the speech is transmitted through G.711 at 64.
 
-
-
+3) Interestingly, the effect of speaker WAAT is stronger than that of speaker gender, according to the F-values of our ANOVA significance tests. The effect of WAAT was significant for all degradations except for AMR-WB at 6.6, whereas the effect of gender was significant for fewer degradations. 
 
 
 

@@ -11,6 +11,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(root.dir = './')
+knitr::opts_chunk$set(fig.width=5, fig.height=5, dpi=300)
 ```
 
 
@@ -20,16 +21,19 @@ knitr::opts_chunk$set(root.dir = './')
 rm(list=ls())
 
 # paths
-path_data <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/data_POLQA'
-path_scores <-'D:/Users/fernandez.laura/Documents/Work/WP6_WP7_ML/1-SpkCharac_ML/data/factorscores'
-path_figures <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/Figures'
-path_R <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/degrading_extremespeakers_8sentences/R'
+setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/analysis/relationships_quality_WAAT")
 
-
+path_github1 <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/polqa"
+path_github2 <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
+  
 # Libraries needed:
+
+library(RCurl) # to read raw data from repo
 library(stringi) # for stri_sub
 library(stringr) # for str_pad
+library(Rmisc) # for conf interval
 library(ggplot2) # for plots
+library(extrafont) # font in plots
 library(reshape2)  # for table, data manipulation
 library(xtable) # for table for latex
 library(knitr) # for kable
@@ -39,7 +43,7 @@ library(knitr) # for kable
 
 ### Objectives
 
-We study the effects of speakers' warmth-attractiveness (WAAT) on transmitted speech quality given by POLQA (objective).
+We study the effects of speakers' warmth-attractiveness (WAAT) on transmitted speech quality given by POLQA (instrumental).
 
 ### Speech Material
 
@@ -59,7 +63,7 @@ We study the effects of speakers' warmth-attractiveness (WAAT) on transmitted sp
 * In the listening test: 8*12 = 96 stimuli in total
 * mean length of the all selected 96 files: 8.7 s, sd = 1.1 s, min = 5.5 s, max = 12.0 s
 
-* POLQA v2.4.2.7 applied (by Gabriel Mittag)
+* POLQA model, applied (by Gabriel Mittag)
 
 
 ### POLQA MOS
@@ -70,14 +74,14 @@ The instrumental quality estimation with the intrusive POLQA model involves the 
 
 The pre-processing applied to the degraded involved band-pass-filtering with the P.341 filter, resampling to 48 kHz, and level-equalizing as indicated before. Requirements regarding pre-processing of reference and of degraded files for POLQA can be found in ITU-T Rec. P.863, Sections 8.1 and 8.3.
 
+
 ```{r}
 
 # speech degradations
 degradations = c('G711','AMRNB','G722','AMRWB','EVS','filtered','MNRU','ref','BP900_2500','MNRU_10DB')  
 
 # load POLQA predictions
-#polqa_raw <- read.csv2(paste0(path_data,'/results_POLQA_8sentences.csv'))  # Gabriel, 13.11.2017
-polqa_raw <- read.csv2(paste0(path_data,'/polqa_lik_results.csv'))  # Gabriel, 29.12.2017
+polqa_raw <- read.csv(text=getURL(paste0(path_github1,"/polqa_lik_results.csv")), header=TRUE, sep=";")  
 names(polqa_raw) <- c( "reference" , "distorted" ,  "MOS")
 
 ## manipulate to add distortion and speaker scores and speaker class
@@ -100,7 +104,7 @@ for (i in 1:length(degradations)){
 
 # From all POLQA scores, take only the stimuli used in the subjective experiment
 
-finaltable_test <- read.csv(file=paste0(path_R,'/finaltable_test.csv')) # 96 stimui
+finaltable_test <- read.csv(text=getURL(paste0(path_github1,"/finaltable_test.csv"))) # 96 stimui
 
 # correcting spk helsinki 
 finaltable_test$sentence<- as.character(finaltable_test$sentence)
@@ -128,11 +132,13 @@ polqa$MOS <- as.numeric(as.character(polqa$MOS))
 polqa$distortion <- as.factor(polqa$distortion)   # levels(polqa$distortion)
 
 # add speakers' WAAT info (class)
-spk_class <- read.csv(paste0(path_data,'/spk_class.csv'))
+spk_class<- read.csv(text=getURL(paste0(path_github2,"/spk_class.csv"))) 
+
+
 spk_class$speaker <-  str_pad(spk_class$speaker, 3, pad = "0")
 polqa <- merge(spk_class, polqa)
 
-write.csv(polqa,paste0(path_R,'/MOS_POLQA.RData'))
+# write.csv(polqa,paste0(path_R,'/MOS_POLQA.RData'))
 
 ```
 
@@ -144,11 +150,10 @@ No strong/consistent effects can be seen in this table. To be compared to the ta
 ```{r}
 
 # aggregate MOS across speaker of same gender and WAAT class
-polqa_agg <- aggregate(polqa$MOS, by = list(polqa$distortion, polqa$spk_gender, polqa$class), mean)
 
-names(polqa_agg) <- c('distortion','speaker_gender', 'WAAT', 'mean_MOS')
+polqa_agg <- group.CI(MOS~distortion+spk_gender+class, polqa, ci = 0.95)
 
-mean_MOS <- dcast(polqa_agg, distortion ~ WAAT + speaker_gender, value.var = "mean_MOS")
+mean_MOS <- dcast(polqa_agg, distortion ~ class + spk_gender, value.var = "MOS.mean")
 
 # sort from high to low MOS
 mean_MOS$mean <- rowMeans(mean_MOS[,2:5])
@@ -161,8 +166,24 @@ options(digits=3)
 # xtable(mean_MOS[,c(2,1,4,3,5)])
 kable(mean_MOS[,c(1:4)])
 
-write.csv(mean_MOS,paste0(path_R,'/mean_MOS_POLQA.RData'))
+# write.csv(mean_MOS,paste0(path_R,'/mean_MOS_POLQA.RData'))
 
+
+# generate figure for paper
+polqa_agg <- within(polqa_agg,  condition <- paste(spk_gender, class, sep="_"))
+
+# The errorbars overlapped, so use position_dodge to move them horizontally
+pd <- position_dodge(0.4) # move them to the left and right
+
+# ggplot without lines, with black error bars
+ggplot(polqa_agg, aes(x=reorder(distortion, -MOS.mean), y=MOS.mean, shape = condition, group=condition)) + 
+    geom_errorbar(aes(ymin=MOS.lower, ymax=MOS.upper), colour="black", width=.1, position=pd) +
+    geom_point(position=pd, size=3) + 
+    scale_y_continuous(breaks = seq(0,5,0.5), limits = c(0, 5.5)) +
+    ylab('POLQA MOS') +
+    xlab('degradation') +
+    theme_bw() + 
+    theme(text=element_text(family="Times New Roman", size=12), axis.text.x = element_text(angle = 30, hjust = 1), legend.position = "bottom", legend.title=element_blank())
 
 
 ## checking mean of high WAAT vs. mean of low WAAT
@@ -230,6 +251,7 @@ lapply(mydata.split, function(x){
     theme_bw() +
     xlab("speaker WAAT class") +
     ylab("MOS") +  
+    ggtitle(x$distortion) +
     scale_y_continuous(limits = c(1, 5)) +
     theme(legend.position = "bottom")
   
