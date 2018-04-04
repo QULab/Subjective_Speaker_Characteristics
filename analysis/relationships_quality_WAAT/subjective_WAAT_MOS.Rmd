@@ -22,6 +22,11 @@ rm(list=ls())
 # paths
 setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/analysis/relationships_quality_WAAT")
 
+path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
+  
+ 
+
+#
 path_data <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/ListeningTest'
 path_POLQA_data <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/data_POLQA'
 path_figures <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/Figures'
@@ -69,7 +74,7 @@ Subjective MOS test to study the effects of speakers' warmth-attractiveness (WAA
 degradations = c('G711','AMRNB','G722','AMRWB','EVS','filtered','MNRU','ref','BP900_2500','MNRU_10DB')  
 
 # load raw answers
-mydata <- read.csv2(paste0(path_data,'/MOS_Lik.csv'))
+mydata <- read.csv2(text=getURL(paste0(path_github,"/MOS_Lik.csv")), header=TRUE, sep=",")  
 mydata$MOS <- as.numeric(as.matrix(mydata$MOS))
 
 # extract listener and stimulus information

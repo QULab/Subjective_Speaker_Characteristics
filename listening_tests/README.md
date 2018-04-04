@@ -107,7 +107,7 @@ The relationships between speech quality and speakers' WAAT was studied with the
 
 * Speakers: 
   - 12 "extreme" speakers, selected based on their salient scores on WAAT
-  - 10 males (5 of low WAAT and 5 of high WAAT), and 10 females (5 of low WAAT and 5 of high WAAT)
+  - 6 males (3 of low WAAT and 3 of high WAAT), and 6 females (3 of low WAAT and 3 of high WAAT)
   - Speakers' IDs: 
     - 3 females of high WAAT: w008_dakar, w125_hamhung, w257_nasinu
     - 3 females of low WAAT: w174_reykjavik, w094_hakupu, w148_phuntsholing
