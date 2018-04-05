@@ -1,0 +1,299 @@
+---
+title: "Effects of bw and WAAT class on SC and on VD"
+author: "Laura Fernández Gallardo"
+date: "December 7th, 2017"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE}
+
+# clear
+rm(list=ls())
+
+```
+ 
+```{r echo=FALSE} 
+
+# setting paths and loading data
+
+path_R <- 'D:/Users/fernandez.laura/Documents/Work/WP4_WP5_HumanPerceptions/6-speakercharacteristics_voicedescriptions_channels/R'
+path_figures <- 'D:/Users/fernandez.laura/Documents/Work/WP4_WP5_HumanPerceptions/6-speakercharacteristics_voicedescriptions_channels/Figures'
+path_scores <-'D:/Users/fernandez.laura/Documents/Work/WP6_WP7_ML/1-SpkCharac_ML/data/factorscores'
+path_questionnaires <- 'D:/Users/fernandez.laura/Documents/Work/WP1_Data_collection/Releasing'
+
+data.SC <- read.csv(paste0(path_R,'/data_SC.csv'))
+
+data.VD <- read.csv(paste0(path_R,'/data_VD.csv'))
+
+```
+
+```{r message=FALSE, warning=FALSE}
+
+# Libraries needed:
+
+library(ggplot2) # for plots
+library(ez) # for ezANOVA
+library(data.table) # for dt significance
+library(knitr) # for kable
+library(xtable) # for table for LaTeX
+
+```
+
+# 2-way repeated measures ANOVA
+
+* For each speaker gender:
+* For each item of: speaker characteristic (SC) and of voice description (VD):
+* We perform 2-way repeated measures, to test the effects of 
+** channel bandwidth (bw)
+** speakers' WAAT class (class)
+** interaction (bw:class)
+
+We use the package ez to compute ezANOVA: Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. Behavior Research Methods, 37 (3), 379-384. 
+
+
+```{r}
+
+# input: ratings (VD or SC) corresponding to the same speaker gender
+#    and item names 
+#    p-value of the significance effects required
+# output: table with booleans for each item with effects found
+
+# example input:
+# data <- data.SC_m
+# itemnames <- items.SC
+# pvalue <- 0.01
+
+perform.ezANOVA <- function(data, itemnames, pvalue){
+  
+ 
+all_effects <- NULL
+
+# (workaround to assign dv dinamically)
+
+for (x in itemnames){
+  eval(parse(text=
+               paste0('ezANOVA2.output <- ezANOVA(data=data,
+                      dv=', x,',
+                      wid=nameListener,
+                      within=.(bw, class),
+                      type = 2)')
+  ))
+
+  all_effects <- rbind(all_effects,data.frame(x,rbind(ezANOVA2.output$ANOVA$p)))
+
+}
+
+names(all_effects)<-c("item","bw", "class","bw:class")
+
+# assign unique group of effects to each item 
+
+signif <- data.frame(item=all_effects$item, all_effects[2:4] < pvalue)
+
+dt <- as.data.table(signif[2:4])[, list(list(.I)), by = signif[2:4]]
+
+signif$group<-NA
+for (i in c(1:length(dt$V1))){
+  
+  indexes <- dt$V1[[i]]
+  signif[indexes,]$group <- i
+  
+}
+
+# sort dataframe by unique effects
+signif <- signif[order(signif$group),]
+
+return(signif)
+
+
+}
+
+```
+
+
+
+
+
+## Voice Descriptions
+
+Analyze ANOVA significant effects for male and for female speech
+
+
+```{r}
+
+# get item names
+items.VD <- names(data.VD)[9:(9+33)]
+
+# split by gender
+data.VD_split = split(data.VD, data.VD$spk_gender)
+data.VD_m <- data.VD_split$m # male speakers
+data.VD_f <- data.VD_split$w # female speakers
+
+
+```
+
+
+Obtain the significant effects by calling our function.
+
+```{r warning=FALSE, message=FALSE}
+
+# male speakers
+effects.VD_m <- perform.ezANOVA(data.VD_m, items.VD, 0.01)
+
+# female speakers
+effects.VD_f <- perform.ezANOVA(data.VD_f, items.VD, 0.01)
+
+```
+
+
+
+
+
+### VD: Male speakers
+
+View items, only when significant effect found for bw or for bw:class
+
+
+```{r}
+
+effects.VD_m <- effects.VD_m[,-ncol(effects.VD_m)]
+
+effects.VD_m_BW <- effects.VD_m[which(effects.VD_m$bw==T | effects.VD_m$bw.class==T), ]
+effects.VD_m_BW <- effects.VD_m[which(effects.VD_m$bw==T | effects.VD_m$bw.class==T), ]
+
+kable(effects.VD_m_BW, row.names = FALSE)
+
+```
+
+
+### VD: Female speakers
+
+View items, only when significant effect found for bw or for bw:class
+
+
+```{r}
+
+effects.VD_f <- effects.VD_f[,-ncol(effects.VD_f)]
+
+effects.VD_f_BW <- effects.VD_f[which(effects.VD_f$bw==T | effects.VD_f$bw.class==T), ]
+effects.VD_f_BW <- effects.VD_f[which(effects.VD_f$bw==T | effects.VD_f$bw.class==T), ]
+
+kable(effects.VD_f_BW, row.names = FALSE)
+
+```
+
+
+
+## Speaker Characteristics
+
+Analyze ANOVA significant effects for male and for female speech
+
+
+```{r}
+
+# get item names
+items.SC <- names(data.SC)[9:(9+33)]
+
+# split by gender
+data.SC_split = split(data.SC, data.SC$spk_gender)
+data.SC_m <- data.SC_split$m # male speakers
+data.SC_f <- data.SC_split$w # female speakers
+
+
+```
+
+Exploring mean ratings for each gender, for each class, for each bandwidth
+
+```{r, warning=FALSE}
+
+data.SC.agg <- aggregate(data.SC[,c(9:(9+33))], by=list(data.SC$bw, data.SC$spk_gender, data.SC$class), mean)
+
+kable(t(data.SC.agg))
+```
+
+
+
+Obtain the significant effects by calling our function. Generate tables for LaTeX.
+ 
+
+```{r warning=FALSE, message=FALSE}
+
+# male speakers
+effects.SC_m <- perform.ezANOVA(data.SC_m, items.SC, 0.01)
+
+# female speakers
+effects.SC_f <- perform.ezANOVA(data.SC_f, items.SC, 0.01)
+
+# generate tables for latex
+# load translations
+ques.SC <- read.csv2(paste0(path_questionnaires,'/SC-Questionnaire.csv'), header=F)
+names(ques.SC)[3]<-'item'
+effects.SC_m <-merge(effects.SC_m,ques.SC[,c(3,5)])
+effects.SC_f <-merge(effects.SC_f,ques.SC[,c(3,5)])
+
+# sort English items alphabetically
+effects.SC_m <- effects.SC_m[order(effects.SC_m$V5),]
+effects.SC_f <- effects.SC_f[order(effects.SC_f$V5),]
+
+# display table (3 first columns correspond to male speakers and the rest to female speakers)
+mftable <- cbind(effects.SC_m[,c(6,2,3,4)],effects.SC_f[,c(2,3,4)])
+print(xtable(mftable),include.rownames=FALSE)
+ 
+
+
+```
+
+
+
+### SC: Male speakers
+
+View items, only when significant effect found for bw or for bw:class
+
+
+```{r}
+
+effects.SC_m <- effects.SC_m[,-ncol(effects.SC_m)]
+
+effects.SC_m_BW <- effects.SC_m[which(effects.SC_m$bw==T | effects.SC_m$bw.class==T), ]
+effects.SC_m_BW <- effects.SC_m[which(effects.SC_m$bw==T | effects.SC_m$bw.class==T), ]
+
+kable(effects.SC_m_BW, row.names = FALSE)
+
+```
+
+
+### SC: Female speakers
+
+View items, only when significant effect found for bw or for bw:class
+
+
+```{r}
+
+effects.SC_f <- effects.SC_f[,-ncol(effects.SC_f)]
+
+effects.SC_f_BW <- effects.SC_f[which(effects.SC_f$bw==T | effects.SC_f$bw.class==T), ]
+effects.SC_f_BW <- effects.SC_f[which(effects.SC_f$bw==T | effects.SC_f$bw.class==T), ]
+
+kable(effects.SC_f_BW, row.names = FALSE)
+
+```
+
+
+
+```{r}
+
+# save generated data frames
+
+save(effects.VD_m_BW, file = paste0(path_R,'/effects_VD_m_BW.RData'))
+save(effects.VD_f_BW, file = paste0(path_R,'/effects_VD_f_BW.RData'))
+save(effects.SC_m_BW, file = paste0(path_R,'/effects_SC_m_BW.RData'))
+save(effects.SC_f_BW, file = paste0(path_R,'/effects_SC_f_BW.RData'))
+
+```
+
+
+
+

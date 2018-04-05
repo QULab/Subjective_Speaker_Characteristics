@@ -1,6 +1,6 @@
 ## This repository
 
-As part of my [Postdoc project](http://www.qu.tu-berlin.de/?id=lfernandez), I collected subjective ratings of speaker and voice characteristics. In this repository, I explore data resulting from listening tests with speech stimuli from the [Nautilus Speaker Characterization (NSC) Corpus](http://www.qu.tu-berlin.de/?id=nsc-corpus) [3]:
+As part of my [Postdoc project](http://www.qu.tu-berlin.de/?id=lfernandez), I collected subjective ratings of speaker and voice characteristics. In this repository, I explore data resulting from [listening tests](https://github.com/laufergall/Subjective_Speaker_Characteristics/tree/master/doc/listening_tests) with speech stimuli from the [Nautilus Speaker Characterization (NSC) Corpus](http://www.qu.tu-berlin.de/?id=nsc-corpus) [3]:
 
 * Factor analysis to find traits of social speaker characteristics (SC), with data from Listening Test 1.
 
@@ -29,6 +29,12 @@ As part of my [Postdoc project](http://www.qu.tu-berlin.de/?id=lfernandez), I co
   (Folder: \analysis\relationships_quality_WAAT)
 
   (Publication: [2])
+
+* Analyzing the relationships between subjective speaker characteristics and voice descriptions, with data from Listening Test 1 and Listening Test 2.
+
+  (Folder: \analysis\relationships_SC_VD)
+
+  ​
 
 I also employed these subjective data to perform predictive modeling of speaker characteristics from speech features (see [this](https://github.com/laufergall/ML_Speaker_Characteristics) repository).
 

@@ -1,0 +1,298 @@
+---
+title: "Correlations between MOS and speaker characteristics"
+author: "Laura Fernández Gallardo"
+date: "December 2017"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = './')
+knitr::opts_chunk$set(fig.width=5, fig.height=5, dpi=300)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+
+# clear
+rm(list=ls())
+
+# needed libraries
+library(ggplot2) 
+library(grid) # for aligned plots (textGrob)
+library(gridExtra) # for aligned plots
+library(knitr) # for kable in rmd
+library(reshape2) # for melt (wide to long format)
+library(Cairo) # for CairoPDF() , create pdf with fonts embeeded
+```
+
+
+### Objectives
+
+The goal of this analysis is to evaluate the differences between the narrowband and wideband effects on the human impressions of speaker characteristics speaker characteristics, related to perceived signal quality, which might also assist decisions in the communication channel design process. 
+
+Perceived signal quality is measured in terms of (mean opinion scores) MOS (see my listening tests).
+
+
+
+```{r echo=FALSE}
+
+# setting paths and loading data
+setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/speaker_characteristics/effects_telephone_degradations")
+
+
+mydata <- read.csv(paste0("../../../data/data_listeningtest3.csv"))
+
+data.MOS <- read.csv(paste0("../../../data/data_listeningtest5.csv"))
+
+
+
+
+
+
+
+path_R <- 'D:/Users/fernandez.laura/Documents/Work/WP4_WP5_HumanPerceptions/6-speakercharacteristics_voicedescriptions_channels/R'
+path_MOS <- 'D:/Users/fernandez.laura/Documents/Work/WP8_SpkCharac_Quality/ListeningTest'
+path_questionnaires <- 'D:/Users/fernandez.laura/Documents/Work/WP1_Data_collection/Releasing'
+path_figures <- 'D:/Users/fernandez.laura/Documents/Work/WP4_WP5_HumanPerceptions/6-speakercharacteristics_voicedescriptions_channels/Figures/SC/SC_MOS_correl'
+
+
+
+```
+
+
+Arranging data.
+
+MOS: from listening test likability-MOS in Nov-Dec 2017.
+
+```{r}
+
+# aggregate data MOS per distortion, per speaker and pick only G711, G722
+
+data.MOS.agg <- aggregate(data.MOS$MOS, by = list(data.MOS$speaker, data.MOS$distortion), mean)
+
+# pick only G711, G722
+
+data.MOS.agg.G <- rbind(data.MOS.agg[grep('G711',data.MOS.agg$Group.2),],
+                        data.MOS.agg[grep('G722',data.MOS.agg$Group.2),])
+
+names(data.MOS.agg.G) <- c('spk','bw','MOS')
+
+# aggregate data SC per distortion, per speaker
+mydata.agg <- aggregate(mydata[9:(9+33)], by = list(mydata$spk_ID, mydata$spk_gender, mydata$bw), mean)
+names(mydata.agg)[1:3] <- c('spk','g','bw')
+levels(mydata.agg$bw) <- c('G711','G722')
+
+# aggregate data VD per distortion, per speaker
+data.VD.agg <- aggregate(data.VD[9:(9+33)], by = list(data.VD$spk_ID, data.VD$spk_gender, data.VD$bw), mean)
+names(data.VD.agg)[1:3] <- c('spk','g','bw')
+levels(data.VD.agg$bw) <- c('G711','G722')
+
+
+# merge both datasets (SC and MOS) (11 common speakers, 6m and 5f, in 2 bandwidths)
+data.mergedSC <- merge(mydata.agg, data.MOS.agg.G)
+
+# merge both datasets (VD and MOS) (11 common speakers, 6m and 5f, in 2 bandwidths)
+data.mergedVD <- merge(data.VD.agg, data.MOS.agg.G)
+
+
+```
+
+
+Load translations of questionnaire items, for table output
+
+```{r}
+
+# load translations
+ques.SC <- read.csv2(paste0(path_questionnaires,'/SC-Questionnaire.csv'), header=F)
+names(ques.SC)[3]<-'item'
+names(ques.SC)[4]<-'left'
+names(ques.SC)[5]<-'right'
+
+```
+
+For each speaker gender: performing correlations of MOS with each SC item.
+
+
+#### Male speakers
+
+```{r}
+
+## male speakers only
+
+correl.SC_m <- sapply(names(data.mergedSC)[4:(4+33)], function(x){
+  
+  data_gender = data.mergedSC[data.mergedSC$g=='m',]
+  
+  cor(data_gender$MOS, data_gender[[x]], method = 'spearman')
+  })
+
+correl.SC_m <- as.data.frame(correl.SC_m)
+correl.SC_m$item <- rownames(correl.SC_m)
+rownames(correl.SC_m) <- NULL
+
+correl.SC_m <-merge(correl.SC_m,ques.SC[,c(3,4,5)])
+ 
+ 
+kable(correl.SC_m[order(abs(correl.SC_m$correl.SC_m), decreasing = T),], row.names = F)
+
+kable(correl.SC_m[order(abs(correl.SC_m$correl.SC_m), decreasing = T),c(3,2,4)], row.names = F)
+
+```
+
+
+#### Female speakers
+
+```{r}
+
+## female speakers only
+
+correl.SC_w <- sapply(names(data.mergedSC)[4:(4+33)], function(x){
+  
+  data_gender = data.mergedSC[data.mergedSC$g=='w',]
+  
+  cor(data_gender$MOS, data_gender[[x]], method = 'spearman')
+  })
+
+correl.SC_w <- as.data.frame(correl.SC_w)
+correl.SC_w$item <- rownames(correl.SC_w)
+rownames(correl.SC_w) <- NULL
+
+correl.SC_w <-merge(correl.SC_w,ques.SC[,c(3,4,5)])
+ 
+kable(correl.SC_w[order(abs(correl.SC_w$correl.SC_w), decreasing = T),c(4,2)], row.names = F)
+
+
+kable(correl.SC_w[order(abs(correl.SC_w$correl.SC_w), decreasing = T),], row.names = F)
+
+```
+
+
+
+Barchart to show correlations alog all items
+
+```{r}
+
+# re-arrange data
+
+df <- merge(correl.SC_m, correl.SC_w)
+df <- df[order(abs(df$correl.SC_m)),]
+names(df) <- c("right_German", "left", "right", "male speakers", "female speakers")
+
+df_long <- melt(df)
+names(df_long) <- c("item_German", "left", "right", "gender", "r")
+
+
+df_long$right <- factor(df_long$right, levels = df$right)
+ 
+
+```
+
+
+
+Plot only positive correlations, and display left and right questionnaire items.
+
+
+```{r}
+
+# df_long <- df_long[order(abs(df_long$correl.SC_m)),]
+# df_long$right <- factor(df_long$right, levels = df$right)
+
+# plot left adjectives
+
+#df_long.left <- df_long[df_long$r<0,]
+
+ 
+df_long$left <- factor(df_long$left, levels = df$left)
+ 
+plot_left <- ggplot(df_long, aes(y= -1*r, x = as.numeric(left), fill = factor(gender))) + 
+  geom_bar(stat = "identity", width = 0.8 , position = position_dodge(width = 0.8) ) +
+  scale_fill_manual(values=c("#998ec3", "#f1a340")) + 
+  coord_flip() +
+  scale_y_reverse( lim=c(0.7,0)) + 
+  scale_x_continuous(breaks = 1:(length(df$left)), labels = df$left) +
+  xlab('') + #xlab('Left adjectives (English)') +  
+  ylab('') + 
+  theme_bw() +
+  theme(legend.title = element_blank(), legend.position = "bottom", text=element_text(size=25))
+
+
+plot_right <- ggplot(df_long, aes(y= r, x = as.numeric(right), fill = factor(gender))) + 
+  geom_bar(stat = "identity", width = 0.8 , position = position_dodge(width = 0.8) ) +
+  scale_fill_manual(values=c("#998ec3", "#f1a340")) + 
+  coord_flip() +
+  scale_y_continuous( lim=c(0, 0.7)) + 
+  
+  scale_x_continuous(breaks = 1:(length(df$left)), labels = NULL,
+                   sec.axis =  sec_axis(~., breaks = 1:(length(df$right)), labels = df$right) )  +
+  xlab('') +
+  ylab('') + 
+  theme_bw()  +
+  theme(legend.title = element_blank(), legend.position = "bottom", text=element_text(size=25))
+
+
+#extract legend
+#https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs
+g_legend<-function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}
+
+mylegend <- g_legend(plot_left)
+
+
+
+# 
+
+```
+
+
+
+```{r}
+
+# save combined plot to pdf file
+
+CairoPDF(paste0(path_figures,"/correl_spearman.pdf"), family="Times", width=8, height=15) 
+#png(paste0(path_figures,"/correl_spearman.png"), family="Times") 
+grid.arrange(arrangeGrob(plot_left + theme(legend.position="none"),
+                         plot_right + theme(legend.position="none"),
+                         nrow=1, 
+                         bottom = textGrob( expression(paste('Spearman\'s ', rho)),  gp = gpar(fontsize = 20) ) 
+                         ),
+             mylegend, nrow=2,heights=c(10, 1) )
+
+# grid.arrange(plot_left, plot_right, ncol=2)
+dev.off()
+
+
+
+```
+ 
+
+
+
+Table of data.mergedSC for ppt
+
+
+```{r}
+
+
+kable(data.mergedSC[,c(1,2,3,4,38)])
+
+kable(round(data.mergedSC[,c(4,38)], 1))
+
+
+```
+
+
+
+
+
+Performing correlations of MOS with each VD item
+(TODO)
+

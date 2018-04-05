@@ -72,7 +72,7 @@ In particular, we examine whether there is a correspondence between more likable
 degradations = c('G711','AMRNB','G722','AMRWB','EVS','filtered','MNRU','ref','BP900_2500','MNRU_10DB')  
 
 # load raw answers
-mydata <- read.csv(text=getURL(paste0(path_github,"/MOS_Lik.csv")), header=TRUE, sep=";")  
+mydata <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest5.csv")), header=TRUE, sep=";")  
 mydata$MOS <- as.numeric(as.matrix(mydata$MOS))
 
 # extract listener and stimulus information
