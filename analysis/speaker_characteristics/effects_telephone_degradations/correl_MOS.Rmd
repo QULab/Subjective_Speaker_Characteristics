@@ -47,8 +47,8 @@ setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speake
 
 mydata <- read.csv(paste0("../../../data/data_listeningtest3.csv"))
 
-data.MOS <- read.csv(paste0("../../../data/data_listeningtest5.csv"))
-
+data.MOS <- read.csv(paste0("../../../generated_data/subjective_MOS.csv"))
+# data generated from relationships_quality_WAAT
 
 
 

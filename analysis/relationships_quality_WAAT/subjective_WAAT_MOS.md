@@ -41,7 +41,7 @@ In particular, we examine whether there is a correspondence between more likable
 degradations = c('G711','AMRNB','G722','AMRWB','EVS','filtered','MNRU','ref','BP900_2500','MNRU_10DB')  
 
 # load raw answers
-mydata <- read.csv(text=getURL(paste0(path_github,"/MOS_Lik.csv")), header=TRUE, sep=";")  
+mydata <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest5.csv")))  
 mydata$MOS <- as.numeric(as.matrix(mydata$MOS))
 
 # extract listener and stimulus information
@@ -83,7 +83,8 @@ summary(as.numeric(mydata$listener_age))
 
 ``` r
 # save these data
-write.csv(mydata, "../../data/generated_data/subjective_MOS.csv", row.names = F)
+write.csv(mydata, "../../data/generated_data/subjective_MOS.csv", row.names = F) 
+# data used for analysis of effects of bandwidth on speaker characteristics
 ```
 
 A group of 20 (10m, 10f) non-experts normal hearing listeners participated, aged 26.4 years on average (range: 19-34). Their mother tongue was German.
