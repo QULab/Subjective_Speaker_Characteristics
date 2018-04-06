@@ -1,0 +1,323 @@
+---
+title: "Effects of speech bandwidth on perceived voice descriptions (ANOVA)"
+author: "Laura Fernández Gallardo"
+date: "December 2017"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = './')
+knitr::opts_chunk$set(fig.width=5, fig.height=5, dpi=150)
+```
+
+
+```{r echo=FALSE}
+
+# clear
+rm(list=ls())
+
+```
+ 
+```{r message=FALSE, warning=FALSE}
+
+# Libraries needed:
+
+library(ggplot2) # for plots
+library(ez) # for ezANOVA
+library(data.table) # for dt significance
+library(knitr) # for kable
+library(xtable) # for table for LaTeX
+
+``` 
+ 
+## Objectives
+
+The goal of this analysis is to evaluate the differences between the narrowband and wideband effects on the human impressions of voices, related to perceived signal quality, which might also assist decisions in the communication channel design process. 
+
+To examine the influence of both, channel bandwidth and speakers' WAAT, and their interaction effects, two-way repeated measures ANOVA significance tests have been conducted for each of the voice description items, and separately for each speaker gender.
+
+This study is similar to what was done for speaker characteristics in:
+
+Fernández Gallardo, L., "Effects of Transmitted Speech Bandwidth on Subjective Assessments of Speaker Characteristics," Int. Conf. on Quality of Multimedia Experience (QoMEX), 2018.
+
+
+```{r echo=FALSE} 
+
+# setting paths and loading data
+setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/analysis/voice_descriptions/effects_telephone_degradations")
+
+mydata <- read.csv(paste0("../../../data/subjective_ratings/data_listeningtest4.csv"))
+ 
+```
+
+
+
+# 2-way repeated measures ANOVA
+
+* For each speaker gender:
+* For each item of voice descriptions (VD):
+* We perform 2-way repeated measures, to test the effects of 
+    + channel bandwidth (bw)
+    + speakers' WAAT class (class)
+    + interaction (bw:class)
+
+We use the package ez to compute ezANOVA: Bakeman, R. (2005). Recommended effect size statistics for repeated measures designs. Behavior Research Methods, 37 (3), 379-384. 
+
+
+```{r}
+
+# input: ratings (VD or SC) corresponding to the same speaker gender
+#    and item names 
+#    p-value of the significance effects required
+# output: table with booleans for each item with effects found
+
+# example input:
+# data <- mydata_m
+# itemnames <- items.VD
+# pvalue <- 0.01
+
+perform.ezANOVA <- function(data, itemnames, pvalue){
+  
+ 
+all_effects <- NULL
+
+# (workaround to assign dv dinamically)
+
+for (x in itemnames){
+  eval(parse(text=
+               paste0('ezANOVA2.output <- ezANOVA(data=data,
+                      dv=', x,',
+                      wid=nameListener,
+                      within=.(bw, class),
+                      type = 2)')
+  ))
+
+  all_effects <- rbind(all_effects,data.frame(x,rbind(ezANOVA2.output$ANOVA$p)))
+
+}
+
+names(all_effects)<-c("item","bw", "class","bw:class")
+
+# assign unique group of effects to each item 
+
+signif <- data.frame(item=all_effects$item, all_effects[2:4] < pvalue)
+
+dt <- as.data.table(signif[2:4])[, list(list(.I)), by = signif[2:4]]
+
+signif$group<-NA
+for (i in c(1:length(dt$V1))){
+  
+  indexes <- dt$V1[[i]]
+  signif[indexes,]$group <- i
+  
+}
+
+# sort dataframe by unique effects
+signif <- signif[order(signif$group),]
+
+return(signif)
+
+
+}
+
+```
+
+## Interaction plots
+
+For each speaker gender, create interaction plot:
+
+* view effects of:
+    + speech bandwidth (bw)
+    + speakers' WAAT class (WAAT)
+    + interaction (bw:WAAT)
+* if lines are parallel: there is no interaction effect
+
+
+```{r message = FALSE, warning=FALSE}
+
+
+# input d: data corresponding to one speaker gender: mydata_m or mydata_f
+create.interaction_plots <-  function(d){
+    
+  for (item in items.VD){  
+    
+    mydata_agg <- aggregate(d[item], by = list(d$bw, d$class), mean)
+    names(mydata_agg)[1]<-'bw'
+    names(mydata_agg)[2]<-'class' 
+    names(mydata_agg)[3]<-'mean' 
+    
+    mplot <- ggplot(d, aes(x = factor(class), y = d[item], fill = bw)) + 
+      geom_violin(adjust = .5, draw_quantiles = c(0.5)) + 
+      geom_point(data = mydata_agg, aes_string(y = "mean", group = "bw", color = "bw")) + 
+      geom_line(data = mydata_agg, aes_string(y = "mean", group = "bw", color = "bw")) + 
+      theme_bw() +
+      xlab("speaker WAAT class") +
+      ylab(item) +  
+      scale_y_continuous(limits = c(0, 100)) +
+      theme(legend.position = "bottom")
+    
+    print(mplot)
+  }
+}
+
+
+```
+
+
+
+
+## Voice Descriptions
+
+Analyze ANOVA significant effects for male and for female speech
+
+
+```{r}
+
+# get item names
+items.VD <- names(mydata)[9:(9+33)]
+
+# split by gender
+mydata_split = split(mydata, mydata$spk_gender)
+mydata_m <- mydata_split$m # male speakers
+mydata_f <- mydata_split$w # female speakers
+
+
+```
+
+Exploring mean ratings for each gender, for each class, for each bandwidth.
+"G.711" is a narrowband codec, while "G.722" is a wideband codec.
+
+
+```{r, warning=FALSE}
+
+mydata.agg <- aggregate(mydata[,c(9:(9+33))], by=list(mydata$bw, mydata$spk_gender, mydata$class), mean)
+
+kable(t(mydata.agg))
+```
+
+
+
+Obtain the significant effects by calling our function. 
+Generate tables for LaTeX.
+
+
+
+```{r warning=FALSE, message=FALSE}
+
+# male speakers
+effects.VD_m <- perform.ezANOVA(mydata_m, items.VD, 0.01)
+
+# female speakers
+effects.VD_f <- perform.ezANOVA(mydata_f, items.VD, 0.01)
+
+# generate tables for latex
+# load translations
+ques.VD <- read.csv(paste0("../../../data/subjective_ratings/VD_Questionnaire.csv"), header=T)
+names(ques.VD)[3]<-'item'
+effects.VD_m <-merge(effects.VD_m,ques.VD[,c(3,5)])
+effects.VD_f <-merge(effects.VD_f,ques.VD[,c(3,5)])
+
+# sort English items alphabetically
+effects.VD_m <- effects.VD_m[order(effects.VD_m$right_English),]
+effects.VD_f <- effects.VD_f[order(effects.VD_f$right_English),]
+
+# display table (3 first columns correspond to male speakers and the rest to female speakers)
+mftable <- cbind(effects.VD_m[,c(6,2,3,4)],effects.VD_f[,c(2,3,4)])
+kable(mftable)
+#print(xtable(mftable),include.rownames=FALSE)
+ 
+```
+
+
+
+
+### VD: Male speakers
+
+View items, only when significant effect found for bw or for bw:class
+
+
+```{r}
+
+# effects.VD_m <- effects.VD_m[,-ncol(effects.VD_m)]
+
+effects.VD_m_BW <- effects.VD_m[which(effects.VD_m$bw==T | effects.VD_m$bw.class==T), ]
+effects.VD_m_BW <- effects.VD_m[which(effects.VD_m$bw==T | effects.VD_m$bw.class==T), ]
+
+kable(effects.VD_m_BW, row.names = FALSE)
+
+```
+
+Interaction plots for male speakers.
+
+```{r}
+
+create.interaction_plots( mydata_m )
+
+```
+
+
+### VD: Female speakers
+
+View items, only when significant effect found for bw or for bw:class
+
+
+```{r}
+
+# effects.VD_f <- effects.VD_f[,-ncol(effects.VD_f)]
+
+effects.VD_f_BW <- effects.VD_f[which(effects.VD_f$bw==T | effects.VD_f$bw.class==T), ]
+effects.VD_f_BW <- effects.VD_f[which(effects.VD_f$bw==T | effects.VD_f$bw.class==T), ]
+
+kable(effects.VD_f_BW, row.names = FALSE)
+
+```
+
+
+Interaction plots for female speakers.
+
+```{r}
+
+create.interaction_plots( mydata_m )
+
+```
+
+
+
+
+## Discussion
+
+Significant effects (p<0.01) by conducting two-way repeated measures ANOVA:
+
+
+Male speakers:
+
+* Effects of bandwidth in isolation (*bw* regardless of WAAT): if the voices are transmitted through wideband instead of narrowband they are perceived as significantly warmer, softer, and gentler.
+
+* Effects of bandwidth in isolation (*bw* regardless of WAAT) and of WAAT in isolation (*WAAT* regardless of bandwidth). The following voice aspects are perceived higher if speakers have high WAAT and/or when the speech is transmitted through wideband instead of narrowband: relaxed, smooth, jointed, not coarse, melodious, lax, fluent, professional, pleasant, articulate, clear, sonorous, and not creaky.
+
+* Interaction effect (*bw:WAAT*): When speakers have high WAAT, their voices are perceived as more powerful, emphasized, and firm in wideband compared to narrowband. Otherwise, if speakers have low WAAT, their voices are perceived powerless, not emphasized and brittle.
+
+* No effects of bandwidth in isolation or interacting with WAAT on: short, breathy, high, nasal, sharp, even, accented, bright, loud, creaky, monotonous, remarkable, slow, natural, precise.
+
+
+Female speakers:
+
+* Effects of bandwidth in isolation (*bw* regardless of WAAT): if the voices are transmitted through wideband instead of narrowband they are perceived as significantly shriller.
+
+* Effects of bandwidth in isolation (*bw* regardless of WAAT) and of WAAT in isolation (*WAAT* regardless of bandwidth). The following voice aspects are perceived higher if speakers have high WAAT and/or when the speech is transmitted through wideband instead of narrowband: not coarse, warm, firm, relaxed, smooth, sonorous, articulate, clear, lax, fluent, soft.
+    
+* Interaction effect (*bw:WAAT*), *bw* effect regardless of WAAT, and *WAAT* effect regardless of bandwidth: if wideband and if high WAAT speakers, voices are perceived as more pleasant and professional. The difference in perception between narrowband and wideband is larger if speakers have high WAAT compared to speakers of low WAAT.
+
+* Interaction effect (*bw:WAAT*) and *WAAT* effect regardless of bandwidth: When speakers have high WAAT, their voices are perceived as more melodious in wideband compared to narrowband. Otherwise, if speakers have low WAAT, their voices are perceived less melodious with no difference between wideband and narrowband.
+
+* No effects of bandwidth in isolation or interacting with WAAT on: short, breathy, high, nasal, sharp, even, accented, bright, loud, creaky, monotonous, remarkable, slow, natural, shaky, precise, powerful, emphasized.
+
+
+ 
+
+

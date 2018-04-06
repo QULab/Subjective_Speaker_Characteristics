@@ -41,7 +41,7 @@ In particular, we examine whether there is a correspondence between more likable
 degradations = c('G711','AMRNB','G722','AMRWB','EVS','filtered','MNRU','ref','BP900_2500','MNRU_10DB')  
 
 # load raw answers
-mydata <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest5.csv")))  
+mydata <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest5.csv")), header = T, sep=';')  
 mydata$MOS <- as.numeric(as.matrix(mydata$MOS))
 
 # extract listener and stimulus information
@@ -210,9 +210,9 @@ max(mean_m - mean_f)
 For each distortion separately, create interaction plot:
 
 -   view effects of:
--   speaker gender (g)
--   speakers' WAAT class (class)
--   interaction (g:class)
+    -   speaker gender (g)
+    -   speakers' WAAT class (class)
+    -   interaction (g:class)
 -   if lines are parallel: there is no interaction effect
 
 ``` r

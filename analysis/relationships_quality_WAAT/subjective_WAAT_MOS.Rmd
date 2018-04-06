@@ -178,9 +178,9 @@ max(mean_m - mean_f)
 For each distortion separately, create interaction plot:
 
 * view effects of:
-- speaker gender (g)
-- speakers' WAAT class (class)
-- interaction (g:class)
+    + speaker gender (g)
+    + speakers' WAAT class (class)
+    + interaction (g:class)
 * if lines are parallel: there is no interaction effect
 
 
@@ -216,7 +216,6 @@ lapply(mydata.split, function(x){
   #dev.off()
 
 })
-
 
 
 ```
