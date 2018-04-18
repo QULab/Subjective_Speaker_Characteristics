@@ -1,5 +1,9 @@
 ## csv files:
 
+(see [listening tests](https://github.com/laufergall/Subjective_Speaker_Characteristics/tree/master/doc/listening_tests))
+
+
+
 **SC_Questionnaire.csv**: labels of the 34 questionnaire items of speaker characteristics.
 
 **VD_Questionnaire.csv**: labels of the 34 questionnaire items of voice descriptions.
