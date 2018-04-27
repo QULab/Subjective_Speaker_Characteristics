@@ -53,3 +53,7 @@ You are welcome to contribute to this project in any way. Please feel free to fi
 [2] Fernández Gallardo, L., Mittag, G., Möller, S. and Beerends, J., "Variable Voice Likability Affecting Subjective Speech Quality Assessments," Int. Conf. on Quality of Multimedia Experience (QoMEX), 2018.
 
 [3] Fernández Gallardo, L. and Weiss, B., "The Nautilus Speaker Characterization Corpus: Speech Recordings and Labels of Speaker Characteristics and Voice Descriptions," in International Conference on Language Resources and Evaluation (LREC), 2018.
+
+
+
+See complete list of project publications [here](http://www.qu.tu-berlin.de/?id=lfernandez).

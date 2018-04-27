@@ -561,7 +561,7 @@ fa.parallel(data_f[,3:ncol(data_f)])
 
 ![](factor_analysis_VD_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-11-1.png)
 
-    ## Parallel analysis suggests that the number of factors =  5  and the number of components =  3
+    ## Parallel analysis suggests that the number of factors =  5  and the number of components =  4
 
 ``` r
 # Parallel analysis suggests that the number of factors =  5  and the number of components =  3 
@@ -671,7 +671,6 @@ names(data_f_02)[3:ncol(data_f_02)]
 fa.parallel(data_f_02[,3:ncol(data_f_02)])
 ```
 
-    ## The estimated weights for the factor scores are probably incorrect.  Try a different factor extraction method.
     ## The estimated weights for the factor scores are probably incorrect.  Try a different factor extraction method.
 
 ![](factor_analysis_VD_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png)
@@ -984,9 +983,16 @@ write.csv(factorscores_f_02, "../../../data/generated_data/factorscores_femalesp
 3) Summary of dimensions and loadings
 -------------------------------------
 
--   Male speech Dimension 1: proficiency (precision / fluency) (\*negative) Dimension 2: tension Dimension 3: melody Dimension 4: brightness
-
--   Female speech Dimension 1: fluency (not connected to precision in contrast to male speech) (*negative) Dimension 2: brightness ( and also, smoothness with lower loading - can be neglected ) Dimension 3: proficiency precision (*negative) Dimension 4: shrillness (related to tension dim of male speech)
+-   Male speech
+    -   Dimension 1: proficiency (precision / fluency) (negative)
+    -   Dimension 2: tension
+    -   Dimension 3: melody
+    -   Dimension 4: brightness
+-   Female speech
+    -   Dimension 1: fluency (not connected to precision in contrast to male speech) (negative)
+    -   Dimension 2: brightness ( and also, smoothness with lower loading - can be neglected )
+    -   Dimension 3: proficiency precision (negative)
+    -   Dimension 4: shrillness (related to tension dim of male speech)
 
 ### Male speakers
 

@@ -1,0 +1,198 @@
+---
+title: "Testing for significant effects of SC WAAT on VD factors"
+author: "Laura Fernández Gallardo"
+date: "August 2017"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = './')
+knitr::opts_chunk$set(fig.width=5, fig.height=5, dpi=150)
+```
+
+
+```{r echo=FALSE}
+
+# clear
+rm(list=ls())
+
+```
+ 
+```{r message=FALSE, warning=FALSE}
+
+# Libraries needed:
+
+library(RCurl) # to read raw data from repo
+library(stringi) # install.packages('stringi')
+library(stats) # for wilcox.test
+
+
+``` 
+ 
+## Objectives
+
+Insights into subjective voice descriptions of extreme warm-attractive speakers.
+
+To assess whether speaker characteristics (SC), namely warmth and attractiveness (WAAT), affect significantly the perceptions of voice descriptions (VD). The factors derived by factor analysis are considered (see [SC factor analysis](https://github.com/laufergall/Subjective_Speaker_Characteristics/tree/master/analysis/speaker_characteristics/factor_analysis) and see [VD factor analysis](https://github.com/laufergall/Subjective_Speaker_Characteristics/tree/master/analysis/voice_descriptions/factor_analysis)) 
+
+We conduct Wilcoxon rank-sum tests.
+
+
+## Load data
+
+Set paths and read subjective ratings to voice descriptions.
+
+```{r echo=FALSE}
+
+setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/analysis/relationships_SC_VD")
+
+path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
+  
+data_raw <- read.csv(text=getURL(paste0(path_github,"/VD_ratings.csv")), header=TRUE, sep=",")  
+
+```
+
+
+Load factor scores of voice descriptions calculated in [VD factor analysis](https://github.com/laufergall/Subjective_Speaker_Characteristics/tree/master/analysis/voice_descriptions/factor_analysis)).
+
+```{r}
+
+path_factorscores <- '../../data/generated_data'
+
+fs_m <- read.csv(paste0(path_factorscores,'/factorscores_VD_malespk.csv'))
+names(fs_m) <- c("sample_heard", "dim1_vd","dim2_vd","dim3_vd","dim4_vd" ) # voice description dimensions
+
+fs_f <- read.csv(paste0(path_factorscores,'/factorscores_VD_femalespk.csv'))
+names(fs_f) <- c("sample_heard", "dim1_vd","dim2_vd","dim3_vd","dim4_vd" ) # voice description dimensions
+
+fs_vd <- rbind(fs_m, fs_f) # join male and female speakers
+fs_vd$speaker_pseudonym <- stri_sub(fs_vd$sample_heard,6,-14)
+fs_vd<-fs_vd[,-1] # remove "sample_heard"
+
+
+```
+
+
+Prepare dataframe with SC and VD factors for each of the 20 speakers. 
+
+```{r}
+
+# merging dfs
+
+mydata_factors <- merge(fs_vd, 
+                        data_raw[data_raw$listener_pseudonym == data_raw$listener_pseudonym[1] , 6:15], 
+                        by = 'speaker_pseudonym')
+
+head(mydata_factors)
+
+
+```
+
+
+
+## Wilkoxon test 
+
+Wilkoxon test with VD factors. Are there significant effects of speaker WAAT on factor value?
+
+(averaging across listeners)  
+
+As a reminder, the factors found for voice descriptions were:
+
+* Male speech
+    * Dimension 1: proficiency (precision / fluency) (negative)
+    * Dimension 2: tension
+    * Dimension 3: melody
+    * Dimension 4: brightness
+
+* Female speech
+    * Dimension 1: fluency (not connected to precision in contrast to male speech)  (negative)
+    * Dimension 2: brightness ( and also, smoothness with lower loading - can be neglected )
+    * Dimension 3: proficiency precision (negative)
+    * Dimension 4: shrillness (related to tension dim of male speech)
+    
+    
+```{r}
+
+# function in utils_R
+source('../utils_R/getsigcode.R')
+
+```
+
+
+
+
+### Male speakers
+
+```{r}
+
+# separate high and low WAAT speakers
+l <- mydata_factors[mydata_factors$speaker_highlow_SC=='low' & mydata_factors$speaker_gender=='m',]
+h <- mydata_factors[mydata_factors$speaker_highlow_SC=='high' & mydata_factors$speaker_gender=='m',]
+
+
+for (i in c(1:4)){ # for each VD factor
+
+  a <- l[,i+1]
+  b <- h[,i+1]
+
+  
+  #---wilcox.test
+  # Wilcoxon rank-sum test -> equivalent to the Mann-Whitney test
+  # paired: each subject or entity is measured twice, resulting in pairs of observations <- this is not our case
+  wtest <- wilcox.test(a, b, paired=FALSE)
+  
+  cat(paste0(names(mydata_factors)[1+i], ': ', ", p-val: ", round(wtest$p.value,4),getsigcode(wtest$p.value), '   mean low=',round(mean(a),3),', mean high=',round(mean(b),3),'\n'))
+  
+}
+
+```
+
+
+
+
+### Female speakers
+
+```{r}
+
+# separate high and low WAAT speakers
+l <- mydata_factors[mydata_factors$speaker_highlow_SC=='low' & mydata_factors$speaker_gender=='w',]
+h <- mydata_factors[mydata_factors$speaker_highlow_SC=='high' & mydata_factors$speaker_gender=='w',]
+
+
+for (i in c(1:4)){ # for each VD factor
+  
+  a <- l[,i+1]
+  b <- h[,i+1]
+  
+  
+  #---wilcox.test
+  # Wilcoxon rank-sum test -> equivalent to the Mann-Whitney test
+  # paired: each subject or entity is measured twice, resulting in pairs of observations <- this is not our case
+  wtest <- wilcox.test(a, b, paired=FALSE)
+  
+  cat(paste0(names(mydata_factors)[1+i], ': ', ", p-val: ", round(wtest$p.value,4),getsigcode(wtest$p.value), '   mean low=',round(mean(a),3),', mean high=',round(mean(b),3),'\n'))
+  
+}
+
+
+```
+
+## Conclusions
+
+We examine the effects of speakers' warmth--attractiveness on the obtained VD factor scores. 
+
+Conducted Wilcoxon rank-sum tests suggested that, for male speakers, *melody* and *brightness* factor scores differ significantly for perceived low warm--attractive speakers compared to perceived high warm--attractive speakers ($p<.01$ and $p<.05$, respectively).
+
+For female speakers, this statistical significant difference has been found for *fluency* ($p<.01$), *brightness* ($p<.05$), and *proficiency precision* ($p<.01$). 
+
+It can therefore be stated that: male voices are perceived as significantly more melodic and brighter; and female voices as significantly more fluent, brighter, and with higher proficiency precision; when speakers are perceived as highly warm and attractive, compared to when speakers are perceived as (extremely) not warm and not attractive.
+
+These findings indicate the plausibility to classify perceived speaker traits based on speech features related to their voice descriptions. However, the voice descriptions of more speakers need to be analyzed in order to better determine the statistical effects between the SC and VD dimensions. 
+ 
+
+

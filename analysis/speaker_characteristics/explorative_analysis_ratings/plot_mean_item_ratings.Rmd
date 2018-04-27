@@ -65,9 +65,8 @@ data_split_g <- split(data_raw, data_raw$speaker_gender)
 data_m <- data_split_g$male
 data_f <- data_split_g$female
 
-
-# souce D:\Users\fernandez.laura\Documents\Work\utils\R\summarySE.R
-source('summarySE.R')
+# function in utils_R
+source('../../utils_R/summarySE.R')
 
 
 nameitems = c("Item 1 sympatisch - unsympatisch",

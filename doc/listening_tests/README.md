@@ -6,9 +6,9 @@ For the listening tests, this [GUI](https://github.com/laufergall/GUI_SpeakerCha
 
 Tests administered using a laptop, a mouse, and Shure SRH240 headphones (diotic listening, frequency range 20-20,000 Hz), except for Listening Test 5, where the AKG K271 MKII (16-28,000 Hz) were employed. Individual test sessions of max. duration of about 1-1.5 hours, with short breaks every 10-15 minutes. No test participant performed more than one test. 
 
+As a reminder, "WAAT" stands for "warmth-attractiveness", the first two traits resulting from factor analysis with data of Listening Test 1.
 
-
-### 1) NSC labeling of speaker characteristics (SC)
+### Listening Test 1: NSC labeling of speaker characteristics (SC)
 
 This listening test was conducted in order to label the NSC corpus with continuous numeric subjective ratings of speaker characteristics, given to all speakers.
 
@@ -31,7 +31,7 @@ This listening test was conducted in order to label the NSC corpus with continuo
 
 
 
-### 2) NSC labeling of voice descriptions (VD)
+### Listening Test 2: NSC labeling of voice descriptions (VD)
 
 This listening test was conducted in order to label the NSC corpus with continuous numeric subjective ratings of speaker characteristics, given to all speakers.
 
@@ -56,7 +56,7 @@ This listening test was conducted in order to label the NSC corpus with continuo
 
 
 
-### 3) Effects of bandwidth on speaker characteristics
+### Listening Test 3: Effects of bandwidth on speaker characteristics
 
 This listening test was conducted with degraded speech stimuli to study the effects of telephone bandwidth on subjective impressions of speaker characteristics. 
 
@@ -81,7 +81,7 @@ This listening test was conducted with degraded speech stimuli to study the effe
 
 
 
-### 4) Effects of bandwidth on voice descriptions
+### Listening Test 4: Effects of bandwidth on voice descriptions
 
 This listening test was conducted with degraded speech stimuli to study the effects of telephone bandwidth on subjective voice descriptions.
 
@@ -101,7 +101,7 @@ This listening test was conducted with degraded speech stimuli to study the effe
 
 
 
-### 5) Speech quality of speakers of extreme WAAT
+### Listening Test 5: Speech quality of speakers of extreme WAAT
 
 The relationships between speech quality and speakers' WAAT was studied with the data from this listening test. 
 
