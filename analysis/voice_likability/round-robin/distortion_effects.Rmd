@@ -1,0 +1,69 @@
+---
+title: "Effect of channel distorions on the SRM variances"
+author: "Laura Fernández Gallardo"
+date: "April 2016"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = './')
+knitr::opts_chunk$set(fig.width=5, fig.height=5, dpi=150)
+```
+
+Clear and set path.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# clear
+rm(list=ls())
+
+# paths
+setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/analysis/relationships_quality_WAAT")
+
+path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
+  
+
+```
+
+
+```{r}
+
+# Libraries needed:
+
+library(RCurl) # to read raw data from repo
+library(TripleR) # analysis of SRM variance
+
+```
+
+## Objectives
+
+We examine speech-based interpersonal perceptions. Here, by analyzing listeners' responses from the round robin experiment,  E. Assessing the effects of channel distorions on the [SRM](http://davidakenny.net/srm/soremo.htm) variances.
+
+SRM model: D. A. Kenny, "Interpersonal Perception: A Social Relations Analysis," New York, U. S.: Guilford Press, 1994.
+
+
+## Load data from listening test
+
+```{r}
+
+## Read raw results
+
+path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
+  
+# data_raw <- read.csv(text=getURL(paste0(path_github,"/VD_ratings.csv")), header=TRUE, sep=",")  
+
+data_raw <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_selfRatings.csv")), header=TRUE, sep=",")  
+
+
+
+#
+data_self <- read.csv("data_listeningtest6_selfRatings.csv", header=TRUE, sep=",")
+data_lik <- read.csv("data_listeningtest6_likabilityRatings_NAs.csv", header=TRUE, sep=",")
+data_likper <- read.csv("data_listeningtest6_likabilityPersonalityRatings_NAs.csv", header=TRUE, sep=",")
+
+```
+
