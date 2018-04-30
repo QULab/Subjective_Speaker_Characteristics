@@ -21,9 +21,6 @@ Clear and set path.
 # clear
 rm(list=ls())
 
-# paths
-setwd("D:/Users/fernandez.laura/Documents/Work/Projects_Github/Subjective_Speaker_Characteristics/analysis/relationships_quality_WAAT")
-
 path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
   
 
@@ -61,7 +58,7 @@ data_lik <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_likabi
 
 data_likper <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_likabilityPersonalityRatings_NAs.csv")), header=TRUE, sep=",")  
 
-participants <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_participants.csv")), header=TRUE, sep=",")  
+participants <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_participants.csv")), header=TRUE, sep=";")  
 
 ```
 
@@ -141,11 +138,56 @@ Interestingly, large perceiver variance has been found with respect to the targe
 Two deductions can then be made: First, perceivers differ in "being a liker" to a greater extent in NB than in WB. This implies more variation among perceivers considering the average of their likability ratings of NB voices compared to WB. In other words, there is a wider range of positive and negative liking tendencies in NB, probably due to the perceivers' different degrees of tolerance to the NB distortion. And second, because targets differ in "being liked" more in WB than in NB, the differences between non-likable and likable voices appear to be better detected with the extended bandwidth.
 
 
+## Gender effects
+
+Gender effects in NB, WB, and full band. Mean likability per listener gender and speaker gender. 
+
+```{r}
+
+IDMales <- participants$ID[participants$gender == 'm'] 
+IDFemales <- participants$ID[participants$gender == 'f'] 
+
+# Subsetting according to listeners IDs and speakers IDs
+data_lik_NB_only_m_m <- subset(data_lik_NB, IDListener%in% IDMales & IDSpeaker %in% IDMales)
+data_lik_NB_only_f_f <- subset(data_lik_NB, IDListener%in% IDFemales & IDSpeaker %in% IDFemales)
+data_lik_NB_only_m_f <- subset(data_lik_NB, IDListener%in% IDMales & IDSpeaker %in% IDFemales)
+data_lik_NB_only_f_m <- subset(data_lik_NB, IDListener%in% IDFemales & IDSpeaker %in% IDMales)
+
+data_lik_WB_only_m_m <- subset(data_lik_WB, IDListener%in% IDMales & IDSpeaker %in% IDMales)
+data_lik_WB_only_f_f <- subset(data_lik_WB, IDListener%in% IDFemales & IDSpeaker %in% IDFemales)
+data_lik_WB_only_m_f <- subset(data_lik_WB, IDListener%in% IDMales & IDSpeaker %in% IDFemales)
+data_lik_WB_only_f_m <- subset(data_lik_WB, IDListener%in% IDFemales & IDSpeaker %in% IDMales)
+
+data_lik_44100 <- data_likper
+data_lik_44100_only_m_m <- subset(data_lik_44100, IDListener%in% IDMales & IDSpeaker %in% IDMales)
+data_lik_44100_only_f_f <- subset(data_lik_44100, IDListener%in% IDFemales & IDSpeaker %in% IDFemales)
+data_lik_44100_only_m_f <- subset(data_lik_44100, IDListener%in% IDMales & IDSpeaker %in% IDFemales)
+data_lik_44100_only_f_m <- subset(data_lik_44100, IDListener%in% IDFemales & IDSpeaker %in% IDMales)
+
+# males rate males
+mean(data_lik_NB_only_m_m$Rating_Likability, na.rm=TRUE) # 43.05238
+mean(data_lik_WB_only_m_m$Rating_Likability, na.rm=TRUE) # 52.86667
+mean(data_lik_44100_only_m_m$Rating_Likability, na.rm=TRUE) # 50.0619
+
+# females rate females
+mean(data_lik_NB_only_f_f$Rating_Likability, na.rm=TRUE) # 47.35714  
+mean(data_lik_WB_only_f_f$Rating_Likability, na.rm=TRUE) # 54.76667
+mean(data_lik_44100_only_f_f$Rating_Likability, na.rm=TRUE) # 53.67143
+
+# males rate females
+mean(data_lik_NB_only_m_f$Rating_Likability, na.rm=TRUE)  # 47.44643
+mean(data_lik_WB_only_m_f$Rating_Likability, na.rm=TRUE) # 53.16964
+mean(data_lik_44100_only_m_f$Rating_Likability, na.rm=TRUE) # 56.63839
+
+# females rate males
+mean(data_lik_NB_only_f_m$Rating_Likability, na.rm=TRUE)  # 43.99554
+mean(data_lik_WB_only_f_m$Rating_Likability, na.rm=TRUE) # 52.47768
+mean(data_lik_44100_only_f_m$Rating_Likability, na.rm=TRUE)  # 49.36607
+
+```
 
 
-
-
-
+In this case, female spekers are generally more liked, by males and by females.
 
 
 

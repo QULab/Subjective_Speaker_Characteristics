@@ -1,0 +1,62 @@
+---
+title: "Effects of speakers' personality on the SRM variances"
+author: "Laura Fernández Gallardo"
+date: "April 2016"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = './')
+knitr::opts_chunk$set(fig.width=5, fig.height=5, dpi=150)
+```
+
+Clear and set path.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# clear
+rm(list=ls())
+
+path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
+  
+
+```
+
+
+```{r}
+
+# Libraries needed:
+
+library(RCurl) # to read raw data from repo
+library(TripleR) # analysis of SRM variance
+library(knitr) # for kable
+
+```
+
+## Objectives
+
+Analyzing listeners' responses of listening test "Round Robin". Effects of the self-assessed personality on the SRM perceiver variance, and effects of the externally assessed personality on the SRM target variance.
+
+
+## Load data from listening test
+
+```{r}
+
+## Read raw results
+
+path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
+  
+data_self <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_selfRatings.csv")), header=TRUE, sep=",")  
+
+data_lik <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_likabilityRatings_NAs.csv")), header=TRUE, sep=",")  
+
+data_likper <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_likabilityPersonalityRatings_NAs.csv")), header=TRUE, sep=",")  
+
+participants <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_participants.csv")), header=TRUE, sep=";")  
+
+```
+
