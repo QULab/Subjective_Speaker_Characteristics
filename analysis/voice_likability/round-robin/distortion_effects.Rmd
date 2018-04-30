@@ -36,12 +36,13 @@ path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_
 
 library(RCurl) # to read raw data from repo
 library(TripleR) # analysis of SRM variance
+library(knitr) # for kable
 
 ```
 
 ## Objectives
 
-We examine speech-based interpersonal perceptions. Here, by analyzing listeners' responses from the round robin experiment,  E. Assessing the effects of channel distorions on the [SRM](http://davidakenny.net/srm/soremo.htm) variances.
+We examine speech-based interpersonal perceptions. Here, by analyzing listeners' responses from the round robin experiment. Assessing the effects of channel distorions on the [SRM](http://davidakenny.net/srm/soremo.htm) variances.
 
 SRM model: D. A. Kenny, "Interpersonal Perception: A Social Relations Analysis," New York, U. S.: Guilford Press, 1994.
 
@@ -54,16 +55,98 @@ SRM model: D. A. Kenny, "Interpersonal Perception: A Social Relations Analysis,"
 
 path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
   
-# data_raw <- read.csv(text=getURL(paste0(path_github,"/VD_ratings.csv")), header=TRUE, sep=",")  
+data_self <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_selfRatings.csv")), header=TRUE, sep=",")  
 
-data_raw <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_selfRatings.csv")), header=TRUE, sep=",")  
+data_lik <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_likabilityRatings_NAs.csv")), header=TRUE, sep=",")  
 
+data_likper <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_likabilityPersonalityRatings_NAs.csv")), header=TRUE, sep=",")  
 
-
-#
-data_self <- read.csv("data_listeningtest6_selfRatings.csv", header=TRUE, sep=",")
-data_lik <- read.csv("data_listeningtest6_likabilityRatings_NAs.csv", header=TRUE, sep=",")
-data_likper <- read.csv("data_listeningtest6_likabilityPersonalityRatings_NAs.csv", header=TRUE, sep=",")
+participants <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_participants.csv")), header=TRUE, sep=",")  
 
 ```
+
+
+## Mutual ratings of voice likability
+
+Split data_lik per channel condition: narrowband (NB) or wideband (WB).
+
+```{r}
+
+data_lik_split<-split(data_lik, data_lik$stimulusDistortion)
+data_lik_NB<-data_lik_split[[1]]
+data_lik_WB<-data_lik_split[[2]]
+
+```
+
+
+Mean of likability ratings in NB and in WB, for each of the 30 speakers. WB voices tend to be rated with higher likability.
+
+The influence of NB and WB communication channels on voice likability were analyzed employing the ratings of the first part of the listening test. Considering a scale from 0 to 100, where greater numbers would represent higher perceived likability, the average rating was 45.47 and 53.30 for NB and WB speech, respectively.
+
+```{r}
+
+mean_NB <- mean(data_lik_NB$Rating_Likability, na.rm=TRUE)
+stdev_NB<- sd(data_lik_NB$Rating_Likability, na.rm=TRUE)
+ratingsSpk_NB <- aggregate(data_lik_NB$Rating_Likability, by=list(data_lik_NB$IDSpeaker), mean, na.rm=T) # per speaker
+
+mean_WB <- mean(data_lik_WB$Rating_Likability, na.rm=TRUE)
+stdev_WB <- sd(data_lik_WB$Rating_Likability, na.rm=TRUE)
+ratingsSpk_WB <- aggregate(data_lik_WB$Rating_Likability, by=list(data_lik_WB$IDSpeaker), mean, na.rm=T) # per speaker
+
+# mean ratings
+mean(ratingsSpk_NB$x)
+mean(ratingsSpk_WB$x)
+
+# mean ratings per speaker
+df <- cbind(ratingsSpk_NB, ratingsSpk_WB$x)
+names(df) <- c('speaker_ID', 'rating_NB', 'rating_WB')
+kable(df) # view
+
+
+```
+
+
+T-test to check the significance of the mean differences between NB and WB:
+
+```{r}
+
+# Two Sample t-test:
+t.test(data_lik_NB$Rating_Likability, data_lik_WB$Rating_Likability, alternative="less")
+
+```
+
+A two-sample t-test shows that the WB mean is significantly higher than the NB mean; t(1718) = -7.354, p < .001, revealing listeners' predilection for WB voices.
+
+
+## Round Robin - univariate analysis for voice likability
+
+
+```{r}
+
+# Variance components, NB
+RR1_NB <- RR(Rating_Likability ~ IDListener*IDSpeaker, data=data_lik_NB, na.rm=TRUE) 
+RR1_NB$varComp
+
+# Variance components, WB
+RR1_WB <- RR(Rating_Likability ~ IDListener*IDSpeaker, data=data_lik_WB, na.rm=TRUE)
+RR1_WB$varComp
+
+```
+
+
+
+These are the SRM variance components computed from the NB and WB ratings separately. 
+Interestingly, large perceiver variance has been found with respect to the target variance in NB, while in WB both perceiver and target variance are similar. 
+
+Two deductions can then be made: First, perceivers differ in "being a liker" to a greater extent in NB than in WB. This implies more variation among perceivers considering the average of their likability ratings of NB voices compared to WB. In other words, there is a wider range of positive and negative liking tendencies in NB, probably due to the perceivers' different degrees of tolerance to the NB distortion. And second, because targets differ in "being liked" more in WB than in NB, the differences between non-likable and likable voices appear to be better detected with the extended bandwidth.
+
+
+
+
+
+
+
+
+
+
 
