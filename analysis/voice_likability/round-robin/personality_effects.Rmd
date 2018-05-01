@@ -2,6 +2,7 @@
 title: "Effects of speakers' personality on the SRM variances"
 author: "Laura Fernández Gallardo"
 date: "April 2016"
+bibliography: references.bib
 output: 
   github_document:
     toc: true
@@ -27,7 +28,7 @@ path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_
 ```
 
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 # Libraries needed:
 
@@ -40,6 +41,8 @@ library(knitr) # for kable
 ## Objectives
 
 Analyzing listeners' responses of listening test "Round Robin". Effects of the self-assessed personality on the SRM perceiver variance, and effects of the externally assessed personality on the SRM target variance.
+
+The [SRM model](http://davidakenny.net/srm/soremo.htm) by D. A. Kenny: @563.
 
 
 ## Load data from listening test
@@ -59,4 +62,230 @@ data_likper <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_lik
 participants <- read.csv(text=getURL(paste0(path_github,"/data_listeningtest6_participants.csv")), header=TRUE, sep=";")  
 
 ```
+
+
+## Self- and externally-assessed personality traits
+
+```{r}
+
+## Get the self-assessed traits for all participants
+selfpers <- data_self[c(19:23)]
+
+## Get the average externally perceived traits for all participants
+perceivedpers <- aggregate(data_likper[c(28:32)], by=list(data_likper$IDSpeaker), mean, na.rm=T)
+
+## Correlate self personality and assessed personality, per trait
+# Extraversion
+fitE <- lm(selfpers$Extraversion ~ perceivedpers$Extraversion)
+summary(fitE)       # R-squared ~ 0.11
+plot(perceivedpers$Extraversion, selfpers$Extraversion, pch=19, col="blue" ) 
+lines(perceivedpers$Extraversion, fitE$fitted, lwd=3, col="darkgrey")
+# Agreeableness
+fitA <- lm(selfpers$Agreeableness ~ perceivedpers$Agreeableness)
+summary(fitA)
+# Conscientiousness
+fitC <- lm(selfpers$Conscientiousness ~ perceivedpers$Conscientiousness)
+summary(fitC)
+# Neuroticism
+fitN <- lm(selfpers$Neuroticism ~ perceivedpers$Neuroticism)
+summary(fitN)
+# Openness
+fitO <- lm(selfpers$Openness ~ perceivedpers$Openness)
+summary(fitO)
+
+```
+
+No correlation has been found between self- and externally-assessed personality for any personality trait.
+
+## Self- and externally-assessed voice likability
+
+```{r}
+
+## Mean of likability for clean data
+mean_44100 <- mean(data_likper$Rating_Likability)
+ratingsSpk <- aggregate(data_likper$Rating_Likability, by=list(data_likper$IDSpeaker), mean, na.rm=T)
+
+
+# self-assessed likability
+selflik<- data_self$Rating_Likability
+
+
+# mean assessed likability for NB and for WB
+data_lik_split<-split(data_lik, data_lik$stimulusDistortion)
+data_lik_NB<-data_lik_split[[1]]
+data_lik_WB<-data_lik_split[[2]]
+ratingsSpk_NB <- aggregate(data_lik_NB$Rating_Likability, by=list(data_lik_NB$IDSpeaker), mean, na.rm=T)
+ratingsSpk_WB <- aggregate(data_lik_WB$Rating_Likability, by=list(data_lik_WB$IDSpeaker), mean, na.rm=T)
+
+# Correlations
+fit_lik_clean <- lm(ratingsSpk$x ~ selflik)
+summary(fit_lik_clean) # no fit
+
+fit_lik_NB <- lm(ratingsSpk_NB$x ~ selflik)
+summary(fit_lik_NB) # no fit
+fit_lik_WB <- lm(ratingsSpk_WB$x ~ selflik)
+summary(fit_lik_WB) # R-squared ~ 0.1
+
+
+```
+
+No correlation has been found between self- and externally-assessed voice likability, for any channel quality.
+
+
+## SRM: Univariate analysis of likabiliy ratings
+
+Applying the SRM model. Likability ratings given to clean speech (sampled at 44.1 kHz) are analyzed.
+
+```{r}
+
+## Round-robin - univariate analysis for "Rating_Likability" in likper data
+RR1 <- RR(Rating_Likability ~ IDListener*IDSpeaker, data=data_likper, na.rm=TRUE)
+
+```
+
+The SRM variance components on the likability variable:
+
+```{r}
+
+RR1$varComp
+
+```
+
+The distribution of variance is comparable to other studies (e.g.@656), with a similar low amount of perceiver and target variance and a high amount of relationship variance.
+
+The perceiver effect reflects the participant's tendency to rate positively or negatively, whereas the target effect measures how likable a speaker is on average (the most common data analyzed). The remaining variance in the ratings comprises the effect of individual dyadic relationships.
+
+In the following, we conduct correlation analyses separately for these three effects.
+
+### Effects of self-assessed personality on the perceiver's variance for liking assessments
+
+Perceiver effects: "What is the personality of people who like others?"
+
+```{r}
+
+
+# self-assessed personality: 
+selfpers
+
+# perceiver/actor variance:
+effects_RR1 <- RR1$effects.gm
+
+# sorting perceiver's variance per participant ID
+effects_RR1_sorted <- effects_RR1[order(as.numeric(rownames(effects_RR1))),,drop=FALSE]
+names_sorted<-participants[participants$ID %in% effects_RR1_sorted$id, ]$spk_pseudonym
+data.frame(names_sorted,effects_RR1_sorted)
+
+effects_RR1_sorted$Rating_Likability.a 
+
+# Correlations per personality trait
+# Extraversion
+fit_perceiver_E <- lm(effects_RR1_sorted$Rating_Likability.a ~ selfpers$Extraversion)
+summary(fit_perceiver_E)
+# Agreeableness
+fit_perceiver_A <- lm(effects_RR1_sorted$Rating_Likability.a ~ selfpers$Agreeableness)
+summary(fit_perceiver_A)
+# Conscientiousness
+fit_perceiver_C <- lm(effects_RR1_sorted$Rating_Likability.a ~ selfpers$Conscientiousness)
+summary(fit_perceiver_C)
+# Neuroticism
+fit_perceiver_N <- lm(effects_RR1_sorted$Rating_Likability.a ~ selfpers$Neuroticism)
+summary(fit_perceiver_N)
+# Openness
+fit_perceiver_O <- lm(effects_RR1_sorted$Rating_Likability.a ~ selfpers$Openness)
+summary(fit_perceiver_O)
+
+
+```
+
+Correlating the Big-Five self reports with perceiver variance yields no significant result, although an effect of the Agreeableness trait was hypothesized. 
+
+Collecting additional personality profiles on the participants from close friends might have improved the validity and reliability of the personality traits. However, such a study was not conducted and the personality attributions from the other participants cannot be considered as they do not know each other. These are, in turn, relevant for the target effects.
+
+
+### Effects of "externally"-assessed personality on the target's variance for liking assessments
+
+Target effects: "Does attributed personality affect likability ratings?"
+
+```{r}
+
+# "externally"-assessed personality
+perceivedpers
+
+# target's variance
+effects_RR1_sorted$Rating_Likability.p
+
+# Correlations per personality trait
+# Extraversion
+fit_target_E <- lm(effects_RR1_sorted$Rating_Likability.p ~ perceivedpers$Extraversion)
+summary(fit_target_E)  # no correlation
+# Agreeableness
+fit_target_A <- lm(effects_RR1_sorted$Rating_Likability.p ~ perceivedpers$Agreeableness)
+summary(fit_target_A) # Multiple R-squared:  0.4152,	Adjusted R-squared:  0.3943, F-statistic: 19.88 on 1 and 28 DF,  p-value: 0.0001216
+plot(perceivedpers$Agreeableness, effects_RR1_sorted$Rating_Likability.p, pch=19, col="blue" ) 
+lines(perceivedpers$Agreeableness, fit_target_A$fitted, lwd=3, col="darkgrey")
+# Conscientiousness
+fit_target_C <- lm(effects_RR1_sorted$Rating_Likability.p ~ perceivedpers$Conscientiousness)
+summary(fit_target_C) # Multiple R-squared:  0.2774,	Adjusted R-squared:  0.2516, F-statistic: 10.75 on 1 and 28 DF,  p-value: 0.00279
+# Neuroticism
+fit_target_N <- lm(effects_RR1_sorted$Rating_Likability.p ~ perceivedpers$Neuroticism)
+summary(fit_target_N) # Multiple R-squared:  0.1136,	Adjusted R-squared:  0.08193, F-statistic: 3.588 on 1 and 28 DF,  p-value: 0.06857
+# Openness
+fit_target_O <- lm(effects_RR1_sorted$Rating_Likability.p ~ perceivedpers$Openness)
+summary(fit_target_O) # Multiple R-squared:  0.2995,	Adjusted R-squared:  0.2745, F-statistic: 11.97 on 1 and 28 DF,  p-value: 0.001748
+
+```
+
+Significant correlations found for Agreeableness, Conscientiousness, and Openness.
+
+The ratings of the Big-Five traits (z-normalized for better comparability) were correlated with target variance. Two effects have been found. Assumed extrovert and agreeable speakers are rated more positively. This is a well known effect for acquainted people @667, @668. 
+
+However, for unacquainted people, the study in @656 reports only a positive effect of Extroversion on target effects, whereas Agreeableness was not correlated. Still, there is sufficient evidence suggesting a positive effect of perceived benevolence on liking and social attractiveness for the acoustic domain and unacquainted people, e.g. @670.
+
+### Relationship effects
+
+Relationship effects: The remaining variance after controlling for target and perceiver.
+
+```{r}
+
+# calculate individual similarities between raters self and targets peceived personality 
+vector_diss_pers <- data_likper[,c(8,28:32,1,3,10)] 
+
+# diss_pers$IDListener is already sorted vector_diss_pers$IDSpeaker #so sort by IDspeaker/Target as well 
+
+vector_diss_pers <- vector_diss_pers[order(vector_diss_pers$IDListener,vector_diss_pers$IDSpeaker),]
+vector_diss_pers <- cbind(vector_diss_pers, rep(data_self[,19], each=29),rep(data_self[,20], each=29),rep(data_self[,21], each=29),rep(data_self[,22], each=29),rep(data_self[,22], each=29)) 
+names(vector_diss_pers)[10:14] <- c("S.Extraversion","S.Agreeableness","S.Conscientiousness","S.Neuroticism","S.Openness")
+
+vector_diss_pers$simE <- abs(vector_diss_pers$Extraversion-vector_diss_pers$S.Extraversion)*-1
+vector_diss_pers$simA <- abs(vector_diss_pers$Agreeableness-vector_diss_pers$S.Agreeableness)*-1
+vector_diss_pers$simC <- abs(vector_diss_pers$Conscientiousness-vector_diss_pers$S.Conscientiousness)*-1
+vector_diss_pers$simN <- abs(vector_diss_pers$Neuroticism-vector_diss_pers$S.Neuroticism)*-1
+vector_diss_pers$simO <- abs(vector_diss_pers$Openness-vector_diss_pers$S.Openness)*-1
+
+# sort for actor/perveiver
+relEffects_RR1 <- RR1$effectsRel 
+relEffects_RR1_sorted <- relEffects_RR1[order(relEffects_RR1$actor.id,relEffects_RR1$partner.id),,drop=FALSE]
+
+# merge rel-variance from RR and individual personality differences 
+relEffects_RR1_sorted <- cbind(relEffects_RR1_sorted, vector_diss_pers)
+
+# normalize
+relEffects_RR1_sorted[,c(4:9)] <- scale(relEffects_RR1_sorted[,c(4:9)])
+
+# correlations
+cor.test(relEffects_RR1_sorted$relationship, relEffects_RR1_sorted[,19]) 
+cor.test(relEffects_RR1_sorted$relationship, relEffects_RR1_sorted[,20]) 
+cor.test(relEffects_RR1_sorted$relationship, relEffects_RR1_sorted[,21]) 
+cor.test(relEffects_RR1_sorted$relationship, relEffects_RR1_sorted[,22]) 
+cor.test(relEffects_RR1_sorted$relationship, relEffects_RR1_sorted[,23])
+
+```
+
+Specifically, considering a pair of participants A--B, the relationship variance accounts for the extent to which A likes B controlling for A's general tendency toward liking others and B's general tendency to be liked by others.
+
+According to the attraction theory @559, the most prominent factors to explain individual relationships are similarity, reciprocal likability, and proximity. Reciprocal likability, however, cannot be analyzed for relationship variance with our data because the participants never interacted. Therefore, any signal of liking, interest, or agreeableness would only affect the target variance. This might partly explain our correlation of Agreeableness--target variance. Also, with unacquainted participants recruited from a single city, only similarity remains as factor to be studied here.
+
+Similarity between each dyad was obtained as the absolute difference between a perceiver's self-rating and his/her individual rating to his/her partner for each of the Big-Five traits, multiplied by -1 and z-normalized. In contrast to @656, which did not find a similarity effect for personality but only for preferences (clothing, subculture), a significant similarity effect for Agreeableness and Neuroticism can be observed from our results.
+
+This indicates that pairs of individuals who are close in these two personality traits tend to like each other's voices to a greater extent, controlling by their tendencies of "being a liker" and of "being liked" by others. A plausible explanation for the dissimilarity effect for Openness is currently missing.
 
