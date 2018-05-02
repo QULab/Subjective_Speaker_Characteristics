@@ -126,9 +126,9 @@ Deriving utility scale values.
 
 # ordering from most liked to least liked
 
-usr<-uscale(btl1) # not normalized
+usr <- uscale(btl1) # not normalized
 
-iir<-order(usr)
+iir <- order(usr)
 usr[iir]
 
 
@@ -167,13 +167,14 @@ Simulated paired-comparison data are obtained from this test as follows, based o
 # Pairs of 15 stimuli: only WB, only male speakers, only the 13 female listeners who participated in the paired-comparison test
 # Row stimuli are chosen over column stimuli
 
-matrix2 <- read.csv(text=getURL(paste0(path_github,"/preferencematrix_from_directscaling_FemalesRateMales.csv")), header=TRUE, sep=",")
 
-rownames(matrix) <- colnames(matrix)
+path_github2 <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/generated_data"
+
+matrix2 <- read.csv(text=getURL(paste0(path_github2,"/preferencematrix_from_directscaling_FemalesRateMales.csv")), header=TRUE, sep=",")
+
+#rownames(matrix) <- colnames(matrix)
 
 ```
-
-
 
 
 ### Consistency checks
@@ -206,28 +207,27 @@ The Kendall's u coefficient was found to be lower than that computed from the pa
 
 A lower number of violations was detected compared to the paired-comparison test. Notwithstanding, the BTL model could fit the data well (p>0.05) and hence these violations could also be categorized as random. 
 
-
 ```{r}
 
 ## Fit BTL
-btl1 <- eba(matrix2) # fit Bradley-Terry-Luce model
-btl1
-# G2(91) = 34.83, p = 1
+btl2 <- eba(matrix2) # fit Bradley-Terry-Luce model
+btl2
+# G2(91) = 34.83, p = 1, it fits
+
+btl2$coefficients
+
+```
 
 
-btl1$coefficients
+Utility scale values and confidence intervals from these "simulated" data.
 
- 
-uss<-uscale(btl1)
-# ii<-order(uss)
-# uss[ii]
+```{r}
 
-# cbind(usr2[iir2], uss[iir2], usr2[iir2] - uss[iir2]) # real - simulated
-
-
+# utility scale values 
+usr2 <-uscale(btl2)
 
 # 95% CI for utility scale values
-cis <- 1.96 * sqrt(diag(cov.u(btl1))) 
+cir2 <- 1.96 * sqrt(diag(cov.u(btl1))) 
 # cbind(cis[ii]) 
 
 
