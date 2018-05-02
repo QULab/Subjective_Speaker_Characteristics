@@ -11,9 +11,9 @@ As part of my [Postdoc project](http://www.qu.tu-berlin.de/?id=lfernandez), I co
 
   The resulting dimensions (referred to as "traits") were: _warmth_, _attractiveness_, _confidence_, _compliance_, _maturity_. 
 
-​	"WAAT" stands for "warmth-attractiveness", the first two traits resulting from this factor analysis.
-
-​	(Publication: [1])
+		"WAAT" stands for "warmth-attractiveness", the first two traits resulting from this factor analysis.
+	
+		(Publication: [1])
 
 
 
@@ -64,7 +64,7 @@ As part of my [Postdoc project](http://www.qu.tu-berlin.de/?id=lfernandez), I co
 
   ​
 
-* Comparison between speaker likability scores obtained by direct scaling or pairwise comparisons in laboratory environments or via crowdsourcing.
+* Comparison between speaker likability scores obtained by direct scaling or pairwise comparisons in laboratory environments (Listening Tests 6 and 7) or via crowdsourcing (Listening Tests 8 and 9). We used the [Crowdee](https://www.crowdee.de/en/home) platform to conduct mobile-crowdsourcing experiments based on micro-tasks.
 
   (Folder: )
 
