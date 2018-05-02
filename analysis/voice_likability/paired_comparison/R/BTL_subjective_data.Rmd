@@ -1,5 +1,5 @@
 ---
-title: "Applying BTL model to subjective data"
+title: "Applying BTL model to paired-comparison data and to direct scaling data"
 author: "Laura Fernández Gallardo"
 date: "May 2016"
 bibliography: references.bib
@@ -42,7 +42,8 @@ library(Hmisc) # for the plot
 
 A paired-comparison listening test has been conducted for obtaining listeners' likability ratings. This test avoids the use of a Likert scale and overcomes its associated difficulties:
 
-* disagreement between judges
+* disagreement between raters
+* raters are biased. Some tend to rate positively and some negatively
 * lack of reference voices representing likability or non-likability
 * unknown range of likability spanned by the stimuli
 
@@ -53,22 +54,325 @@ Our main interest is to assess the possible advantages of this method with respe
 Once their answers are collected, the the Bradley-Terry-Luce (BTL) probabilistic choice model @681 @682 is applied to the preference choice matrix and a ratio scale of preference is estimated. 
 
 
-## Load preference matrix
+## Preference matrix from the paired-comparison experiment
 
-Preference matrix, combined from listeners' preferences.
+Preference matrix, combined from listeners' preferences. Row and column names are speaker pseudonyms.
 
 ```{r}
+
+matrix <- read.csv(text=getURL(paste0(path_github,"/preferencematrix_total.csv")), header=TRUE, sep=",")
+
+rownames(matrix) <- colnames(matrix)
+
+```
+
+
+### Consistency checks
+
+
+
+#### Transitivity violations
+
+The BTL model implies a very strong form of stochastic transitivity. Given a triple of voices x, y, z for which the preference is determined as x > y and y > z, a transitivity is violated if x < z. Transitivity violations reflect individually inconsistent choice behavior or disagreement between raters. 
+
+The BTL model can only be fit if no systematic violations of the stochastic transitivity occur. We hypothesized that the ratio scale measures derived by the BTL model, if successful, could more reliably represent the voices' likability compared to direct scaling tests, yielding greater agreement between listeners. 
+
+```{r}
+
+strans(matrix)
+
+```
+
+
+It can be seen that very few WST violations out of the binom{15}{3}=455 possible tests have been encountered. The likelihood ratio test of the BTL model fit was performed to determine whether the transitivity violations encountered were systematic, and therefore critical, or random. Because this test did not result to be significant (p>0.05), the restrictive BTL model could be fit, and therefore the transitivity violations can be attributed to randomness @680. 
+
+A meaningful ordering of listeners' preferences could then be derived by probabilistic choice modeling, shown in the following.
+
+
+
+#### Concordance among listeners' preferences
+
+In addition, the Kendall's coefficient of agreement $u$ (se @698, Section 11.8) was calculated as a check for concordance among listeners' preferences.
+
+```{r}
+
+kendall.u(matrix)
+
+```
+
+
+This coefficient, computed from the preference matrix, was u=0.19. The extreme values u_{max}=1 and u_{min}=-1/M=-0.08, where M=13 listeners, would indicate complete agreement and evenly distributed answers, respectively. A chi2 test suggested that this value is significantly different to the u value if the agreement between raters were caused by chance (p<0.001). However, the low u coefficient obtained manifests the subjectivity of the task. Listeners seem not to apply the same criteria when assessing the likability of the voices.
+
+
+### Scaling listeners' preferences
+
+Since the BTL model has been shown to hold, utility scale (upsilon-scale) values were assigned to each speaker, representing their voice likability.
+
+```{r}
+
+## Fit BTL
+btl1 <- eba(matrix) # fit Bradley-Terry-Luce model
+btl1
+# G2(91) = 66.08, p = 0.9772 , indicates that it fits
+
+btl1$coefficients
+
+```
+
+
+Deriving utility scale values.
+
+```{r}
+
+# ordering from most liked to least liked
+
+usr<-uscale(btl1) # not normalized
+
+iir<-order(usr)
+usr[iir]
+
+
+# 95% CI for utility scale values
+cir <- 1.96 * sqrt(diag(cov.u(btl1))) 
+# cbind(cir[iir])
+
+
+```
+
+Generating plot: ratio scale preferences estimated by the BTL model. Error bars show 95% confidence intervals. The indifference line is plotted as y=1/15.
+
+```{r}
+
+# plotting utility scale values and conf interval
+dotchart(usr[iir], xlim=c(0, .3),
+         xlab="Utility scale value (BTL model)", pch=16) # plot the scale
+arrows(usr[iir]-cir[iir], 1:15, usr[iir]+cir[iir], 1:15, .05, 90, 3) # error bars
+abline(v=1/15, lty=2) # indifference line
+
+```
+
+
+
+## Preference matrix from the direct scaling experiment
+
+
+The results from the paired-comparison test are now compared to those obtained from the direct scaling test in @my17.
+
+Simulated paired-comparison data are obtained from this test as follows, based on the approach in @679. All ratings on the continuous likability scale were confronted in pairs. The higher of the two ratings was considered the winner of the comparison and the value in the corresponding cell of the simulated preference matrix (of size 15 x 15, initialized with zeros) was incremented by unity. This process was repeated for the same 13 female listeners who also participated in the paired-comparison test. 22 ties out of the 1365 (13 x 105) rating comparisons were detected, for which a random winner was selected. 
+
+
+```{r}
+
+# matrix2 of choice frequencies 
+# Pairs of 15 stimuli: only WB, only male speakers, only the 13 female listeners who participated in the paired-comparison test
+# Row stimuli are chosen over column stimuli
+
+matrix2 <- read.csv(text=getURL(paste0(path_github,"/preferencematrix_from_directscaling_FemalesRateMales.csv")), header=TRUE, sep=",")
+
+rownames(matrix) <- colnames(matrix)
 
 ```
 
 
 
 
+### Consistency checks
+
+The consistency of the ratings was analyzed similarly as before. 
+
+#### Transitivity violations
+
+
+```{r}
+## Analysis of consistency
+
+strans(matrix2)
+
+```
+
+#### Concordance among listeners' preferences
+
+```{r}
+
+## Agreement
+kendall.u(matrix2)
+
+```
+
+The Kendall's u coefficient was found to be lower than that computed from the paired-comparison test.
+
+
+### Scaling listeners' preferences
+
+A lower number of violations was detected compared to the paired-comparison test. Notwithstanding, the BTL model could fit the data well (p>0.05) and hence these violations could also be categorized as random. 
+
+
+```{r}
+
+## Fit BTL
+btl1 <- eba(matrix2) # fit Bradley-Terry-Luce model
+btl1
+# G2(91) = 34.83, p = 1
+
+
+btl1$coefficients
+
+ 
+uss<-uscale(btl1)
+# ii<-order(uss)
+# uss[ii]
+
+# cbind(usr2[iir2], uss[iir2], usr2[iir2] - uss[iir2]) # real - simulated
+
+
+
+# 95% CI for utility scale values
+cis <- 1.96 * sqrt(diag(cov.u(btl1))) 
+# cbind(cis[ii]) 
+
+
+
+# save scale and order and conf. intevals for figure
+setwd(path_variables)
+save(uss, file="uss.R")
+save(cis, file="cis.R")
+
+write.csv(uss, file = "uss.csv")
+write.csv(cis, file = "cis.csv")
+
+# load from REAL pair-comparison data: scale and order and conf. intevals for figure
+setwd(path_variables)
+load(file="usr2.R")
+load(file="iir2.R")
+load(file="cir.R")
+
+
+cbind(uss[iir2])
+
+# checking which speaker is more affected
+cols<-cbind(usr2[iir2] , uss[iir2], usr2[iir2] - uss[iir2])
+cbind(sort(abs(cols[,3])))
 
 
 
 
+# Plot
+
+dotchart(uss[iir2], xlim=c(0, .3),
+         xlab="Utility scale value (BTL model)", pch=16) # plot the scale
+arrows(uss[iir2]-cis[iir2], 1:15, uss[iir2]+cis[iir2], 1:15, .05, 90, 3) # error bars
+abline(v=1/15, lty=2) # indifference line
+
+```
+
+## Comparing paired-comparisons and direct scaling 
 
 
 
-The BTL model implies a very strong form of stochastic transitivity. Given a triple of voices $x$, $y$, $z$ for which the preference is determined as $x > y$ and $y > z$, a transitivity is violated if $x < z$. Transitivity violations reflect individually inconsistent choice behavior or disagreement between raters. The BTL model can only be fit if no systematic violations of the stochastic transitivity occur. We hypothesized that the ratio scale measures derived by the BTL model, if successful, could more reliably represent the voices' likability compared to direct scaling tests, yielding greater agreement between listeners. 
+```{r}
+
+
+##### Get ratings on scale to check ranking!
+
+setwd("D:/Users/fernandez.laura/Documents/Work/WP1_Data_collection/11/R")
+data_lik <- read.csv("likabilityRatings.csv", header=TRUE, sep=",")
+participants <- read.csv("participants.csv", header=TRUE, sep=";") # just to check persons names
+data_lik_split<-split(data_lik, data_lik$stimulusDistortion)
+data_lik_WB<-data_lik_split[[2]] # Wideband
+IDMales <- participants$ID[participants$gender == 'm'] 
+IDFemales <- participants$ID[participants$gender == 'f'] 
+# remove female IDs who did not participate: SHagedorn(ID=3) and SMilarch(ID=12)
+IDFemales<-IDFemales[!IDFemales %in% c(3,12)]
+data_lik_WB_only_f_m <- subset(data_lik_WB, IDListener %in% IDFemales & IDSpeaker %in% IDMales)
+ratings.mean <- aggregate(data_lik_WB_only_f_m$Rating_Likability, by=list(data_lik_WB_only_f_m$IDSpeaker), mean, na.rm=T) # mean per speaker
+
+
+
+# confidence intervals
+ratings.sd<- aggregate(data_lik_WB_only_f_m$Rating_Likability, by=list(data_lik_WB_only_f_m$IDSpeaker), sd, na.rm=T) # sd per speaker
+N<-13 # Number of listeners
+ratings.se <- ratings.sd$x / sqrt(N)  # Calculate standard error of the mean
+ratings.ci <- 1.96*ratings.sd$x/sqrt(N) # = 1.96*ratings.se
+
+
+# sort ratings as iir2
+ratings.mean[iir2,]
+ratings.ci[iir2]
+
+
+
+# View
+setwd(path_variables)
+df<-data.frame(participants$ID[ratings.mean[iir2,]$Group.1], participants$name[ratings.mean[iir2,]$Group.1], ratings.mean[iir2,]$x,ratings.ci[iir2], uss[iir2], usr2[iir2])
+
+# save direct scaling data for plot
+write.csv(df, file = "directscaling.csv")
+
+directscalingmeans <-structure(c( df$ratings.mean.iir2....x ),   .Names = c( names(uss[iir2]) ))
+save(directscalingmeans , file="directscalingmeans.R")
+write.csv(directscalingmeans, file = "directscalingmeans.csv")
+
+
+
+```
+
+
+
+```{r}
+
+# Correlations
+
+# between scale and simulated
+cor(ratings.mean[iir2,]$x, uss[iir2]) # correlated: 90.9% # $r = 0.91$
+
+# between scale and real
+cor(ratings.mean[iir2,]$x, usr2[iir2]) # correlated: 81.0%  # $r = 0.81$
+
+# between simulated and real
+cor(uss[iir2], usr2[iir2]) # correlated: 90.1% # $r = 0.90$
+
+
+# Correlations, Pearson
+
+#library(Hmisc) # type can be pearson or spearman
+
+# between scale and simulated
+rcorr(as.matrix2(data.frame(ratings.mean[iir2,]$x, uss[iir2])), type="pearson") # $r = 0.91$ 
+
+# between scale and real
+rcorr(as.matrix2(data.frame(ratings.mean[iir2,]$x, usr2[iir2])), type="pearson") # $r = 0.81$
+
+cor.test.plus <- function(x) {
+  list(x, 
+       Standard.Error = unname(sqrt((1 - x$estimate^2)/x$parameter)))
+}
+
+cor.test.plus(cor.test(    ratings.mean[iir2,]$x,  usr2[iir2]  ))
+
+
+# between simulated and real
+rcorr(as.matrix2(data.frame(uss[iir2], usr2[iir2])), type="pearson")  # $r = 0.90$
+
+
+## checking mistake in the ITG paper !!!!!
+
+x <- ratings.mean[iir2,]$x
+y <- uss[iir2]
+fit <- lm(x ~ y)
+summary(fit)$r.squared
+
+# R2 equals the square of the Pearson correlation coefficient     
+correl <- rcorr(as.matrix2(data.frame(ratings.mean[iir2,]$x, uss[iir2])), type="pearson")
+correl$r[2]*correl$r[2]
+
+```
+
+
+## Conclusions
+
+A paired-comparison listening test has been presented in this paper for collecting subjective voice likability ratings and contrasted to the direct scaling test in @my17. In view of our results, paired-comparison constitutes a reliable method for voice likability assessment while enabling simple comparative judgments. The BTL probabilistic choice model could be successfully applied and ratio scale preference measures were derived. 
+
+It has been shown that, when direct scaling ratings are transformed into (simulated) paired-comparison data, similar likability measures (R2 = 0.90) are obtained as when using the real paired-comparison data. However, the lower Kendall's u obtained with the direct scaling data suggests that this test leads to a somewhat lesser agreement between raters. Still, given the considerable amount of time that would be required for a paired-comparison listening test with more speakers (our test sessions took 30 minutes for 15 voices), direct scaling tests, which have been shown to provide similar scores, may be generally preferred despite the detriment to raters' agreement.
+
+
+
