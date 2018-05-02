@@ -177,7 +177,7 @@ A paired-comparison listening test was conducted to examine the applicability, r
 - Speakers: Only male speakers from Listening Test 6 (15 males)
 - Speech stimuli: Only WB stimuli from Listening Test 6
 - Test: The 15 speech stimuli were combined into 105 unique pairs, presented randomly. Listeners were asked to determine the preference for "A" or "B" by using a slider, which represents the extent of the difference in likability between the two voices.
-- Test participants: 13 females
+- Test participants: 13 out of the 15 female listeners of Listening Test 6
   - Mean age =27.8, range = 20-34
   - German as mother tongue 
   - Except for one participant, all listeners were unacquainted with the speakers
