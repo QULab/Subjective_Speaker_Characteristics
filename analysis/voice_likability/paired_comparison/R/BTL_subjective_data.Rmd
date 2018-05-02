@@ -1,0 +1,74 @@
+---
+title: "Applying BTL model to subjective data"
+author: "Laura Fernández Gallardo"
+date: "May 2016"
+bibliography: references.bib
+output: 
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = './')
+knitr::opts_chunk$set(fig.width=5, fig.height=5, dpi=150)
+```
+
+Clear and set path.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# clear
+rm(list=ls())
+
+path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings/data_listeningtest7"
+  
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# Libraries needed:
+
+library(RCurl) # to read raw data from repo
+library(eba) # BTL model
+library(Hmisc) # for the plot
+
+```
+
+## Objectives
+
+A paired-comparison listening test has been conducted for obtaining listeners' likability ratings. This test avoids the use of a Likert scale and overcomes its associated difficulties:
+
+* disagreement between judges
+* lack of reference voices representing likability or non-likability
+* unknown range of likability spanned by the stimuli
+
+In this work, the listener compares the likability of two presented speech stimuli and decides which one is more likable and to which extent, i.e. how much likable is the preferred utterance over the other. This is done for all unique pairs from the considered set of voices. 
+
+Our main interest is to assess the possible advantages of this method with respect to the direct scaling test described in @my17 (first test part, wideband quality). The same speech is employed again as audio stimuli, presented in pairs, and the same listeners were recruited to perform this second test. 
+
+Once their answers are collected, the the Bradley-Terry-Luce (BTL) probabilistic choice model @681 @682 is applied to the preference choice matrix and a ratio scale of preference is estimated. 
+
+
+## Load preference matrix
+
+Preference matrix, combined from listeners' preferences.
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+The BTL model implies a very strong form of stochastic transitivity. Given a triple of voices $x$, $y$, $z$ for which the preference is determined as $x > y$ and $y > z$, a transitivity is violated if $x < z$. Transitivity violations reflect individually inconsistent choice behavior or disagreement between raters. The BTL model can only be fit if no systematic violations of the stochastic transitivity occur. We hypothesized that the ratio scale measures derived by the BTL model, if successful, could more reliably represent the voices' likability compared to direct scaling tests, yielding greater agreement between listeners. 
