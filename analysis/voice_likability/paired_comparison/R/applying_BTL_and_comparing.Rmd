@@ -1,5 +1,5 @@
 ---
-title: "Applying BTL model to paired-comparison data and to direct scaling data"
+title: "Applying BTL model to paired-comparison data"
 author: "Laura Fernández Gallardo"
 date: "May 2016"
 bibliography: references.bib
@@ -17,7 +17,7 @@ knitr::opts_chunk$set(fig.width=5, fig.height=5, dpi=150)
 
 Clear and set path.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r}
 
 # clear
 rm(list=ls())
@@ -28,13 +28,12 @@ path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_
 ```
 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE}
 
 # Libraries needed:
 
 library(RCurl) # to read raw data from repo
 library(eba) # BTL model
-library(Hmisc) # for the plot
 
 ```
 
@@ -54,7 +53,7 @@ Our main interest is to assess the possible advantages of this method with respe
 Once their answers are collected, the the Bradley-Terry-Luce (BTL) probabilistic choice model @681 @682 is applied to the preference choice matrix and a ratio scale of preference is estimated. 
 
 
-## Preference matrix from the paired-comparison experiment
+## Preference matrix from the paired-comparison test
 
 Preference matrix, combined from listeners' preferences. Row and column names are speaker pseudonyms.
 
@@ -153,10 +152,10 @@ abline(v=1/15, lty=2) # indifference line
 
 
 
-## Preference matrix from the direct scaling experiment
+## Preference matrix from the direct scaling test
 
 
-The results from the paired-comparison test are now compared to those obtained from the direct scaling test in @my17.
+The results from the paired-comparison test are now compared to those obtained from the direct scaling test in @my17 (Listening Test 6).
 
 Simulated paired-comparison data are obtained from this test as follows, based on the approach in @679. All ratings on the continuous likability scale were confronted in pairs. The higher of the two ratings was considered the winner of the comparison and the value in the corresponding cell of the simulated preference matrix (of size 15 x 15, initialized with zeros) was incremented by unity. This process was repeated for the same 13 female listeners who also participated in the paired-comparison test. 22 ties out of the 1365 (13 x 105) rating comparisons were detected, for which a random winner was selected. 
 
@@ -227,66 +226,49 @@ Utility scale values and confidence intervals from these "simulated" data.
 usr2 <-uscale(btl2)
 
 # 95% CI for utility scale values
-cir2 <- 1.96 * sqrt(diag(cov.u(btl1))) 
+cir2 <- 1.96 * sqrt(diag(cov.u(btl2))) 
 # cbind(cis[ii]) 
 
+```
 
+Plot with the same speaker ordering as with the data from the paired-comparison test.
 
-# save scale and order and conf. intevals for figure
-setwd(path_variables)
-save(uss, file="uss.R")
-save(cis, file="cis.R")
-
-write.csv(uss, file = "uss.csv")
-write.csv(cis, file = "cis.csv")
-
-# load from REAL pair-comparison data: scale and order and conf. intevals for figure
-setwd(path_variables)
-load(file="usr2.R")
-load(file="iir2.R")
-load(file="cir.R")
-
-
-cbind(uss[iir2])
-
-# checking which speaker is more affected
-cols<-cbind(usr2[iir2] , uss[iir2], usr2[iir2] - uss[iir2])
-cbind(sort(abs(cols[,3])))
-
-
-
+```{r}
 
 # Plot
 
-dotchart(uss[iir2], xlim=c(0, .3),
+dotchart(usr2[iir], xlim=c(0, .3),
          xlab="Utility scale value (BTL model)", pch=16) # plot the scale
-arrows(uss[iir2]-cis[iir2], 1:15, uss[iir2]+cis[iir2], 1:15, .05, 90, 3) # error bars
+arrows(usr2[iir] - cir2[iir], 1:15, usr2[iir] + cir2[iir], 1:15, .05, 90, 3) # error bars
 abline(v=1/15, lty=2) # indifference line
 
 ```
 
-## Comparing paired-comparisons and direct scaling 
 
+## Raw data from the direct scaling test
+
+Get averaged ratings on the continuous scale (Listening Test 6, @my17) to check ranking of speakers. Consider only the same listeners who participated in the paired-comparison experiment and the WB stimuli only.
 
 
 ```{r}
 
+# load data direct scaling
+data_lik <- read.csv(text=getURL(paste0(path_github,"/../data_listeningtest6_likabilityRatings_NAs.csv")), header=TRUE, sep=",")  
+participants <- read.csv(text=getURL(paste0(path_github,"/../data_listeningtest6_participants.csv")), header=TRUE, sep=";")  
 
-##### Get ratings on scale to check ranking!
-
-setwd("D:/Users/fernandez.laura/Documents/Work/WP1_Data_collection/11/R")
-data_lik <- read.csv("likabilityRatings.csv", header=TRUE, sep=",")
-participants <- read.csv("participants.csv", header=TRUE, sep=";") # just to check persons names
-data_lik_split<-split(data_lik, data_lik$stimulusDistortion)
-data_lik_WB<-data_lik_split[[2]] # Wideband
+# same listeners as in Listening Test 7
+data_lik_split <- split(data_lik, data_lik$stimulusDistortion)
+data_lik_WB <- data_lik_split[[2]] # wideband stimuli
 IDMales <- participants$ID[participants$gender == 'm'] 
 IDFemales <- participants$ID[participants$gender == 'f'] 
-# remove female IDs who did not participate: SHagedorn(ID=3) and SMilarch(ID=12)
-IDFemales<-IDFemales[!IDFemales %in% c(3,12)]
+
+# remove female IDs who did not participate: (ID=3 and ID=12)
+IDFemales <- IDFemales[!IDFemales %in% c(3,12)]
+
+# average ratings
 data_lik_WB_only_f_m <- subset(data_lik_WB, IDListener %in% IDFemales & IDSpeaker %in% IDMales)
 ratings.mean <- aggregate(data_lik_WB_only_f_m$Rating_Likability, by=list(data_lik_WB_only_f_m$IDSpeaker), mean, na.rm=T) # mean per speaker
-
-
+names(ratings.mean) <- c('speaker_ID','mean') 
 
 # confidence intervals
 ratings.sd<- aggregate(data_lik_WB_only_f_m$Rating_Likability, by=list(data_lik_WB_only_f_m$IDSpeaker), sd, na.rm=T) # sd per speaker
@@ -295,84 +277,56 @@ ratings.se <- ratings.sd$x / sqrt(N)  # Calculate standard error of the mean
 ratings.ci <- 1.96*ratings.sd$x/sqrt(N) # = 1.96*ratings.se
 
 
-# sort ratings as iir2
-ratings.mean[iir2,]
-ratings.ci[iir2]
-
-
-
-# View
-setwd(path_variables)
-df<-data.frame(participants$ID[ratings.mean[iir2,]$Group.1], participants$name[ratings.mean[iir2,]$Group.1], ratings.mean[iir2,]$x,ratings.ci[iir2], uss[iir2], usr2[iir2])
-
-# save direct scaling data for plot
-write.csv(df, file = "directscaling.csv")
-
-directscalingmeans <-structure(c( df$ratings.mean.iir2....x ),   .Names = c( names(uss[iir2]) ))
-save(directscalingmeans , file="directscalingmeans.R")
-write.csv(directscalingmeans, file = "directscalingmeans.csv")
-
-
-
 ```
 
 
+ 
+## Comparing direct scaling and pair comparison data
+
+We have 3 sets of likability scores:
+
+* utility scale values from paired-comparison test
+* utility scale values from direct scaling test (after simulating paired-comparison data)
+* raw direct scaling test data (0 - 100), averaged across listeners
+
+Combining these sets of scores in a data frame, sorted by most to least liked according to the paired-comparison test.
+
+```{r}
+
+df <- data.frame(ratings.mean[iir,]$speaker_ID, 
+                 participants$spk_pseudonym[ratings.mean[iir,]$speaker_ID], 
+                 usr[iir], 
+                 usr2[iir],
+                 ratings.mean[iir,]$mean)
+
+names(df) <- c('speaker_ID', 'spk_pseudonym', 'uscale_vals_paired_comparison', 'uscale_vals_direct_scaling', 'direct_scaling_mean')
+  
+```
+
+
+Perform Pearson correlations across the sets of scores.
 
 ```{r}
 
 # Correlations
 
-# between scale and simulated
-cor(ratings.mean[iir2,]$x, uss[iir2]) # correlated: 90.9% # $r = 0.91$
+# between scale and simulated pair comparison data
+cor(df$direct_scaling_mean, df$uscale_vals_direct_scaling)
 
-# between scale and real
-cor(ratings.mean[iir2,]$x, usr2[iir2]) # correlated: 81.0%  # $r = 0.81$
+# between scale and real pair comparison data
+cor(df$direct_scaling_mean, df$uscale_vals_paired_comparison)
 
-# between simulated and real
-cor(uss[iir2], usr2[iir2]) # correlated: 90.1% # $r = 0.90$
-
-
-# Correlations, Pearson
-
-#library(Hmisc) # type can be pearson or spearman
-
-# between scale and simulated
-rcorr(as.matrix2(data.frame(ratings.mean[iir2,]$x, uss[iir2])), type="pearson") # $r = 0.91$ 
-
-# between scale and real
-rcorr(as.matrix2(data.frame(ratings.mean[iir2,]$x, usr2[iir2])), type="pearson") # $r = 0.81$
-
-cor.test.plus <- function(x) {
-  list(x, 
-       Standard.Error = unname(sqrt((1 - x$estimate^2)/x$parameter)))
-}
-
-cor.test.plus(cor.test(    ratings.mean[iir2,]$x,  usr2[iir2]  ))
-
-
-# between simulated and real
-rcorr(as.matrix2(data.frame(uss[iir2], usr2[iir2])), type="pearson")  # $r = 0.90$
-
-
-## checking mistake in the ITG paper !!!!!
-
-x <- ratings.mean[iir2,]$x
-y <- uss[iir2]
-fit <- lm(x ~ y)
-summary(fit)$r.squared
-
-# R2 equals the square of the Pearson correlation coefficient     
-correl <- rcorr(as.matrix2(data.frame(ratings.mean[iir2,]$x, uss[iir2])), type="pearson")
-correl$r[2]*correl$r[2]
-
+# between simulated and real pair comparison data
+cor(df$uscale_vals_direct_scaling, df$uscale_vals_paired_comparison)
 ```
 
+It can be thus asserted that the direct scaling and the paired-comparison tests provide very similar likability scores. In other words, the likability measures derived from both test paradigms converge to almost the same indicators of the listeners' preferences. 
 
 ## Conclusions
 
 A paired-comparison listening test has been presented in this paper for collecting subjective voice likability ratings and contrasted to the direct scaling test in @my17. In view of our results, paired-comparison constitutes a reliable method for voice likability assessment while enabling simple comparative judgments. The BTL probabilistic choice model could be successfully applied and ratio scale preference measures were derived. 
 
-It has been shown that, when direct scaling ratings are transformed into (simulated) paired-comparison data, similar likability measures (R2 = 0.90) are obtained as when using the real paired-comparison data. However, the lower Kendall's u obtained with the direct scaling data suggests that this test leads to a somewhat lesser agreement between raters. Still, given the considerable amount of time that would be required for a paired-comparison listening test with more speakers (our test sessions took 30 minutes for 15 voices), direct scaling tests, which have been shown to provide similar scores, may be generally preferred despite the detriment to raters' agreement.
+It has been shown that, when direct scaling ratings are transformed into (simulated) paired-comparison data, similar likability measures (r = 0.90) are obtained as when using the real paired-comparison data. However, the lower Kendall's u obtained with the direct scaling data suggests that this test leads to a somewhat lesser agreement between raters. Still, given the considerable amount of time that would be required for a paired-comparison listening test with more speakers (our test sessions took 30 minutes for 15 voices), direct scaling tests, which have been shown to provide similar scores, may be generally preferred despite the detriment to raters' agreement.
 
 
 
