@@ -1,0 +1,327 @@
+{
+   "title":"Sympathie der Stimme (Einleitung)",
+   "name":"Sympathie_2016-07-20T09:32:23.991Z",
+   "description":"In dieser Jobreihe geht es um Vergleiche von Stimmen im Bezug auf Sympathie. <p> Zunächst (Einleitung) werden wir deine Hörumgebung prüfen, um optimale Voraussetzungen für die nachfolgenden Jobs zu schaffen. </p><p>Es ist sehr wichtig für unsere Untersuchungen, dass du dich für die Dauer Paarvergleiche in einem <b>ruhigen Raum</b> befindest. Der Job dauert eine halbe Minute Hierfür bekommst du zunächst läppische 0,02 €. Im Anschluss wirst du dann die <b>Sympathie von Stimmen</b>&nbsp;durchführen können. </p><p><b>Achtung: Nachdem Du die Umgebungsüberprüfung durchgeführt hast, hast Du 1 Stunde Zeit die Paarvergleiche zu erlegdigen. Du kannst bis zu 25 Vergleiche à 0,14 € durchführen, die etwa eine halbe Minute dauern. </b></p><p><b><b><u>Anforderungen</u></b><br>• Kopfhörer<br>• Permanente Internetverbindung<br>• Sehr ruhige Umgebung bei der Bearbeitung<br>• Deutsch als Muttersprache</b></p>",
+   "instructions":"instructions",
+   "category":"SURVEY",
+   "keywords":[
+      "Stimme",
+      "Sympathie",
+      "Bewertungen",
+      "Likability",
+      "Paarvergleiche"
+   ],
+   "condition": "LAURA_STUDY_1H==null",
+   "assignmentDurationInSec":120,
+   "maxAssignments":25,
+   "validFrom":"2016-08-25T09:33:09Z",
+   "validUntil":"2016-10-15T09:33:09Z",
+   "terms":"Terms and conditions that have to be agreed upon by the worker.",
+   "privacyStatement":"Description of how collected data is handled and used regarding privacy.",
+   "downloadSize":100,
+   "autoApproval":{
+      "autoApprovalDelayInSec":0,
+      "autoProfileEntries": [
+         {
+            "key": "LAURA_STUDY_1H",
+            "owner": "93229ADA2A",
+            "stringValue":  "passed or other value that should be set",
+            "readableBy":  "WORLD"
+         }
+      ]
+   },
+   "rewards":[
+      {
+         "currency":"EUR",
+         "amount":0.02
+      },
+      {
+         "currency":"POINTS",
+         "amount":1.00
+      }
+   ],
+   "settings":{
+      "showTimer":false,
+      "logType":"FINE"
+   },
+   "taskGenerator":{
+      "repetitions":1500
+   },
+   "clientRequirements":{
+      "headsetRequired":true
+   },
+   "qualificationRequirements":[
+      {
+         "name":"Job Voraussetzungen",
+         "field":"AGE",
+         "comparator":"GREATER_OR_EQUAL",
+         "value":"18"
+      }
+   ],
+   "questions":[
+      {
+         "questionTitle":"Willkommen!",
+         "isRequired":false,
+         "formatString":"Danke, dass du an dieser Jobreihe teilnimmst. Du brauchst etwa <b>1 Minute</b> für die Umgebungsüberprüfung und den ersten Paarvergleich. Alles zusammen wird mit 0,16 € vergütet. <p> Auf der nächsten Seite wird der Geräuschpegel deiner Umgebung überprüft. Hinweis: Du solltest dich in einem Raum befinden (nicht draußen oder unterwegs), es dürfen weder Musik, Stimmen (auch TV) oder andere laute Geräusche von elektrischen Geräten zu hören sein, z.B. Föhn, Staubsauger, Handyklingeln, etc. <p>Bitte stelle sicher, dass du für die komplette Jobreihe eine ruhige Umgebung gewährleisten kannst. <p>Wir werden die Bewertung des Geräuschniveaus erst im Anschluss an die Jobs vornehmen können. Im Falle einer unruhigen Geräuschkulisse im Hintergrund wären die Ergebnisse des Jobs unbrauchbar und somit kann die Vergütung folglich nicht gewährt werden.",
+         "name":"0",
+         "answerSpecification":{
+            "type":"INFO"
+         }
+      },
+      {
+         "questionTitle":"Aufnahme von der Hörumgebung",
+         "isRequired":true,
+         "formatString":"Bitte deine Umgebung für mindestens 7 Sekunden aufnehmen. <p><small>Auf die <font color=\"blue\"> blaue </font>Record-Taste drücken. Eine <font color=\"red\"> rote </font> Taste signalisiert dann die laufende Aufnahme. Erneutes Betätigen der Taste beendet die Aufnahme. Danach mit <em> 'Weiter' </em> fortfahren.</small>",
+         "name":"1",
+         "answerSpecification":{
+            "type":"FILEUPLOAD",
+            "kind":"AUDIO",
+            "mimeType":"audio/mp4",
+            "maxFileSize":10485760,
+            "parameters":[
+               {
+                  "name":"audioSource",
+                  "value":"mic"
+               },
+               {
+                  "name":"audioEncoder",
+                  "value":"aac"
+               },
+               {
+                  "name":"numChannels",
+                  "value":"1"
+               },
+               {
+                  "name":"minDurationMs",
+                  "value":"10000"
+               },
+               {
+                  "name":"maxDurationMs",
+                  "value":"12000"
+               }
+            ]
+         }
+      },
+      {
+         "questionTitle":"Playback Test",
+         "isRequired":true,
+         "name":"2",
+         "formatString":"<p>Bitte höre dir dieses Test-Beispliel an.<br>Du kannst es so oft abspielen, wie du möchtest. Stelle dir die Lautstärke dabei auf ein angenehmens Level ein.</p>\n<p><media id=\"2016-07-20T09:31:31.326Z\"1f\" controls=\"controls\"></p><p>Gib zur Bestätigung das Ergebnis der genannte Aufgabe ein!</p>",
+         "answerSpecification":{
+            "type":"SELECTION",
+            "suggestedStyle":"RADIOBUTTON",
+            "randomizationType":"RANDOM_NAIVE",
+            "selectableValues":[
+               {
+                  "name":"0",
+                  "value":"3"
+               },
+               {
+                  "value":"1",
+                  "name":"1"
+               },
+               {
+                  "value":"2",
+                  "name":"2"
+               },
+               {
+                  "value":"4",
+                  "name":"3"
+               },
+               {
+                  "value":"7",
+                  "name":"4"
+               }
+            ]
+         },
+         "staticMedia":[
+            {
+               "identifier":"2016-07-20T09:31:31.326Z",
+               "type":"AUDIO",
+               "value":"https://api.crowdee.de/v1/files/ab6a6cbaad27cc572896537bee16b807"
+            }
+         ]
+      },
+      {
+         "questionTitle":"Geschlecht",
+         "isRequired":true,
+         "name":"3",
+         "formatString":"<p>Bitte bestimmen Sie das Geschlecht der Person aus der letzten Aufzeichnung.</p>",
+         "answerSpecification":{
+            "type":"SELECTION",
+            "suggestedStyle":"RADIOBUTTON",
+            "randomizationType":"RANDOM_NAIVE",
+            "selectableValues":[
+               {
+                  "name":"0",
+                  "value":"Männlich"
+               },
+               {
+                  "value":"Weiblich",
+                  "name":"1"
+               },
+               {
+                  "value":"Ich weiß es nicht",
+                  "name":"2"
+               }
+            ]
+         }
+      },
+      {
+         "questionTitle":"Musikinstrumente",
+         "isRequired":true,
+         "name":"4",
+         "formatString":"<p>Beherrschen Sie ein oder mehrere Musikinstrumente? Wählen Sie bitte alles zutreffende aus!</p>",
+         "answerSpecification":{
+            "type":"SELECTION",
+            "suggestedStyle":"CHECKBOX",
+            "randomizationType":"RANDOM_NAIVE",
+            "selectableValues":[
+               {
+                  "name":"0",
+                  "value":"Klavier"
+               },
+               {
+                  "name":"1",
+                  "value":"Gitarre"
+               },
+               {
+                  "name":"2",
+                  "value":"Flöte"
+               },
+               {
+                  "name":"3",
+                  "value":"Akkordion"
+               },
+               {
+                  "name":"4",
+                  "value":"Saxophon"
+               },
+               {
+                  "name":"5",
+                  "value":"Schlagzeug"
+               },
+               {
+                  "name":"6",
+                  "value":"Trompete"
+               },
+               {
+                  "name":"7",
+                  "value":"Geige"
+               },
+               {
+                  "name":"8",
+                  "value":"Gesang"
+               },
+               {
+                  "name":"9",
+                  "value":"Keins"
+               }
+            ],
+            "freetextSpecification":{
+               "preFillText":"Other",
+               "defaultText":"Anderes (bitte alle angeben)"
+            }
+         }
+      },
+      {
+         "questionTitle":"Musikalische Kenntnisse",
+         "isRequired":true,
+         "name":"5",
+         "formatString":"<p>Haben Sie eine musikalische Ausbildung? Wählen Sie bitte alles zutreffende aus!</p>",
+         "answerSpecification":{
+            "type":"SELECTION",
+            "suggestedStyle":"CHECKBOX",
+            "selectableValues":[
+               {
+                  "name":"0",
+                  "value":"Musikhochschule/-Akademie"
+               },
+               {
+                  "name":"1",
+                  "value":"Musikschule"
+               },
+               {
+                  "name":"2",
+                  "value":"Privatunterricht"
+               },
+               {
+                  "name":"3",
+                  "value":"Autodidakt"
+               },
+               {
+                  "name":"4",
+                  "value":"Nein"
+               }
+            ],
+            "freetextSpecification":{
+               "preFillText":"Other",
+               "defaultText":"Anderes (bitte angeben)"
+            }
+         }
+      },
+      {
+         "questionTitle":"Musikalische Tätigkeiten",
+         "isRequired":true,
+         "name":"6",
+         "formatString":"<p>Sind Sie musikalisch aktiv, ob als Hobby oder professionell? Wählen Sie bitte alles zutreffende aus!</p>",
+         "answerSpecification":{
+            "type":"SELECTION",
+            "selectableValues":[
+               {
+                  "name":"0",
+                  "value":"Spielen (solo)"
+               },
+               {
+                  "name":"1",
+                  "value":"Spielen (in einer Gruppe)"
+               },
+               {
+                  "name":"2",
+                  "value":"Spielen (im Orchester)"
+               },
+               {
+                  "name":"3",
+                  "value":"Komponieren"
+               },
+               {
+                  "name":"4",
+                  "value":"Aufzeichnen"
+               },
+               {
+                  "name":"5",
+                  "value":"Bearbeiten/Produzieren"
+               },
+               {
+                  "name":"6",
+                  "value":"Nein"
+               }
+            ],
+            "suggestedStyle":"CHECKBOX",
+            "freetextSpecification":{
+               "preFillText":"Other",
+               "defaultText":"Anderes (bitte alles angeben)"
+            }
+         }
+      },
+      {
+         "questionTitle":"Alter",
+         "isRequired":true,
+         "formatString":"<p>Bitte gib dein Alter an:</p>",
+         "name":"7",
+         "answerSpecification":{
+            "type":"FREETEXT",
+            "defaultText":"Schreib bitte hier:"
+         }
+      },
+      {
+         "questionTitle":"Thanks!",
+         "formatString":"<center><h5><b style=\"color: inherit; letter-spacing: 0.02em; line-height: 1;\">Danke für Ihren Beitrag.</b><br></h5><h5><b style=\"\\&quot;color:\" inherit;=\"\" line-height:=\"\" 1.1;\\\"=\"\"></b></h5><p> Im Anschluss kannst du jetzt die Studie <b>“Sympathie von Stimmen”</b> durchführen!</p><p><br> <b>;)</b></p></center>",
+         "isRequired":false,
+         "name":"8",
+         "answerSpecification":{
+            "type":"INFO"
+         }
+      }
+   ]
+}

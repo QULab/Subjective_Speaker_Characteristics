@@ -4,6 +4,8 @@ The raw data from listening tests 1) and 2) and the scores resulting from factor
 
 For the listening tests, this [GUI](https://github.com/laufergall/GUI_SpeakerCharacteristics) written in Java (adapted depending on the questionnaire items and audio stimuli) was employed.
 
+Thanks to Rafael Zequeira Jiménez (Technische Universität Berlin, Germany) for the preparation of crowdsourcing micro-tasks in [Crowdee](https://www.crowdee.de/en/home) (Listening Tests 7 and 8).
+
 In-lab tests had a max. duration of about 1-1.5 hours, with short breaks every 10-15 minutes. They were administered using a laptop, a mouse, and headphones:
 
 * For Listening Tests 1, 2, 3, and 4: Shure SRH240 headphones (diotic listening, frequency range 20-20,000 Hz)
@@ -185,6 +187,8 @@ A paired-comparison listening test was conducted to examine the applicability, r
 
 
 
+
+
 ### Listening Test 8: Paired-comparison for voice likability perceptions (crowdsourcing)
 
 Investigating whether mobile crowdsourcing tests are as valid as in-lab tests for obtaining meaningful speech likability annotations.
@@ -200,7 +204,7 @@ Investigating whether mobile crowdsourcing tests are as valid as in-lab tests fo
 
 - Test participants: 77 unique workers provided 1365 answers deemed trustworthy.
 
-Thanks to Rafael Zequeira Jiménez (Technische Universität Berlin, Germany) for the preparation of crowdsourcing micro-tasks in [Crowdee](https://www.crowdee.de/en/home).
+
 
 
 
