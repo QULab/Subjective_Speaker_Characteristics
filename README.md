@@ -12,7 +12,7 @@ As part of my [Postdoc project](http://www.qu.tu-berlin.de/?id=lfernandez), I co
   The resulting dimensions (referred to as "traits") were: _warmth_, _attractiveness_, _confidence_, _compliance_, _maturity_. 
 
 		"WAAT" stands for "warmth-attractiveness", the first two traits resulting from this factor analysis.
-	
+		
 		(Publication: [1])
 
 
@@ -104,3 +104,5 @@ You are welcome to contribute to this project in any way. Please feel free to fi
 
 
 See complete list of project publications [here](http://www.qu.tu-berlin.de/?id=lfernandez).
+
+See slides and posters in conference presentations here.
