@@ -57,6 +57,16 @@ As part of my [Postdoc project](http://www.qu.tu-berlin.de/?id=lfernandez), I co
 
   ​
 
+* Computing feature importance measures for the prediction of speaker characteristics and voice descriptions.
+
+  (Folder: \analysis\features_SC_VD\)
+
+  (Publication: [8])
+
+  ​
+
+  ​
+
 
 ### With respect to voice likability:
 
@@ -118,3 +128,5 @@ You are welcome to contribute to this project in any way. Please feel free to fi
 [6] Fernández Gallardo, L., Zequeira Jiménez, R. and Möller, S., "Perceptual Ratings of Voice Likability Collected through In-Lab Listening Tests vs. Mobile-Based Crowdsourcing," in Interspeech, pp. 2233-2237, 2017.
 
 [7] Zequeira Jiménez, R., Fernández Gallardo, L. and Möller, S., "Scoring Voice Likability using Pair-Comparison: Laboratory vs. Crowdsourcing Approach," Int. Conf. on Quality of Multimedia Experience (QoMEX), 2017.
+
+[8] Fernández Gallardo, L. and Weiss, B., "Perceived Interpersonal Speaker Attributes and their Acoustic Features," in 13. Tagung Phonetik und Phonologie im deutschprachigen Raum, 2017.

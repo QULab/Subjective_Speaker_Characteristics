@@ -1,0 +1,75 @@
+---
+title: "Correlations between speech features and speaker characteristics / voice descriptions"
+author: "Laura Fernández Gallardo"
+date: "August 2017"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = './')
+knitr::opts_chunk$set(fig.width=5, fig.height=5, dpi=150)
+```
+
+```{r message=FALSE, warning=FALSE}
+
+# clear
+rm(list=ls())
+
+# Libraries needed:
+
+library(RCurl) # to read raw data from repo
+library(caret) 
+library(usdm)
+
+```
+
+
+## Objectives
+
+Computing measures of feature importance for the prediction of:
+
+* speaker characteristics (SC)
+* voice descriptions (VD)
+
+
+## Load speech features
+
+```{r}
+
+path_feats <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/speech_features"
+
+gemaps_m <- read.csv(text=getURL(paste0(path_github,"/eGeMAPSv01a_88_malespk.csv")), header=TRUE, sep=",")
+gemaps_w <- read.csv(text=getURL(paste0(path_github,"/eGeMAPSv01a_88_femalespk.csv")), header=TRUE, sep=",")
+
+gemaps <- rbind(gemaps_m, gemaps_w)
+gemaps$id <- as.numeric(str_sub(gemaps$sample_heard,2,4))
+gemaps$gender <- str_sub(gemaps$sample_heard,1,1)
+
+gemaps <- gemaps[order(gemaps$id),]
+
+```
+
+male speakers: 126 observations.  89 variables = 88 features + filename
+
+female speakers: 174 observations.  89 variables = 88 features + filename
+
+
+
+## Feature importance for speaker characteristics
+
+### Importance measures
+
+### Plots
+
+## Feature importance for voice descriptions
+
+### Importance measures
+
+### Plots
+
+
+
