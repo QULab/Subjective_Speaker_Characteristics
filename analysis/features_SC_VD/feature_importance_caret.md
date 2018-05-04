@@ -1,21 +1,19 @@
----
-title: "Correlations between speech features and speaker characteristics / voice descriptions"
-author: "Laura Fern·ndez Gallardo"
-date: "June 2017"
-output: 
-  github_document:
-    toc: true
-    toc_depth: 3
----
+Correlations between speech features and speaker characteristics / voice descriptions
+================
+Laura Fern√°ndez Gallardo
+June 2017
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(root.dir = './')
-knitr::opts_chunk$set(fig.width=10, fig.height=15, dpi=150)
-```
+-   [Objectives](#objectives)
+-   [Load speech features](#load-speech-features)
+-   [Pre-processing of speech features](#pre-processing-of-speech-features)
+-   [Feature importance for speaker characteristics](#feature-importance-for-speaker-characteristics)
+    -   [Estimate variable importance](#estimate-variable-importance)
+    -   [Plots](#plots)
+-   [Feature importance for voice descriptions](#feature-importance-for-voice-descriptions)
+    -   [Estimate variable importance](#estimate-variable-importance-1)
+    -   [Plots](#plots-1)
 
-```{r message=FALSE, warning=FALSE}
-
+``` r
 # clear
 rm(list=ls())
 
@@ -26,42 +24,40 @@ library(caret) # pre-processing and feat imp
 library(usdm) #  for variance inflation factor
 library(reshape2) # for plot
 library(ggplot2) # for plot
-
 ```
 
-
-## Objectives
+Objectives
+----------
 
 Computing measures of feature importance for the prediction of:
 
-* speaker characteristics (SC)
-* voice descriptions (VD)
+-   speaker characteristics (SC)
+-   voice descriptions (VD)
 
 To calculate feature importance, I have used in other analyses different filter methods:
 
-* with caret: 
+-   with caret:
 
-```{r}
+``` r
 #caret::filterVarImp(transformed_m_2_v2, class_m, nonpara = TRUE,  scale=FALSE)
 ```
 
-* with mlr: 
+-   with mlr:
 
-```{r}
+``` r
 #mdata <- data.frame(transformed_m_v2, target = fs_SC_m$dim1)    
 #regrTask <- makeRegrTask(data = mdata, target = 'target')    
 #fv <- generateFilterValuesData(regrTask, method = 'linear.correlation')
 ```
 
-In this script, I choose linear correlation values as reliable indicators of feature importance. These values are also straightforward to interpret: the Pearson correlation between feature and factor scores of speaker attributes. 
+In this script, I choose linear correlation values as reliable indicators of feature importance. These values are also straightforward to interpret: the Pearson correlation between feature and factor scores of speaker attributes.
 
 The computation of feature importance enables feature ranking and the selection of a feature subset for the regression task.
 
+Load speech features
+--------------------
 
-## Load speech features
-
-```{r}
-
+``` r
 path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/speech_features"
 
 gemaps_m <- read.csv(text=getURL(paste0(path_github,"/eGeMAPSv01a_88_malespk.csv")), header=TRUE, sep=",")
@@ -70,19 +66,17 @@ gemaps_f <- read.csv(text=getURL(paste0(path_github,"/eGeMAPSv01a_88_femalespk.c
 # feats: remove filename
 feats_m <-gemaps_m[,-1]
 feats_f <-gemaps_f[,-1]
-
 ```
 
-Male speakers: 126 observations.  89 variables = 88 features + filename
+Male speakers: 126 observations. 89 variables = 88 features + filename
 
-Female speakers: 174 observations.  89 variables = 88 features + filename
+Female speakers: 174 observations. 89 variables = 88 features + filename
 
 Each observation corresponds to a different speaker.
 
-Assign each speech feature to one group. Thanks to Benjamin Weiss (Technische Universit‰t Berlin) for proposing this grouping.
+Assign each speech feature to one group. Thanks to Benjamin Weiss (Technische Universit√§t Berlin) for proposing this grouping.
 
-```{r}
-
+``` r
 gr <- c('Dynamics','Timbre','Pitch Level', 'Setting', 'Noise','Loudness level','Tempo','Intonation','Unvoiced')
 
 feats <- data.frame('featname' = names(gemaps_m[,-1]) )
@@ -106,15 +100,14 @@ feats$cluster[c(77:80)]=gr[9]
 feats$cluster[c(81,84:87)]=gr[1]
 feats$cluster[c(82,83)]=gr[7]
 feats$cluster[88]=gr[6]
-
 ```
 
-## Pre-processing of speech features
+Pre-processing of speech features
+---------------------------------
 
 Using the caret package: Box-Cox transformation to reduce skewness, centering and scaling.
 
-```{r}
-
+``` r
 trans_m <- caret::preProcess(feats_m,
                             method = c('BoxCox','center','scale'))
 
@@ -124,9 +117,7 @@ trans_f <- caret::preProcess(feats_f,
 transformed_m <- predict(trans_m, feats_m) # boxcox, center, scale
 
 transformed_f <- predict(trans_f, feats_f) # boxcox, center, scale
-
 ```
-
 
 Calculate variance inflation factor (VIF) to deal with multicollinearity problems:
 
@@ -136,8 +127,7 @@ Identify collinear variables that should be excluded.
 
 From the usdm package: "A VIF greater than 10 is a signal that the model has a collinearity problem".
 
-```{r}
-
+``` r
 # vifcor
 #v1 <- vifcor(transformed_m_2, th=0.5) 
 
@@ -147,17 +137,14 @@ v2_f <- vifstep(transformed_f, th=10)
 
 transformed_m_v2 <- exclude(transformed_m,v2_m)
 transformed_f_v2 <- exclude(transformed_f,v2_f)
-
-
 ```
 
-
-## Feature importance for speaker characteristics
+Feature importance for speaker characteristics
+----------------------------------------------
 
 Load targets: factor scores of speaker characteristics. Speakers are sorted as in the features dataframe.
 
-```{r}
-
+``` r
 path_github2 <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/generated_data"
 
 fs_SC_m <- read.csv(text=getURL(paste0(path_github2,"/factorscores_SC_malespk.csv")), header=TRUE, sep=",")
@@ -167,25 +154,20 @@ fs_SC_f <- read.csv(text=getURL(paste0(path_github2,"/factorscores_SC_femalespk.
 
 dims_SC_m <- c('Warmth','Attractiveness','Confidence','Compliance','Maturity')
 dims_SC_f <- c('Warmth','Attractiveness','Compliance','Confidence','Maturity')
-
 ```
-
 
 ### Estimate variable importance
 
 As measure of feature importance I choose the Pearson correlation between feature and target.
 
-```{r}
-
+``` r
 cor_m <- cor(transformed_m_v2, fs_SC_m[,-1])
 cor_f <- cor(transformed_f_v2, fs_SC_f[,-1])
-
 ```
 
 Data for plot:
 
-```{r}
-
+``` r
 varimp_m <- data.frame(featname=rownames(cor_m),cor_m)
 rownames(varimp_m) <- c()
 colnames(varimp_m)<-c('featname',dims_SC_m)
@@ -195,16 +177,13 @@ varimp_f <- data.frame(featname=rownames(cor_f),cor_f)
 rownames(varimp_f) <- c()
 colnames(varimp_f)<-c('featname',dims_SC_f)
 varimp_f <- merge(varimp_f,feats)
-
 ```
 
 ### Plots
 
 Plot feature importance values for each speaker trait.
 
-
-```{r}
-
+``` r
 # varimp: data frame with 'featname', 'cluster', and one column for each feature importance measure, where rows are different features
 # n: column number in varimp to plot values for
 plot.varimp <- function(varimp, n) {
@@ -219,68 +198,60 @@ mplot <- ggplot(data=varimp, aes(y=varimp[,n], x=reorder(featname, abs(varimp[,n
 print(mplot)
 
 }
-
 ```
 
 #### Male speakers
 
-```{r}
-
+``` r
 for (i in 1:5){
   plot.varimp(varimp_m, i+1)
 }
-
 ```
 
-*	Contributing to higher warmth: Higher F0 range (rho=.52), higher mean spectral slope 0-500Hz (rho=.27), lower sd of F1 (rho=-.23) and F2 (rho=-.23) frequencies.
+![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-2.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-3.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-4.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-5.png)
 
-* Contributing to higher attractiveness: Higher F0 range (rho=.35), higher sd of Hammarberg Index (rho=.23), lower mean length of unvoiced segments (rho=-.22), higher sd of F0 (rho=.21), lower median F0 (rho=-.20).
+-   Contributing to higher warmth: Higher F0 range (rho=.52), higher mean spectral slope 0-500Hz (rho=.27), lower sd of F1 (rho=-.23) and F2 (rho=-.23) frequencies.
 
-*	Contributing to higher confidence: Lower median F0 (rho=-.29), higher F0 range (rho=.25).
+-   Contributing to higher attractiveness: Higher F0 range (rho=.35), higher sd of Hammarberg Index (rho=.23), lower mean length of unvoiced segments (rho=-.22), higher sd of F0 (rho=.21), lower median F0 (rho=-.20).
 
-*	Contributing to higher compliance: Lower sd length voiced segments (rho=-.24), lower sd of F1 frequency (rho=-.23), lower sd of falling slope for loudness (rho=-.20), higher F1 (rho=.19) and F2 (rho=.19) bandwidth.
+-   Contributing to higher confidence: Lower median F0 (rho=-.29), higher F0 range (rho=.25).
 
-*	Contributing to higher maturity: Lower median F0 (rho=-.42), higher sd of F3 (rho=.33), higher sd of F3 bandwidth (rho=-.31).
+-   Contributing to higher compliance: Lower sd length voiced segments (rho=-.24), lower sd of F1 frequency (rho=-.23), lower sd of falling slope for loudness (rho=-.20), higher F1 (rho=.19) and F2 (rho=.19) bandwidth.
+
+-   Contributing to higher maturity: Lower median F0 (rho=-.42), higher sd of F3 (rho=.33), higher sd of F3 bandwidth (rho=-.31).
 
 Currently, we do not have explanations for many of the relationships found, since features are viewed in isolation. Further analyses of feature combinations can presumably offer more conclusive justifications of our results.
 
 That notwithstanding, there are some clear observations that corroborate previous research on voice characteristics. Lower and highly variable F0 seems to play a major role displaying attractiveness and confidence in male speech, as also shown by Zuckerman and Miyake (1993) and Jones et al. (2010). The melodious voice resulting from variable pitch also indicates higher warmth (a friendly attitude). Related to these findings, Brown et al. (1974) showed that decreased intonation and increased F0 caused the speakers to be rated as less benevolent and less competent. Also, Apple et al. (1979) indicated that males with high-pitch voices are perceived as less truthful, less persuasive, weaker, and more nervous. Lower median F0 also correlates with maturity, as also found by Collins (2000). The correlation between the sd of Hammarberg Index and attractiveness suggests that the dynamics in the energy distribution in the spectrum contributes to high perceived attractiveness.
 
-
 #### Female speakers
 
-```{r}
-
+``` r
 for (i in 1:5){
   plot.varimp(varimp_f, i+1)
 }
-
 ```
 
+![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-1.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-2.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-3.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-4.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-5.png)
 
-*	Contributing to higher warmth: Higher F1 (rho=.43), higher F0 range (rho=.37), higher sd of F2 bandwidth (rho=.29), higher sd of spectral flux (rho=.22), lower sd of F1 (rho=-.21), higher median F0 (rho=.21).
+-   Contributing to higher warmth: Higher F1 (rho=.43), higher F0 range (rho=.37), higher sd of F2 bandwidth (rho=.29), higher sd of spectral flux (rho=.22), lower sd of F1 (rho=-.21), higher median F0 (rho=.21).
 
-*	Contributing to higher attractiveness: Higher F1 (rho=.38), higher sd of F2 bandwidth (rho=.30), lower sd of F1 (rho=-.23), higher F0 range (rho=.22), lower mean spectral slope 0-500Hz (rho=-.20).
+-   Contributing to higher attractiveness: Higher F1 (rho=.38), higher sd of F2 bandwidth (rho=.30), lower sd of F1 (rho=-.23), higher F0 range (rho=.22), lower mean spectral slope 0-500Hz (rho=-.20).
 
-*	Contributing to higher compliance: Lower sd of F1 (rho=-.34), higher F1 (rho=.31), lower loudness range (rho=-.30).
+-   Contributing to higher compliance: Lower sd of F1 (rho=-.34), higher F1 (rho=.31), lower loudness range (rho=-.30).
 
-*	Contributing to higher confidence: Higher sd of falling slope for loudness (rho=.33), higher F0 range (rho=.32).
+-   Contributing to higher confidence: Higher sd of falling slope for loudness (rho=.33), higher F0 range (rho=.32).
 
-*	Contributing to higher maturity: Lower median F0 (rho=-.47), higher mean mfcc4 (rho=.46), lower F1 (rho=-.38), higher mean mfcc2 (rho=.34).
+-   Contributing to higher maturity: Lower median F0 (rho=-.47), higher mean mfcc4 (rho=.46), lower F1 (rho=-.38), higher mean mfcc2 (rho=.34).
 
 For female speech, warmth, attractiveness, compliance, and "lower" maturity are cued by higher F1, which is also an indicator of a more careful and precise articulation. As also found for male speakers, higher F0 range signals higher warmth, attractiveness and confidence. With respect to these outcomes, Zuckerman and Miyake (1993) detected that female attractiveness correlated positively with articulation and negatively with monotonousness. Finally, lower pitch signals maturity, which is coherent with the decrease of females' F0 with age (Nishio and Niimi 2008).
 
-
-
-
-
-## Feature importance for voice descriptions
+Feature importance for voice descriptions
+-----------------------------------------
 
 Load targets: factor scores of voice descriptions. Speakers are sorted as in the features dataframe.
 
-
-```{r}
-
+``` r
 path_github2 <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/generated_data"
 
 fs_VD_m <- read.csv(text=getURL(paste0(path_github2,"/factorscores_VD_malespk.csv")), header=TRUE, sep=",")
@@ -290,34 +261,27 @@ fs_VD_f <- read.csv(text=getURL(paste0(path_github2,"/factorscores_VD_femalespk.
 
 dims_VD_m <- c('(neg) Proficiency','Tension','Melody','Brightness')
 dims_VD_f <- c('(neg) Fluency', 'Brightness', '(neg) Proficiency', 'Shrillness')
-
 ```
 
 Indexes of speakers for which voice descriptions data are available.
 
-```{r}
-
+``` r
 index_m <- gemaps_m$sample_heard %in% fs_VD_m$sample_heard
 index_f <- gemaps_f$sample_heard %in% fs_VD_f$sample_heard
-
 ```
 
-    
 ### Estimate variable importance
 
 As measure of feature importance I choose the Pearson correlation between feature and target.
 
-```{r}
-
+``` r
 cor_m <- cor(transformed_m_v2[index_m,], fs_VD_m[,-1])
 cor_f <- cor(transformed_f_v2[index_f,], fs_VD_f[,-1])
-
 ```
 
 Data for plot:
 
-```{r}
-
+``` r
 varimp_m <- data.frame(featname=rownames(cor_m),cor_m)
 rownames(varimp_m) <- c()
 colnames(varimp_m)<-c('featname',dims_VD_m)
@@ -327,7 +291,6 @@ varimp_f <- data.frame(featname=rownames(cor_f),cor_f)
 rownames(varimp_f) <- c()
 colnames(varimp_f)<-c('featname',dims_VD_f)
 varimp_f <- merge(varimp_f,feats)
-
 ```
 
 ### Plots
@@ -336,22 +299,20 @@ Plot feature importance values for each dimension of voice descriptions.
 
 #### Male speakers
 
-```{r}
-
+``` r
 for (i in 1:4){
   plot.varimp(varimp_m, i+1)
 }
-
 ```
+
+![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-18-1.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-18-2.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-18-3.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-18-4.png)
 
 #### Female speakers
 
-```{r}
-
+``` r
 for (i in 1:4){
   plot.varimp(varimp_f, i+1)
 }
-
 ```
 
-
+![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-19-1.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-19-2.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-19-3.png)![](feature_importance_caret_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-19-4.png)
