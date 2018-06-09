@@ -109,9 +109,9 @@ You are welcome to contribute to this project in any way. Please feel free to fi
 
 ## References
 
-- See complete list of project publications [here](http://www.qu.tu-berlin.de/?id=lfernandez).
+- See my complete list of project publications [here](http://www.qu.tu-berlin.de/?id=lfernandez).
 
-- See slides and posters in conference presentations [here](https://github.com/laufergall/Subjective_Speaker_Characteristics/tree/master/doc/slides_posters).
+- See my slides and posters in conference presentations [here](https://github.com/laufergall/Subjective_Speaker_Characteristics/tree/master/doc/publications_LFernandez/slides_posters).
 
   ​
 
