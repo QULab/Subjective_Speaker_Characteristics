@@ -1,0 +1,307 @@
+---
+title: "Correlations between speech features and speaker characteristics / voice descriptions"
+author: "Laura Fernández Gallardo"
+date: "October 2017"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = './')
+knitr::opts_chunk$set(fig.width=10, fig.height=15, dpi=150)
+```
+
+```{r message=FALSE, warning=FALSE}
+
+# clear
+rm(list=ls())
+
+# Libraries needed:
+
+library(RCurl) # to read raw data from repo
+library(caret) # pre-processing and feat imp
+library(usdm) #  for variance inflation factor
+library(mlr) # regression
+
+```
+
+
+## Objectives
+
+Predicing voice descriptions (VD) from speech features, [extracted with OpenSMILE](https://github.com/laufergall/Subjective_Speaker_Characteristics/tree/master/data/speech_features).
+
+
+## Load speech features
+
+```{r}
+
+path_github <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/speech_features"
+
+gemaps_m <- read.csv(text=getURL(paste0(path_github,"/eGeMAPSv01a_88_malespk.csv")), header=TRUE, sep=",")
+gemaps_f <- read.csv(text=getURL(paste0(path_github,"/eGeMAPSv01a_88_femalespk.csv")), header=TRUE, sep=",")
+
+```
+
+## Ratings of voice descriptions
+
+Subjective ratings were given to 20 speakers: 10 males and 10 females. 
+
+
+```{r}
+
+path_github2 <- "https://raw.githubusercontent.com/laufergall/Subjective_Speaker_Characteristics/master/data/subjective_ratings"
+
+# load raw ratings
+ratings <- read.csv(text=getURL(paste0(path_github2,"/VD_ratings.csv")), header=TRUE, sep=",")
+
+
+# mean of ratings and split by gender
+ratings_a <- aggregate(ratings[16:(16+33)], by=list(ratings$sample_heard), mean)
+names(ratings_a)[1] <- 'sample_heard'
+
+# merge ratings and features (10 samples only for each gender)
+data_m <- merge(ratings_a, gemaps_m)
+data_f <- merge(ratings_a, gemaps_f)
+
+# just the 88 speech features
+feats_m <- data_m[,(ncol(data_m)-88+1):ncol(data_m)]
+feats_f <- data_f[,(ncol(data_f)-88+1):ncol(data_f)]
+
+```
+
+
+## Predicting: "melodisch" for male speakers
+
+The item "melodisch" is relevant for the prediction of males' "mitfuehlend", "gelangweilt", "distanziert", "gleichgueltig", "freundlich" , "maennlich", and of females' "gleichgueltig" "ruhig" as seen [here](https://github.com/laufergall/Subjective_Speaker_Characteristics/blob/master/analysis/relationships_SC_VD/linearregression_VD_SC.md). 
+
+Additionally, it seems to be easyly separable according to speakers' WAAT, as seen [here](https://github.com/laufergall/Subjective_Speaker_Characteristics/blob/master/analysis/voice_descriptions/explorative_analysis_ratings/analysis_ratings_cleanspeech.md)
+
+
+### Pre-processing of speech features
+
+Same as done [here](https://github.com/laufergall/Subjective_Speaker_Characteristics/tree/master/analysis/features_SC_VD).
+
+Using the caret package: Box-Cox transformation to reduce skewness, centering and scaling.
+
+```{r}
+
+trans_m <- caret::preProcess(feats_m,
+                            method = c('BoxCox','center','scale'))
+
+transformed_m <- predict(trans_m, feats_m)
+
+```
+
+
+Calculate variance inflation factor (VIF) to deal with multicollinearity problems:
+
+Naimi, B., Hamm, N. A. S., Groen, T. A., Skidmore, A. K. and Toxopeus, A. G.,"Where is Positional Uncertainty a Problem for Species Distribution Modelling?," Ecography, 37, pp. 191-203, 2014.
+
+Identify collinear variables that should be excluded.
+
+From the usdm package: "A VIF greater than 10 is a signal that the model has a collinearity problem".
+
+```{r}
+
+# vifcor
+#v1 <- vifcor(transformed_m_2, th=0.5) 
+
+# vifstep
+v2_m <- vifstep(transformed_m, th=10)
+
+transformed_m_v2 <- exclude(transformed_m,v2_m)
+
+```
+
+
+### mlr regression task
+
+Predicting "melodisch" for male speakers.
+
+```{r}
+
+# just 10 observations and 6 features
+
+mdata <- cbind(transformed_m_v2, data_m$melodisch)
+names(mdata)[ncol(mdata)]<-'target'
+
+# data for regression model
+
+regrTask <- mlr::makeRegrTask(data = mdata, target = 'target')   
+
+```
+
+
+Function to perform regression with different learners and tuning hyperparameters (given as input parameters).
+
+Learner fused with filter method for calculating the feature importance, based on linear correlation (as done [here](https://github.com/laufergall/Subjective_Speaker_Characteristics/blob/master/analysis/features_SC_VD/feature_importance_caret.md)). 
+
+Leave-one-out cross-validation as resampling strategy, since we only have 10 observations.
+
+I set the performance metric to be: median(abs(response - truth)).
+
+
+```{r}
+
+regr_fw_LOO_medae <- function(regr.lrn, ps) {
+
+# learner fused with filter method for feature selection
+lrn = mlr::makeFilterWrapper(learner = regr.lrn, fw.method = "linear.correlation")
+
+# search space: going through different sizes of the feature subset 
+# tuning by gridsearch
+# resampling strategy: Leave-one-out Cv
+# performance measure: medae
+
+rdesc = mlr::makeResampleDesc("LOO")
+
+res = mlr::tuneParams(lrn, 
+                      task = regrTask, 
+                      resampling = rdesc, 
+                      par.set = ps, 
+                      control = makeTuneControlGrid(),
+                      measures = list(medae)
+                      )
+
+# train model with the optimal feature set found
+
+lrn2 = makeFilterWrapper(learner = regr.lrn, 
+                        fw.method = "linear.correlation", 
+                        fw.abs = res$x$fw.abs)
+
+mod = train(lrn2, regrTask)
+
+print('selected features:')
+cbind(getFilteredFeatures(mod))
+
+}
+
+
+
+# interesting plot to check correlations
+# plotLearnerPrediction("regr.lm", features = "loudnessPeaksPerSec", task =regrTask)
+
+```
+
+
+Creating different learners and checking the regession performance.
+
+#### regr.featureless
+
+```{r}
+
+regr.lrn = makeLearner("regr.featureless", method = 'mean')
+# regr.lrn$par.set
+
+# no features are selected for this regressor anyway
+ps = makeParamSet(
+  makeDiscreteParam("fw.abs", values = 1)
+  )
+
+regr_fw_LOO_medae(regr.lrn, ps)
+
+```
+
+#### regr.lm
+
+Linear regression
+ 
+Parameters: selecting a number of features 
+
+```{r}
+
+regr.lrn = makeLearner("regr.lm")
+# regr.lrn$par.set
+
+# parameters: selecting a number of features
+ps = makeParamSet(
+  makeDiscreteParam("fw.abs", values = seq(1, ncol(mdata)-1))
+  )
+
+regr_fw_LOO_medae(regr.lrn, ps)
+
+```
+
+ 
+#### regr.randomForest
+
+Parameters: 
+mtry: Number of variables randomly sampled as candidates at each split
+ntree: Number of trees to grow
+
+```{r}
+
+regr.lrn = makeLearner("regr.randomForest")
+regr.lrn$par.set
+
+# parameters: selecting a number of features
+ps = makeParamSet(
+  makeDiscreteParam("fw.abs", values = seq(2, ncol(mdata)-1)),
+  makeDiscreteParam("mtry", values = seq(1, 2)),
+  makeDiscreteParam("ntree", values = seq(1, 10)) 
+  )
+
+regr_fw_LOO_medae(regr.lrn, ps)
+
+```
+
+
+#### regr.rknn
+
+Random k-Nearest-Neighbors
+Parameters: selecting a number of features and k
+
+```{r}
+
+regr.lrn = makeLearner("regr.rknn")
+regr.lrn$par.set
+
+ps = makeParamSet(
+  makeDiscreteParam("fw.abs", values = seq(2, ncol(mdata)-1)),
+  makeDiscreteParam("k", values = seq(1, 5))
+  )
+
+regr_fw_LOO_medae(regr.lrn, ps)
+
+```
+
+#### regr.rpart
+
+Decision Tree
+
+Parameters: selecting a number of feature, minsplit
+
+```{r}
+
+regr.lrn = makeLearner("regr.rpart")
+regr.lrn$par.set
+
+ps = makeParamSet(
+  makeDiscreteParam("fw.abs", values = seq(1, ncol(mdata)-1)),
+  makeDiscreteParam("minsplit", values = seq(1, 10))
+  )
+
+regr_fw_LOO_medae(regr.lrn, ps)
+
+```
+
+
+## Conclusions
+
+* Performance (medae) on the regression task predicting subjective ratings given to "melodisch" for male speakers:
+
+    * Baseline (selects mean): 16.8
+    * Linear Regression: 11.0
+    * Random Forest: 7.5 <- best performance, with just 2 selected features: "loudnessPeaksPerSec" and "equivalentSoundLevel_dBp"   
+    * Random k-Nearest-Neighbors: 13.6
+    * Decision Tree: 10.3
+    
+* This work contributes to the Lens model for the prediction of speaker characteristics given speech segments. The 2 steps are: 
+
+    * from measurable acoustic speech parameters to voice desctiptions: this script shows that this can be done. Instead of "melodisch", we can also try to predict any of the other 33 subjective voice descriptions, such as "gepresst", "mit akzent", "unbetont", ... for male and for female speakers.
+    * from voice descritions to speaker characteristics: there exist linear relationships that permit accurate predictions as shown [here](https://github.com/laufergall/Subjective_Speaker_Characteristics/blob/master/analysis/relationships_SC_VD/linearregression_VD_SC.md)
+    
+* Future work: more data needs to be collected to corroborate this, especially more subjective voice descriptions from other speakers. Here, we only have 20. The NSC database can be used to this aim.
