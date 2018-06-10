@@ -65,7 +65,16 @@ As part of my [Postdoc project](http://www.qu.tu-berlin.de/?id=lfernandez), I co
 
   ​
 
+
+
+* Predicting subjective ratings of voice descriptions from speech features (regression).
+
+  (Folder: \analysis\predicting_VD)
+
   ​
+
+  ​
+
 
 
 ### With respect to voice likability:
