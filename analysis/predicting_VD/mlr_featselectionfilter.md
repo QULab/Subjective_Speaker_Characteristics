@@ -333,405 +333,405 @@ regr_fw_LOO_medae(regr.lrn, ps)
 
     ## [Tune-x] 1: fw.abs=2; mtry=1; ntree=1
 
-    ## [Tune-y] 1: medae.test.mean=16.6776923; time: 0.0 min
+    ## [Tune-y] 1: medae.test.mean=13.4682692; time: 0.0 min
 
     ## [Tune-x] 2: fw.abs=3; mtry=1; ntree=1
 
-    ## [Tune-y] 2: medae.test.mean=19.6568590; time: 0.0 min
+    ## [Tune-y] 2: medae.test.mean=14.1480769; time: 0.0 min
 
     ## [Tune-x] 3: fw.abs=4; mtry=1; ntree=1
 
-    ## [Tune-y] 3: medae.test.mean=13.8035256; time: 0.0 min
+    ## [Tune-y] 3: medae.test.mean=21.0703846; time: 0.0 min
 
     ## [Tune-x] 4: fw.abs=5; mtry=1; ntree=1
 
-    ## [Tune-y] 4: medae.test.mean=16.9223077; time: 0.0 min
+    ## [Tune-y] 4: medae.test.mean=23.5551282; time: 0.0 min
 
     ## [Tune-x] 5: fw.abs=6; mtry=1; ntree=1
 
-    ## [Tune-y] 5: medae.test.mean=13.8525000; time: 0.0 min
+    ## [Tune-y] 5: medae.test.mean=20.3945513; time: 0.0 min
 
     ## [Tune-x] 6: fw.abs=2; mtry=2; ntree=1
 
-    ## [Tune-y] 6: medae.test.mean=16.9986538; time: 0.0 min
+    ## [Tune-y] 6: medae.test.mean=10.1219231; time: 0.0 min
 
     ## [Tune-x] 7: fw.abs=3; mtry=2; ntree=1
 
-    ## [Tune-y] 7: medae.test.mean=20.2109615; time: 0.0 min
+    ## [Tune-y] 7: medae.test.mean=22.6069872; time: 0.0 min
 
     ## [Tune-x] 8: fw.abs=4; mtry=2; ntree=1
 
-    ## [Tune-y] 8: medae.test.mean=16.6857051; time: 0.0 min
+    ## [Tune-y] 8: medae.test.mean=15.5855128; time: 0.0 min
 
     ## [Tune-x] 9: fw.abs=5; mtry=2; ntree=1
 
-    ## [Tune-y] 9: medae.test.mean=13.8548718; time: 0.0 min
+    ## [Tune-y] 9: medae.test.mean=16.1058333; time: 0.0 min
 
     ## [Tune-x] 10: fw.abs=6; mtry=2; ntree=1
 
-    ## [Tune-y] 10: medae.test.mean=19.1040385; time: 0.0 min
+    ## [Tune-y] 10: medae.test.mean=19.6332051; time: 0.0 min
 
     ## [Tune-x] 11: fw.abs=2; mtry=1; ntree=2
 
-    ## [Tune-y] 11: medae.test.mean=15.2787821; time: 0.0 min
+    ## [Tune-y] 11: medae.test.mean=12.4357372; time: 0.0 min
 
     ## [Tune-x] 12: fw.abs=3; mtry=1; ntree=2
 
-    ## [Tune-y] 12: medae.test.mean=17.4804808; time: 0.0 min
+    ## [Tune-y] 12: medae.test.mean=17.7240064; time: 0.0 min
 
     ## [Tune-x] 13: fw.abs=4; mtry=1; ntree=2
 
-    ## [Tune-y] 13: medae.test.mean=15.9873077; time: 0.0 min
+    ## [Tune-y] 13: medae.test.mean=11.7753526; time: 0.0 min
 
     ## [Tune-x] 14: fw.abs=5; mtry=1; ntree=2
 
-    ## [Tune-y] 14: medae.test.mean=11.7982051; time: 0.0 min
+    ## [Tune-y] 14: medae.test.mean=19.5728846; time: 0.0 min
 
     ## [Tune-x] 15: fw.abs=6; mtry=1; ntree=2
 
-    ## [Tune-y] 15: medae.test.mean=18.5847115; time: 0.0 min
+    ## [Tune-y] 15: medae.test.mean=18.7297756; time: 0.0 min
 
     ## [Tune-x] 16: fw.abs=2; mtry=2; ntree=2
 
-    ## [Tune-y] 16: medae.test.mean=15.5154167; time: 0.0 min
+    ## [Tune-y] 16: medae.test.mean=8.3436538; time: 0.0 min
 
     ## [Tune-x] 17: fw.abs=3; mtry=2; ntree=2
 
-    ## [Tune-y] 17: medae.test.mean=13.0159615; time: 0.0 min
+    ## [Tune-y] 17: medae.test.mean=16.0762821; time: 0.0 min
 
     ## [Tune-x] 18: fw.abs=4; mtry=2; ntree=2
 
-    ## [Tune-y] 18: medae.test.mean=19.3903846; time: 0.0 min
+    ## [Tune-y] 18: medae.test.mean=16.4755449; time: 0.0 min
 
     ## [Tune-x] 19: fw.abs=5; mtry=2; ntree=2
 
-    ## [Tune-y] 19: medae.test.mean=17.9738782; time: 0.0 min
+    ## [Tune-y] 19: medae.test.mean=16.7079167; time: 0.0 min
 
     ## [Tune-x] 20: fw.abs=6; mtry=2; ntree=2
 
-    ## [Tune-y] 20: medae.test.mean=15.6414423; time: 0.0 min
+    ## [Tune-y] 20: medae.test.mean=17.0590064; time: 0.0 min
 
     ## [Tune-x] 21: fw.abs=2; mtry=1; ntree=3
 
-    ## [Tune-y] 21: medae.test.mean=13.7225427; time: 0.0 min
+    ## [Tune-y] 21: medae.test.mean=12.6958333; time: 0.0 min
 
     ## [Tune-x] 22: fw.abs=3; mtry=1; ntree=3
 
-    ## [Tune-y] 22: medae.test.mean=16.9207692; time: 0.0 min
+    ## [Tune-y] 22: medae.test.mean=9.5056624; time: 0.0 min
 
     ## [Tune-x] 23: fw.abs=4; mtry=1; ntree=3
 
-    ## [Tune-y] 23: medae.test.mean=21.7507265; time: 0.0 min
+    ## [Tune-y] 23: medae.test.mean=19.4530769; time: 0.0 min
 
     ## [Tune-x] 24: fw.abs=5; mtry=1; ntree=3
 
-    ## [Tune-y] 24: medae.test.mean=17.1020940; time: 0.0 min
+    ## [Tune-y] 24: medae.test.mean=15.7633761; time: 0.0 min
 
     ## [Tune-x] 25: fw.abs=6; mtry=1; ntree=3
 
-    ## [Tune-y] 25: medae.test.mean=16.7109829; time: 0.0 min
+    ## [Tune-y] 25: medae.test.mean=18.3785470; time: 0.0 min
 
     ## [Tune-x] 26: fw.abs=2; mtry=2; ntree=3
 
-    ## [Tune-y] 26: medae.test.mean=11.6474145; time: 0.0 min
+    ## [Tune-y] 26: medae.test.mean=11.4802564; time: 0.0 min
 
     ## [Tune-x] 27: fw.abs=3; mtry=2; ntree=3
 
-    ## [Tune-y] 27: medae.test.mean=16.6132265; time: 0.0 min
+    ## [Tune-y] 27: medae.test.mean=13.5920940; time: 0.0 min
 
     ## [Tune-x] 28: fw.abs=4; mtry=2; ntree=3
 
-    ## [Tune-y] 28: medae.test.mean=17.5840385; time: 0.0 min
+    ## [Tune-y] 28: medae.test.mean=14.0703205; time: 0.0 min
 
     ## [Tune-x] 29: fw.abs=5; mtry=2; ntree=3
 
-    ## [Tune-y] 29: medae.test.mean=16.0670726; time: 0.0 min
+    ## [Tune-y] 29: medae.test.mean=17.7629060; time: 0.0 min
 
     ## [Tune-x] 30: fw.abs=6; mtry=2; ntree=3
 
-    ## [Tune-y] 30: medae.test.mean=15.7417094; time: 0.0 min
+    ## [Tune-y] 30: medae.test.mean=15.7003632; time: 0.0 min
 
     ## [Tune-x] 31: fw.abs=2; mtry=1; ntree=4
 
-    ## [Tune-y] 31: medae.test.mean=11.7579808; time: 0.0 min
+    ## [Tune-y] 31: medae.test.mean=14.4855609; time: 0.0 min
 
     ## [Tune-x] 32: fw.abs=3; mtry=1; ntree=4
 
-    ## [Tune-y] 32: medae.test.mean=16.5521635; time: 0.0 min
+    ## [Tune-y] 32: medae.test.mean=16.1745833; time: 0.0 min
 
     ## [Tune-x] 33: fw.abs=4; mtry=1; ntree=4
 
-    ## [Tune-y] 33: medae.test.mean=15.4968590; time: 0.0 min
+    ## [Tune-y] 33: medae.test.mean=16.7404647; time: 0.0 min
 
     ## [Tune-x] 34: fw.abs=5; mtry=1; ntree=4
 
-    ## [Tune-y] 34: medae.test.mean=18.4207212; time: 0.0 min
+    ## [Tune-y] 34: medae.test.mean=15.4827083; time: 0.0 min
 
     ## [Tune-x] 35: fw.abs=6; mtry=1; ntree=4
 
-    ## [Tune-y] 35: medae.test.mean=16.7658013; time: 0.0 min
+    ## [Tune-y] 35: medae.test.mean=15.5300962; time: 0.0 min
 
     ## [Tune-x] 36: fw.abs=2; mtry=2; ntree=4
 
-    ## [Tune-y] 36: medae.test.mean=15.1748718; time: 0.0 min
+    ## [Tune-y] 36: medae.test.mean=13.1596154; time: 0.0 min
 
     ## [Tune-x] 37: fw.abs=3; mtry=2; ntree=4
 
-    ## [Tune-y] 37: medae.test.mean=15.1107051; time: 0.0 min
+    ## [Tune-y] 37: medae.test.mean=13.9660897; time: 0.0 min
 
     ## [Tune-x] 38: fw.abs=4; mtry=2; ntree=4
 
-    ## [Tune-y] 38: medae.test.mean=14.6542468; time: 0.0 min
+    ## [Tune-y] 38: medae.test.mean=14.9963622; time: 0.0 min
 
     ## [Tune-x] 39: fw.abs=5; mtry=2; ntree=4
 
-    ## [Tune-y] 39: medae.test.mean=18.3352564; time: 0.0 min
+    ## [Tune-y] 39: medae.test.mean=12.9985256; time: 0.0 min
 
     ## [Tune-x] 40: fw.abs=6; mtry=2; ntree=4
 
-    ## [Tune-y] 40: medae.test.mean=15.5763782; time: 0.0 min
+    ## [Tune-y] 40: medae.test.mean=13.1716346; time: 0.0 min
 
     ## [Tune-x] 41: fw.abs=2; mtry=1; ntree=5
 
-    ## [Tune-y] 41: medae.test.mean=12.7712949; time: 0.0 min
+    ## [Tune-y] 41: medae.test.mean=15.7930385; time: 0.0 min
 
     ## [Tune-x] 42: fw.abs=3; mtry=1; ntree=5
 
-    ## [Tune-y] 42: medae.test.mean=15.9533846; time: 0.0 min
+    ## [Tune-y] 42: medae.test.mean=14.7051026; time: 0.0 min
 
     ## [Tune-x] 43: fw.abs=4; mtry=1; ntree=5
 
-    ## [Tune-y] 43: medae.test.mean=16.5765769; time: 0.0 min
+    ## [Tune-y] 43: medae.test.mean=15.1418974; time: 0.0 min
 
     ## [Tune-x] 44: fw.abs=5; mtry=1; ntree=5
 
-    ## [Tune-y] 44: medae.test.mean=16.4666667; time: 0.0 min
+    ## [Tune-y] 44: medae.test.mean=15.6290769; time: 0.0 min
 
     ## [Tune-x] 45: fw.abs=6; mtry=1; ntree=5
 
-    ## [Tune-y] 45: medae.test.mean=15.8500256; time: 0.0 min
+    ## [Tune-y] 45: medae.test.mean=13.2041282; time: 0.0 min
 
     ## [Tune-x] 46: fw.abs=2; mtry=2; ntree=5
 
-    ## [Tune-y] 46: medae.test.mean=16.0103077; time: 0.0 min
+    ## [Tune-y] 46: medae.test.mean=11.8606154; time: 0.0 min
 
     ## [Tune-x] 47: fw.abs=3; mtry=2; ntree=5
 
-    ## [Tune-y] 47: medae.test.mean=15.5008846; time: 0.0 min
+    ## [Tune-y] 47: medae.test.mean=14.2245000; time: 0.0 min
 
     ## [Tune-x] 48: fw.abs=4; mtry=2; ntree=5
 
-    ## [Tune-y] 48: medae.test.mean=12.5423077; time: 0.0 min
+    ## [Tune-y] 48: medae.test.mean=15.7298462; time: 0.0 min
 
     ## [Tune-x] 49: fw.abs=5; mtry=2; ntree=5
 
-    ## [Tune-y] 49: medae.test.mean=16.9856154; time: 0.0 min
+    ## [Tune-y] 49: medae.test.mean=15.1176538; time: 0.0 min
 
     ## [Tune-x] 50: fw.abs=6; mtry=2; ntree=5
 
-    ## [Tune-y] 50: medae.test.mean=16.2350128; time: 0.0 min
+    ## [Tune-y] 50: medae.test.mean=16.2271923; time: 0.0 min
 
     ## [Tune-x] 51: fw.abs=2; mtry=1; ntree=6
 
-    ## [Tune-y] 51: medae.test.mean=15.6168483; time: 0.0 min
+    ## [Tune-y] 51: medae.test.mean=14.6224252; time: 0.0 min
 
     ## [Tune-x] 52: fw.abs=3; mtry=1; ntree=6
 
-    ## [Tune-y] 52: medae.test.mean=15.8421047; time: 0.0 min
+    ## [Tune-y] 52: medae.test.mean=18.4520085; time: 0.0 min
 
     ## [Tune-x] 53: fw.abs=4; mtry=1; ntree=6
 
-    ## [Tune-y] 53: medae.test.mean=16.8470620; time: 0.0 min
+    ## [Tune-y] 53: medae.test.mean=17.8951389; time: 0.0 min
 
     ## [Tune-x] 54: fw.abs=5; mtry=1; ntree=6
 
-    ## [Tune-y] 54: medae.test.mean=15.4344231; time: 0.0 min
+    ## [Tune-y] 54: medae.test.mean=15.8300000; time: 0.0 min
 
     ## [Tune-x] 55: fw.abs=6; mtry=1; ntree=6
 
-    ## [Tune-y] 55: medae.test.mean=14.2719658; time: 0.0 min
+    ## [Tune-y] 55: medae.test.mean=16.8498504; time: 0.0 min
 
     ## [Tune-x] 56: fw.abs=2; mtry=2; ntree=6
 
-    ## [Tune-y] 56: medae.test.mean=12.7506624; time: 0.0 min
+    ## [Tune-y] 56: medae.test.mean=12.8758868; time: 0.0 min
 
     ## [Tune-x] 57: fw.abs=3; mtry=2; ntree=6
 
-    ## [Tune-y] 57: medae.test.mean=14.5902350; time: 0.0 min
+    ## [Tune-y] 57: medae.test.mean=14.5684081; time: 0.0 min
 
     ## [Tune-x] 58: fw.abs=4; mtry=2; ntree=6
 
-    ## [Tune-y] 58: medae.test.mean=16.3118590; time: 0.0 min
+    ## [Tune-y] 58: medae.test.mean=17.1264530; time: 0.0 min
 
     ## [Tune-x] 59: fw.abs=5; mtry=2; ntree=6
 
-    ## [Tune-y] 59: medae.test.mean=17.7474786; time: 0.0 min
+    ## [Tune-y] 59: medae.test.mean=13.6409936; time: 0.0 min
 
     ## [Tune-x] 60: fw.abs=6; mtry=2; ntree=6
 
-    ## [Tune-y] 60: medae.test.mean=18.2272970; time: 0.0 min
+    ## [Tune-y] 60: medae.test.mean=16.5464530; time: 0.0 min
 
     ## [Tune-x] 61: fw.abs=2; mtry=1; ntree=7
 
-    ## [Tune-y] 61: medae.test.mean=14.0554121; time: 0.0 min
+    ## [Tune-y] 61: medae.test.mean=15.0370421; time: 0.0 min
 
     ## [Tune-x] 62: fw.abs=3; mtry=1; ntree=7
 
-    ## [Tune-y] 62: medae.test.mean=16.1331777; time: 0.0 min
+    ## [Tune-y] 62: medae.test.mean=15.2293223; time: 0.0 min
 
     ## [Tune-x] 63: fw.abs=4; mtry=1; ntree=7
 
-    ## [Tune-y] 63: medae.test.mean=15.4918956; time: 0.0 min
+    ## [Tune-y] 63: medae.test.mean=16.8828388; time: 0.0 min
 
     ## [Tune-x] 64: fw.abs=5; mtry=1; ntree=7
 
-    ## [Tune-y] 64: medae.test.mean=16.0793040; time: 0.0 min
+    ## [Tune-y] 64: medae.test.mean=13.9721978; time: 0.0 min
 
     ## [Tune-x] 65: fw.abs=6; mtry=1; ntree=7
 
-    ## [Tune-y] 65: medae.test.mean=13.3557784; time: 0.0 min
+    ## [Tune-y] 65: medae.test.mean=18.8976374; time: 0.0 min
 
     ## [Tune-x] 66: fw.abs=2; mtry=2; ntree=7
 
-    ## [Tune-y] 66: medae.test.mean=12.3200916; time: 0.0 min
+    ## [Tune-y] 66: medae.test.mean=10.9294048; time: 0.0 min
 
     ## [Tune-x] 67: fw.abs=3; mtry=2; ntree=7
 
-    ## [Tune-y] 67: medae.test.mean=13.2600458; time: 0.0 min
+    ## [Tune-y] 67: medae.test.mean=17.2040476; time: 0.0 min
 
     ## [Tune-x] 68: fw.abs=4; mtry=2; ntree=7
 
-    ## [Tune-y] 68: medae.test.mean=16.5055128; time: 0.0 min
+    ## [Tune-y] 68: medae.test.mean=16.6868407; time: 0.0 min
 
     ## [Tune-x] 69: fw.abs=5; mtry=2; ntree=7
 
-    ## [Tune-y] 69: medae.test.mean=17.5690568; time: 0.0 min
+    ## [Tune-y] 69: medae.test.mean=15.2564103; time: 0.0 min
 
     ## [Tune-x] 70: fw.abs=6; mtry=2; ntree=7
 
-    ## [Tune-y] 70: medae.test.mean=16.4994414; time: 0.0 min
+    ## [Tune-y] 70: medae.test.mean=16.9050641; time: 0.0 min
 
     ## [Tune-x] 71: fw.abs=2; mtry=1; ntree=8
 
-    ## [Tune-y] 71: medae.test.mean=13.2211699; time: 0.0 min
+    ## [Tune-y] 71: medae.test.mean=15.5250721; time: 0.0 min
 
     ## [Tune-x] 72: fw.abs=3; mtry=1; ntree=8
 
-    ## [Tune-y] 72: medae.test.mean=17.9100481; time: 0.0 min
+    ## [Tune-y] 72: medae.test.mean=17.4994471; time: 0.0 min
 
     ## [Tune-x] 73: fw.abs=4; mtry=1; ntree=8
 
-    ## [Tune-y] 73: medae.test.mean=13.9910497; time: 0.0 min
+    ## [Tune-y] 73: medae.test.mean=15.7489583; time: 0.0 min
 
     ## [Tune-x] 74: fw.abs=5; mtry=1; ntree=8
 
-    ## [Tune-y] 74: medae.test.mean=18.9800641; time: 0.0 min
+    ## [Tune-y] 74: medae.test.mean=14.6366426; time: 0.0 min
 
     ## [Tune-x] 75: fw.abs=6; mtry=1; ntree=8
 
-    ## [Tune-y] 75: medae.test.mean=16.9199279; time: 0.0 min
+    ## [Tune-y] 75: medae.test.mean=15.8153125; time: 0.0 min
 
     ## [Tune-x] 76: fw.abs=2; mtry=2; ntree=8
 
-    ## [Tune-y] 76: medae.test.mean=13.7198478; time: 0.0 min
+    ## [Tune-y] 76: medae.test.mean=12.6890064; time: 0.0 min
 
     ## [Tune-x] 77: fw.abs=3; mtry=2; ntree=8
 
-    ## [Tune-y] 77: medae.test.mean=16.9614263; time: 0.0 min
+    ## [Tune-y] 77: medae.test.mean=15.1934375; time: 0.0 min
 
     ## [Tune-x] 78: fw.abs=4; mtry=2; ntree=8
 
-    ## [Tune-y] 78: medae.test.mean=13.0932212; time: 0.0 min
+    ## [Tune-y] 78: medae.test.mean=16.5680929; time: 0.0 min
 
     ## [Tune-x] 79: fw.abs=5; mtry=2; ntree=8
 
-    ## [Tune-y] 79: medae.test.mean=15.8904327; time: 0.0 min
+    ## [Tune-y] 79: medae.test.mean=15.3141266; time: 0.0 min
 
     ## [Tune-x] 80: fw.abs=6; mtry=2; ntree=8
 
-    ## [Tune-y] 80: medae.test.mean=13.6091587; time: 0.0 min
+    ## [Tune-y] 80: medae.test.mean=17.7259295; time: 0.0 min
 
     ## [Tune-x] 81: fw.abs=2; mtry=1; ntree=9
 
-    ## [Tune-y] 81: medae.test.mean=13.2721011; time: 0.0 min
+    ## [Tune-y] 81: medae.test.mean=16.1094302; time: 0.0 min
 
     ## [Tune-x] 82: fw.abs=3; mtry=1; ntree=9
 
-    ## [Tune-y] 82: medae.test.mean=14.9606695; time: 0.0 min
+    ## [Tune-y] 82: medae.test.mean=15.6320513; time: 0.0 min
 
     ## [Tune-x] 83: fw.abs=4; mtry=1; ntree=9
 
-    ## [Tune-y] 83: medae.test.mean=17.6760826; time: 0.0 min
+    ## [Tune-y] 83: medae.test.mean=16.7592379; time: 0.0 min
 
     ## [Tune-x] 84: fw.abs=5; mtry=1; ntree=9
 
-    ## [Tune-y] 84: medae.test.mean=14.0926923; time: 0.0 min
+    ## [Tune-y] 84: medae.test.mean=16.5192593; time: 0.0 min
 
     ## [Tune-x] 85: fw.abs=6; mtry=1; ntree=9
 
-    ## [Tune-y] 85: medae.test.mean=15.9348647; time: 0.0 min
+    ## [Tune-y] 85: medae.test.mean=18.0826140; time: 0.0 min
 
     ## [Tune-x] 86: fw.abs=2; mtry=2; ntree=9
 
-    ## [Tune-y] 86: medae.test.mean=13.3302991; time: 0.0 min
+    ## [Tune-y] 86: medae.test.mean=13.4697436; time: 0.0 min
 
     ## [Tune-x] 87: fw.abs=3; mtry=2; ntree=9
 
-    ## [Tune-y] 87: medae.test.mean=14.1683974; time: 0.0 min
+    ## [Tune-y] 87: medae.test.mean=15.8650427; time: 0.0 min
 
     ## [Tune-x] 88: fw.abs=4; mtry=2; ntree=9
 
-    ## [Tune-y] 88: medae.test.mean=17.2062821; time: 0.0 min
+    ## [Tune-y] 88: medae.test.mean=16.3243519; time: 0.0 min
 
     ## [Tune-x] 89: fw.abs=5; mtry=2; ntree=9
 
-    ## [Tune-y] 89: medae.test.mean=16.7637536; time: 0.0 min
+    ## [Tune-y] 89: medae.test.mean=16.0369373; time: 0.0 min
 
     ## [Tune-x] 90: fw.abs=6; mtry=2; ntree=9
 
-    ## [Tune-y] 90: medae.test.mean=14.7317949; time: 0.0 min
+    ## [Tune-y] 90: medae.test.mean=14.5051923; time: 0.0 min
 
     ## [Tune-x] 91: fw.abs=2; mtry=1; ntree=10
 
-    ## [Tune-y] 91: medae.test.mean=12.8033205; time: 0.0 min
+    ## [Tune-y] 91: medae.test.mean=15.1752564; time: 0.0 min
 
     ## [Tune-x] 92: fw.abs=3; mtry=1; ntree=10
 
-    ## [Tune-y] 92: medae.test.mean=16.3659679; time: 0.0 min
+    ## [Tune-y] 92: medae.test.mean=15.9538782; time: 0.0 min
 
     ## [Tune-x] 93: fw.abs=4; mtry=1; ntree=10
 
-    ## [Tune-y] 93: medae.test.mean=16.3224679; time: 0.0 min
+    ## [Tune-y] 93: medae.test.mean=14.7955641; time: 0.0 min
 
     ## [Tune-x] 94: fw.abs=5; mtry=1; ntree=10
 
-    ## [Tune-y] 94: medae.test.mean=17.5012885; time: 0.0 min
+    ## [Tune-y] 94: medae.test.mean=14.6556090; time: 0.0 min
 
     ## [Tune-x] 95: fw.abs=6; mtry=1; ntree=10
 
-    ## [Tune-y] 95: medae.test.mean=18.7276603; time: 0.0 min
+    ## [Tune-y] 95: medae.test.mean=16.9049103; time: 0.0 min
 
     ## [Tune-x] 96: fw.abs=2; mtry=2; ntree=10
 
-    ## [Tune-y] 96: medae.test.mean=12.2873141; time: 0.0 min
+    ## [Tune-y] 96: medae.test.mean=11.6077436; time: 0.0 min
 
     ## [Tune-x] 97: fw.abs=3; mtry=2; ntree=10
 
-    ## [Tune-y] 97: medae.test.mean=15.5092692; time: 0.0 min
+    ## [Tune-y] 97: medae.test.mean=16.4023974; time: 0.0 min
 
     ## [Tune-x] 98: fw.abs=4; mtry=2; ntree=10
 
-    ## [Tune-y] 98: medae.test.mean=16.4951026; time: 0.0 min
+    ## [Tune-y] 98: medae.test.mean=15.8783205; time: 0.0 min
 
     ## [Tune-x] 99: fw.abs=5; mtry=2; ntree=10
 
-    ## [Tune-y] 99: medae.test.mean=15.2785897; time: 0.0 min
+    ## [Tune-y] 99: medae.test.mean=15.8991410; time: 0.0 min
 
     ## [Tune-x] 100: fw.abs=6; mtry=2; ntree=10
 
-    ## [Tune-y] 100: medae.test.mean=17.1838397; time: 0.0 min
+    ## [Tune-y] 100: medae.test.mean=14.8619359; time: 0.0 min
 
-    ## [Tune] Result: fw.abs=2; mtry=2; ntree=3 : medae.test.mean=11.6474145
+    ## [Tune] Result: fw.abs=2; mtry=2; ntree=2 : medae.test.mean=8.3436538
 
     ## [1] "selected features:"
 
@@ -776,105 +776,105 @@ regr_fw_LOO_medae(regr.lrn, ps)
 
     ## [Tune-x] 1: fw.abs=2; k=1
 
-    ## [Tune-y] 1: medae.test.mean=14.8945462; time: 0.0 min
+    ## [Tune-y] 1: medae.test.mean=14.8542154; time: 0.0 min
 
     ## [Tune-x] 2: fw.abs=3; k=1
 
-    ## [Tune-y] 2: medae.test.mean=16.7898231; time: 0.0 min
+    ## [Tune-y] 2: medae.test.mean=16.7276000; time: 0.0 min
 
     ## [Tune-x] 3: fw.abs=4; k=1
 
-    ## [Tune-y] 3: medae.test.mean=17.2778385; time: 0.0 min
+    ## [Tune-y] 3: medae.test.mean=17.4817846; time: 0.0 min
 
     ## [Tune-x] 4: fw.abs=5; k=1
 
-    ## [Tune-y] 4: medae.test.mean=15.9868923; time: 0.0 min
+    ## [Tune-y] 4: medae.test.mean=15.4727846; time: 0.0 min
 
     ## [Tune-x] 5: fw.abs=6; k=1
 
-    ## [Tune-y] 5: medae.test.mean=16.5414769; time: 0.0 min
+    ## [Tune-y] 5: medae.test.mean=16.2864615; time: 0.0 min
 
     ## [Tune-x] 6: fw.abs=2; k=2
 
-    ## [Tune-y] 6: medae.test.mean=14.4728192; time: 0.0 min
+    ## [Tune-y] 6: medae.test.mean=14.5290538; time: 0.0 min
 
     ## [Tune-x] 7: fw.abs=3; k=2
 
-    ## [Tune-y] 7: medae.test.mean=15.9659500; time: 0.0 min
+    ## [Tune-y] 7: medae.test.mean=15.6910000; time: 0.0 min
 
     ## [Tune-x] 8: fw.abs=4; k=2
 
-    ## [Tune-y] 8: medae.test.mean=15.9825808; time: 0.0 min
+    ## [Tune-y] 8: medae.test.mean=15.8657769; time: 0.0 min
 
     ## [Tune-x] 9: fw.abs=5; k=2
 
-    ## [Tune-y] 9: medae.test.mean=15.2716462; time: 0.0 min
+    ## [Tune-y] 9: medae.test.mean=15.1174923; time: 0.0 min
 
     ## [Tune-x] 10: fw.abs=6; k=2
 
-    ## [Tune-y] 10: medae.test.mean=15.2318346; time: 0.0 min
+    ## [Tune-y] 10: medae.test.mean=15.2423885; time: 0.0 min
 
     ## [Tune-x] 11: fw.abs=2; k=3
 
-    ## [Tune-y] 11: medae.test.mean=13.5886949; time: 0.0 min
+    ## [Tune-y] 11: medae.test.mean=13.4296872; time: 0.0 min
 
     ## [Tune-x] 12: fw.abs=3; k=3
 
-    ## [Tune-y] 12: medae.test.mean=15.1988282; time: 0.0 min
+    ## [Tune-y] 12: medae.test.mean=15.2451179; time: 0.0 min
 
     ## [Tune-x] 13: fw.abs=4; k=3
 
-    ## [Tune-y] 13: medae.test.mean=16.6017436; time: 0.0 min
+    ## [Tune-y] 13: medae.test.mean=16.5984231; time: 0.0 min
 
     ## [Tune-x] 14: fw.abs=5; k=3
 
-    ## [Tune-y] 14: medae.test.mean=15.9950923; time: 0.0 min
+    ## [Tune-y] 14: medae.test.mean=16.1415231; time: 0.0 min
 
     ## [Tune-x] 15: fw.abs=6; k=3
 
-    ## [Tune-y] 15: medae.test.mean=16.1495462; time: 0.0 min
+    ## [Tune-y] 15: medae.test.mean=16.1764744; time: 0.0 min
 
     ## [Tune-x] 16: fw.abs=2; k=4
 
-    ## [Tune-y] 16: medae.test.mean=14.2531250; time: 0.0 min
+    ## [Tune-y] 16: medae.test.mean=14.2716962; time: 0.0 min
 
     ## [Tune-x] 17: fw.abs=3; k=4
 
-    ## [Tune-y] 17: medae.test.mean=15.9473865; time: 0.0 min
+    ## [Tune-y] 17: medae.test.mean=16.0973327; time: 0.0 min
 
     ## [Tune-x] 18: fw.abs=4; k=4
 
-    ## [Tune-y] 18: medae.test.mean=16.1147058; time: 0.0 min
+    ## [Tune-y] 18: medae.test.mean=16.1411212; time: 0.0 min
 
     ## [Tune-x] 19: fw.abs=5; k=4
 
-    ## [Tune-y] 19: medae.test.mean=16.1135404; time: 0.0 min
+    ## [Tune-y] 19: medae.test.mean=16.1055192; time: 0.0 min
 
     ## [Tune-x] 20: fw.abs=6; k=4
 
-    ## [Tune-y] 20: medae.test.mean=16.1132673; time: 0.0 min
+    ## [Tune-y] 20: medae.test.mean=16.0767346; time: 0.0 min
 
     ## [Tune-x] 21: fw.abs=2; k=5
 
-    ## [Tune-y] 21: medae.test.mean=14.3721800; time: 0.0 min
+    ## [Tune-y] 21: medae.test.mean=14.3637985; time: 0.0 min
 
     ## [Tune-x] 22: fw.abs=3; k=5
 
-    ## [Tune-y] 22: medae.test.mean=15.9757062; time: 0.0 min
+    ## [Tune-y] 22: medae.test.mean=15.8016554; time: 0.0 min
 
     ## [Tune-x] 23: fw.abs=4; k=5
 
-    ## [Tune-y] 23: medae.test.mean=16.4619200; time: 0.0 min
+    ## [Tune-y] 23: medae.test.mean=16.3935508; time: 0.0 min
 
     ## [Tune-x] 24: fw.abs=5; k=5
 
-    ## [Tune-y] 24: medae.test.mean=16.1437877; time: 0.0 min
+    ## [Tune-y] 24: medae.test.mean=16.1769954; time: 0.0 min
 
     ## [Tune-x] 25: fw.abs=6; k=5
 
-    ## [Tune-y] 25: medae.test.mean=16.0390523; time: 0.0 min
+    ## [Tune-y] 25: medae.test.mean=16.1821723; time: 0.0 min
 
-    ## [Tune] Result: fw.abs=2; k=3 : medae.test.mean=13.5886949
+    ## [Tune] Result: fw.abs=2; k=3 : medae.test.mean=13.4296872
 
     ## [1] "selected features:"
 
@@ -1163,7 +1163,7 @@ regr_fw_LOO_medae(regr.lrn, ps)
 
     ## [Tune-y] 60: medae.test.mean=16.7777778; time: 0.0 min
 
-    ## [Tune] Result: fw.abs=1; minsplit=8 : medae.test.mean=10.2873718
+    ## [Tune] Result: fw.abs=1; minsplit=9 : medae.test.mean=10.2873718
 
     ## [1] "selected features:"
 
@@ -1181,7 +1181,11 @@ Conclusions
     -   Random k-Nearest-Neighbors: 13.6
     -   Decision Tree: 10.3
 
--   This work contributes to the Lens model for the prediction of speaker characteristics given speech segments. The 2 steps are:
+-   This work contributes to the Lens model for the prediction of speaker characteristics given speech segments.
+
+Following the Brunswik Lens Model revised by Scherer (1978), the features that can be extracted from the speech signal (e.g. pitch and formant frequencies, speech tempo, etc.) can be seen as "Distal Cues", whereas the collected VC-subjective labels represent the "Proximal Percepts" that directly account for the final listeners' impressions of speakers (speaker characteristics). The NSC data facilitates the research necessary to clarify the relationship between "Distal Cues" and "Proximal Percepts", which should lead to machines reaching the human performance in the attribution of speaker social characteristics.
+
+-   The 2 steps are:
 
     -   from measurable acoustic speech parameters to voice desctiptions: this script shows that this can be done. Instead of "melodisch", we can also try to predict any of the other 33 subjective voice descriptions, such as "gepresst", "mit akzent", "unbetont", ... for male and for female speakers.
     -   from voice descritions to speaker characteristics: there exist linear relationships that permit accurate predictions as shown [here](https://github.com/laufergall/Subjective_Speaker_Characteristics/blob/master/analysis/relationships_SC_VD/linearregression_VD_SC.md)

@@ -299,7 +299,11 @@ regr_fw_LOO_medae(regr.lrn, ps)
     * Random k-Nearest-Neighbors: 13.6
     * Decision Tree: 10.3
     
-* This work contributes to the Lens model for the prediction of speaker characteristics given speech segments. The 2 steps are: 
+* This work contributes to the Lens model for the prediction of speaker characteristics given speech segments. 
+
+Following the Brunswik Lens Model revised by Scherer (1978), the features that can be extracted from the speech signal (e.g. pitch and formant frequencies, speech tempo, etc.) can be seen as "Distal Cues", whereas the collected VC-subjective labels represent the "Proximal Percepts" that directly account for the final listeners' impressions of speakers (speaker characteristics). The NSC data facilitates the research necessary to clarify the relationship between "Distal Cues" and "Proximal Percepts", which should lead to machines reaching the human performance in the attribution of speaker social characteristics.
+
+* The 2 steps are: 
 
     * from measurable acoustic speech parameters to voice desctiptions: this script shows that this can be done. Instead of "melodisch", we can also try to predict any of the other 33 subjective voice descriptions, such as "gepresst", "mit akzent", "unbetont", ... for male and for female speakers.
     * from voice descritions to speaker characteristics: there exist linear relationships that permit accurate predictions as shown [here](https://github.com/laufergall/Subjective_Speaker_Characteristics/blob/master/analysis/relationships_SC_VD/linearregression_VD_SC.md)
